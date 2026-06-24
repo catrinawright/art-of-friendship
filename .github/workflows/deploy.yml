@@ -1,19 +1,15 @@
-name: Deploy Art of Friendship to GitHub Pages
+yamlname: Deploy Art of Friendship to GitHub Pages
 
 on:
-  # Runs on every push to the main branch
   push:
     branches: [ main ]
-  # Allows manual trigger from the Actions tab
   workflow_dispatch:
 
-# Required permissions for the GitHub Pages deployment action
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Only one deployment runs at a time
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -23,33 +19,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. Check out the repository ─────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ── 2. Set up Node.js ────────────────────────────────────────────────
-       - name: Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-     
-
-      # ── 3. Install dependencies ──────────────────────────────────────────
       - name: Install dependencies
         run: npm install
 
-      # ── 4. Build the app ─────────────────────────────────────────────────
-      # VITE_ANTHROPIC_API_KEY is optional.
-      # Add it as a GitHub Secret (Settings → Secrets → Actions) named
-      # VITE_ANTHROPIC_API_KEY to enable the AI Scenario Generator.
-      # Without it, the generator uses the built-in template fallback.
       - name: Build
         run: npm run build
         env:
           VITE_ANTHROPIC_API_KEY: ${{ secrets.VITE_ANTHROPIC_API_KEY }}
 
-      # ── 5. Upload the built files as a Pages artifact ────────────────────
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
@@ -58,7 +43,6 @@ jobs:
         with:
           path: dist
 
-      # ── 6. Deploy to GitHub Pages ────────────────────────────────────────
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
