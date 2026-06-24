@@ -1,4 +1,4 @@
-yamlname: Deploy Art of Friendship to GitHub Pages
+name: Deploy Art of Friendship to GitHub Pages
 
 on:
   push:
