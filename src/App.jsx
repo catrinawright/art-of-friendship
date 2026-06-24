@@ -3129,15 +3129,15 @@ function Module4Generator({ navigate }) {
       const ruleMap = { 'Before the Interaction': [1, 2, 8], 'During the Interaction': [4, 5, 7, 9], 'After the Interaction': [3, 6, 10, 11], 'Periodic Evaluation': [12, 13] };
       const rules = ruleMap[cluster] || [1];
       const templateResult = {
-        title: 'Practice Scenario — ' + cluster,
-        scenario: 'Alex navigates a social situation involving ' + category.split(' (')[0] + '. During the interaction, Alex faces a decision point that connects directly to the ' + cluster + ' rules. The other person's behavior and Alex's response both carry information about the relational dynamic at play.',
+        title: 'Practice Scenario: ' + cluster,
+        scenario: 'Alex navigates a situation involving ' + category.split('(')[0].trim() + '. A decision point arises that connects to the ' + cluster + ' rules.',
         rules: rules.slice(0, 2),
-        ruleNames: rules.slice(0, 2).map(r => RULES_SIMPLE.find(rs => rs.num === r)?.title || 'Rule ' + r),
+        ruleNames: rules.slice(0, 2).map(function(r) { var f = RULES_SIMPLE.find(function(x) { return x.num === r; }); return f ? f.title : 'Rule ' + r; }),
         analysisQuestions: [
           'What specific behavior in this scenario raises a concern?',
           'Which rule from the ' + cluster + ' cluster applies most directly?',
           'What is the correct next action according to the framework?',
-          'Bilateral: If this were your behavior in a recent interaction — what would the correction pathway be?'
+          'Bilateral: If this were your behavior in a recent interaction, what would the correction pathway be?'
         ]
       };
       setResult(templateResult);
