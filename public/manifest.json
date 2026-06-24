@@ -1,0 +1,17 @@
+{
+  "name": "The Art of Friendship",
+  "short_name": "ArtOfFriendship",
+  "description": "A social-emotional learning framework for relationship skills",
+  "start_url": "/art-of-friendship/",
+  "display": "standalone",
+  "background_color": "#EEF2F6",
+  "theme_color": "#1B3A5C",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231B3A5C' rx='40'/><text y='140' x='30' font-size='130'>🌱</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
