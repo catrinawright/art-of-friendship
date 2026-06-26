@@ -943,8 +943,8 @@ function HomeScreen({ navigate, regState, goal }) {
           {[
             { label: '📖 My Reference', desc: 'Rules & Definitions', screen: 'navigator', color: C.interactive },
             { label: '✉️ Before I Communicate', desc: 'Pre-Comm Checklist', screen: 'module2-anchor', color: C.calm },
-            { label: '📊 My Tracker', desc: 'Logs & Journals', screen: 'navigator', color: C.activated },
-            { label: '🎯 Practice', desc: 'Scenarios & Cards', screen: 'navigator', color: C.secondary },
+            { label: '📊 My Tracker', desc: 'Logs & Journals', screen: 'module3', color: C.activated },
+            { label: '🎯 Practice', desc: 'Scenarios & Cards', screen: 'module4', color: C.secondary },
           ].map(({ label, desc, screen, color }, i) => (
             <button
               key={i}
@@ -983,7 +983,8 @@ function HomeScreen({ navigate, regState, goal }) {
   );
 }
 
-function NavigatorScreen({ navigate }) {
+function NavigatorScreen({ navigate, setDest }) {
+  const goToTool = (dest) => { setDest(dest); navigate('module3-gate'); };
   return (
     <div style={{ paddingTop: 8 }}>
       <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 6 }}>
@@ -993,14 +994,14 @@ function NavigatorScreen({ navigate }) {
         You just finished an interaction. Choose where you want to go.
       </div>
       {[
-        { label: '🔍 Self-Audit — Review the interaction', screen: 'regulation' },
-        { label: '📓 Bilateral Journal — Record what I noticed', screen: 'regulation' },
-        { label: '📋 Rule I Applied Today — Log one application', screen: 'regulation' },
-        { label: '💡 Something else', screen: 'home' },
-      ].map(({ label, screen }, i) => (
+        { label: '🔍 Self-Audit — Review the interaction',       dest: 'module3-audit'      },
+        { label: '📓 Bilateral Journal — Record what I noticed', dest: 'module3-journal'    },
+        { label: '📋 Rule I Applied Today — Log one application', dest: 'module3-applied'  },
+        { label: '💡 Something else',                            dest: null                 },
+      ].map(({ label, dest }, i) => (
         <button
           key={i}
-          onClick={() => navigate(screen)}
+          onClick={() => dest ? goToTool(dest) : navigate('home')}
           style={{
             display: 'block', width: '100%', minHeight: 56,
             backgroundColor: C.white, border: `1.5px solid ${C.border}`,
@@ -3473,7 +3474,7 @@ export default function App() {
 
   const renderScreen = () => {
     if (screen === 'home') return <HomeScreen navigate={navigate} regState={regState} goal={weekly_goal} />;
-    if (screen === 'navigator') return <NavigatorScreen navigate={navigate} />;
+    if (screen === 'navigator') return <NavigatorScreen navigate={navigate} setDest={setModule3Dest} />;
     if (screen === 'regulation') return <RegulationScreen navigate={navigate} onSetReg={setRegState} regState={regState} />;
     if (screen === 'overwhelmed-stop') return <OverwhelmedStop navigate={navigate} onEmergency={handleEmergency} />;
     if (screen === 'emergency') return <EmergencyScreen navigate={navigate} />;
