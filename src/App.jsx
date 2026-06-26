@@ -2,22 +2,22 @@ import { useState } from "react";
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const C = {
-  bg:           '#EEF2F6',
-  card:         '#FAFCFE',
-  primary:      '#1B3A5C',
-  interactive:  '#2E6DA4',
-  calm:         '#4E8A6B',
-  activated:    '#C4781A',
-  overwhelmed:  '#A84858',
-  secondary:    '#7A8FA6',
-  border:       '#D4DCE8',
-  green:        '#3A7D5A',
-  amber:        '#C4781A',
-  red:          '#A84858',
-  greenBg:      '#EBF5EF',
-  amberBg:      '#FDF3E7',
-  redBg:        '#FAEAEC',
-  white:        '#FAFCFE',
+  bg:           '#F7F3EE',   // warm cream — replaces clinical cool gray
+  card:         '#FFFFFF',   // pure white — maximum contrast against warm bg
+  primary:      '#1A2744',   // deep indigo
+  interactive:  '#3D5FC8',   // vibrant periwinkle
+  calm:         '#2A9D8F',   // rich teal
+  activated:    '#E07B39',   // warm amber
+  overwhelmed:  '#C23B59',   // clear rose
+  secondary:    '#7A8699',   // neutral gray
+  border:       '#E8E2D9',   // warm border
+  green:        '#2A9D6E',
+  amber:        '#E07B39',
+  red:          '#C23B59',
+  greenBg:      '#E6F6F3',
+  amberBg:      '#FEF2E7',
+  redBg:        '#FCEDF1',
+  white:        '#FFFFFF',
 };
 
 const FONT_SIZES = { standard: 15, large: 18, xlarge: 21 };
@@ -667,8 +667,9 @@ function Shell({ children, regState, onEmergency, onSettings, onGrounding, title
 function Card({ children, style = {} }) {
   return (
     <div style={{
-      backgroundColor: C.white, borderRadius: 12,
+      backgroundColor: C.white, borderRadius: 14,
       border: `1px solid ${C.border}`,
+      boxShadow: '0 2px 8px rgba(26,39,68,0.07), 0 1px 2px rgba(26,39,68,0.04)',
       padding: '16px', marginBottom: 12,
       ...style,
     }}>
@@ -690,13 +691,13 @@ function Btn({ label, onClick, variant = 'primary', fullWidth = true, small = fa
     ...style,
   };
   const variants = {
-    primary:   { backgroundColor: C.interactive, color: '#fff' },
-    secondary: { backgroundColor: 'transparent', color: C.interactive, border: `1.5px solid ${C.interactive}` },
-    calm:      { backgroundColor: C.calm, color: '#fff' },
-    activated: { backgroundColor: C.activated, color: '#fff' },
+    primary:     { backgroundColor: C.interactive, color: '#fff', boxShadow: '0 3px 10px rgba(61,95,200,0.30)' },
+    secondary:   { backgroundColor: 'transparent', color: C.interactive, border: `1.5px solid ${C.interactive}` },
+    calm:        { backgroundColor: C.calm, color: '#fff', boxShadow: '0 3px 10px rgba(42,157,143,0.30)' },
+    activated:   { backgroundColor: C.activated, color: '#fff' },
     overwhelmed: { backgroundColor: C.overwhelmed, color: '#fff' },
-    green:     { backgroundColor: C.green, color: '#fff' },
-    ghost:     { backgroundColor: 'transparent', color: C.secondary, border: `1px solid ${C.border}` },
+    green:       { backgroundColor: C.green, color: '#fff', boxShadow: '0 3px 10px rgba(42,157,110,0.30)' },
+    ghost:       { backgroundColor: 'transparent', color: C.secondary, border: `1px solid ${C.border}` },
   };
   return (
     <button style={{ ...base, ...variants[variant], ...style }} onClick={onClick}>
@@ -887,15 +888,22 @@ function SettingsPanel({ settings, onChange, onClose }) {
 function HomeScreen({ navigate, regState, goal }) {
   return (
     <div>
-      {/* App identity */}
-      <div style={{ textAlign: 'center', marginBottom: 24, paddingTop: 8 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 1, marginBottom: 4 }}>
-          THE ART OF FRIENDSHIP
+      {/* Gradient identity banner */}
+      <div style={{
+        background: 'linear-gradient(135deg, #1A2744 0%, #3D5FC8 100%)',
+        borderRadius: 16, padding: '20px 18px 18px',
+        marginBottom: 20,
+      }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: 1.5, marginBottom: 4 }}>
+          YOUR PERSONAL FRAMEWORK
         </div>
-        <div style={{ fontSize: 26, fontWeight: 800, color: C.primary, lineHeight: 1.2 }}>
-          What do you need<br />right now?
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 6 }}>
+          The Art of Friendship
         </div>
-        <div style={{ fontSize: 13, color: C.secondary, marginTop: 6 }}>
+        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>
+          What do you need right now?
+        </div>
+        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
           Select what fits your moment.
         </div>
       </div>
@@ -3278,6 +3286,77 @@ Respond with ONLY valid JSON, no markdown, no explanation:
 
 
 
+// ─── WELCOME SCREEN ───────────────────────────────────────────────────────────
+
+function WelcomeScreen({ onStart }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 300,
+      background: 'linear-gradient(160deg, #1A2744 0%, #243672 55%, #3D5FC8 100%)',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '32px 28px', textAlign: 'center',
+    }}>
+      {/* Icon */}
+      <div style={{ fontSize: 72, marginBottom: 20, filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.3))' }}>🌱</div>
+
+      {/* Identity */}
+      <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: 2, marginBottom: 8 }}>
+        YOUR PERSONAL FRAMEWORK
+      </div>
+      <div style={{ fontSize: 30, fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 12 }}>
+        The Art of Friendship
+      </div>
+      <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.72)', lineHeight: 1.7, marginBottom: 6, maxWidth: 290 }}>
+        A structured framework for understanding, building, and protecting your relationships — one rule at a time.
+      </div>
+      <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 36 }}>
+        Developed by Catrina Wright, MAT
+      </div>
+
+      {/* CTA */}
+      <button
+        onClick={onStart}
+        style={{
+          backgroundColor: '#fff', color: '#1A2744',
+          border: 'none', borderRadius: 14,
+          padding: '17px 48px',
+          fontSize: 16, fontWeight: 800,
+          cursor: 'pointer', letterSpacing: 0.2,
+          boxShadow: '0 6px 24px rgba(0,0,0,0.25)',
+          width: '100%', maxWidth: 280,
+        }}
+      >
+        Get Started
+      </button>
+
+      {/* Module preview */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 28, flexWrap: 'wrap', justifyContent: 'center' }}>
+        {[
+          { icon: '📖', label: 'My Reference' },
+          { icon: '✉️', label: 'Before I Communicate' },
+          { icon: '📊', label: 'My Tracker' },
+          { icon: '🎯', label: 'Practice' },
+        ].map(m => (
+          <div key={m.label} style={{
+            backgroundColor: 'rgba(255,255,255,0.10)',
+            border: '1px solid rgba(255,255,255,0.15)',
+            borderRadius: 20, padding: '5px 12px',
+            fontSize: 12, color: 'rgba(255,255,255,0.65)',
+          }}>
+            {m.icon} {m.label}
+          </div>
+        ))}
+      </div>
+
+      {/* Legal */}
+      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginTop: 20 }}>
+        Educational tool · Not a clinical service · CC BY-NC 4.0
+      </div>
+    </div>
+  );
+}
+
 // ─── LEGAL SCREEN ─────────────────────────────────────────────────────────────
 
 function LegalScreen({ navigate }) {
@@ -3395,6 +3474,7 @@ export default function App() {
   const [regState, setRegState] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showGrounding, setShowGrounding] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [settings, setSettings] = useState({
     fontSize: 'standard',
     highContrast: false,
@@ -3511,53 +3591,62 @@ export default function App() {
 
   return (
     <div style={{
-      width: '100%',
-      maxWidth: 430,
-      margin: '0 auto',
-      height: '100svh',          /* svh = small viewport height — handles mobile browser chrome */
-      minHeight: '100vh',        /* fallback for browsers without svh support */
+      minHeight: '100vh',
+      backgroundColor: '#1A2744',
       display: 'flex',
-      flexDirection: 'column',
+      justifyContent: 'center',
       fontFamily: 'system-ui, -apple-system, sans-serif',
       fontSize: fontSize,
-      backgroundColor: C.bg,
-      position: 'relative',
-      overflow: 'hidden',
     }}>
-      {isEmergency ? (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <RegBar state="overwhelmed" />
-          <div style={{ flex: 1, overflow: 'hidden' }}>
-            <EmergencyScreen navigate={navigate} />
-          </div>
-        </div>
-      ) : (
-        <Shell
-          regState={regState}
-          title={screenTitles[screen]}
-          onBack={showBack ? goBack : null}
-          onEmergency={handleEmergency}
-          onSettings={() => setShowSettings(true)}
-          onGrounding={() => setShowGrounding(true)}
-        >
-          {renderScreen()}
-        </Shell>
-      )}
+      <div style={{
+        width: '100%',
+        maxWidth: 430,
+        height: '100svh',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: C.bg,
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 0 80px rgba(0,0,0,0.5)',
+      }}>
+        {showWelcome && <WelcomeScreen onStart={() => setShowWelcome(false)} />}
 
-      {showGrounding && (
-        <GroundingOverlay
-          onClose={() => setShowGrounding(false)}
-          onEmergency={handleEmergency}
-          regState={regState}
-        />
-      )}
-      {showSettings && (
-        <SettingsPanel
-          settings={settings}
-          onChange={setSettings}
-          onClose={() => setShowSettings(false)}
-        />
-      )}
+        {isEmergency ? (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <RegBar state="overwhelmed" />
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+              <EmergencyScreen navigate={navigate} />
+            </div>
+          </div>
+        ) : (
+          <Shell
+            regState={regState}
+            title={screenTitles[screen]}
+            onBack={showBack ? goBack : null}
+            onEmergency={handleEmergency}
+            onSettings={() => setShowSettings(true)}
+            onGrounding={() => setShowGrounding(true)}
+          >
+            {renderScreen()}
+          </Shell>
+        )}
+
+        {showGrounding && (
+          <GroundingOverlay
+            onClose={() => setShowGrounding(false)}
+            onEmergency={handleEmergency}
+            regState={regState}
+          />
+        )}
+        {showSettings && (
+          <SettingsPanel
+            settings={settings}
+            onChange={setSettings}
+            onClose={() => setShowSettings(false)}
+          />
+        )}
+      </div>
     </div>
   );
 }
