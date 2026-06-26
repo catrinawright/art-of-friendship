@@ -1098,106 +1098,150 @@ function SettingsPanel({ settings, onChange, onClose }) {
 // ─── SCREENS ──────────────────────────────────────────────────────────────────
 
 function HomeScreen({ navigate, regState, goal }) {
+  const steps = [
+    {
+      num: 1, icon: '📖', screen: 'module1',
+      title: 'My Reference',
+      sub: '13 Rules · 17 Definitions',
+      purpose: 'Learn the framework. Read the rules before anything else.',
+      note: 'Start here — every session',
+      noteColor: C.calm,
+      color: C.interactive,
+    },
+    {
+      num: 2, icon: '🎯', screen: 'module4',
+      title: 'Practice',
+      sub: 'Scenarios · Flashcards · Trivia',
+      purpose: 'Test what you know before applying it in real situations.',
+      color: DC[3],
+    },
+    {
+      num: 3, icon: '✉️', screen: 'module2-anchor',
+      title: 'Before I Communicate',
+      sub: '5-Question Checklist',
+      purpose: 'Apply the rules to a real communication before you send or say anything.',
+      color: DC[5],
+    },
+    {
+      num: 4, icon: '📊', screen: 'module3',
+      title: 'My Tracker',
+      sub: 'Self-Audit · Journals · Logs',
+      purpose: 'Reflect on your conduct and monitor your patterns over time.',
+      color: DC[4],
+    },
+  ];
+
   return (
     <div>
-      {/* Gradient identity banner */}
+      {/* Identity banner */}
       <div style={{
         background: 'linear-gradient(135deg, #1A2744 0%, #3D5FC8 100%)',
-        borderRadius: 16, padding: '20px 18px 18px',
-        marginBottom: 20,
+        borderRadius: 16, padding: '18px 18px 16px', marginBottom: 20,
       }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: 1.5, marginBottom: 4 }}>
           YOUR PERSONAL FRAMEWORK
         </div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 6 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
           The Art of Friendship
         </div>
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>
-          What do you need right now?
-        </div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 4 }}>
-          Select what fits your moment.
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+          A structured path for developing relationship skills.
         </div>
       </div>
 
-      {/* Navigator cards */}
-      {[
-        { label: '💬  About to communicate with someone', screen: 'module2-anchor', color: C.interactive },
-        { label: '🗣  In the middle of an interaction', screen: 'module2-anchor', color: C.calm },
-        { label: '🔁  Just finished an interaction', screen: 'navigator', color: C.secondary },
-        { label: '❓  I am not sure', screen: 'regulation', color: C.secondary },
-      ].map(({ label, screen, color }, i) => (
-        <button
-          key={i}
-          onClick={() => navigate(screen)}
-          style={{
-            display: 'block', width: '100%', minHeight: 60,
-            backgroundColor: C.white, border: `1.5px solid ${C.border}`,
-            borderLeft: `4px solid ${color}`,
-            borderRadius: 10, padding: '14px 16px',
-            cursor: 'pointer', textAlign: 'left',
-            fontSize: 15, fontWeight: 600, color: C.primary,
-            marginBottom: 10, lineHeight: 1.4,
-          }}
-        >
-          {label}
-        </button>
-      ))}
+      {/* ── LEARNING PATH (primary) ── */}
+      <div style={{ marginBottom: 4 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 4 }}>
+          YOUR LEARNING PATH
+        </div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 14 }}>
+          Work through these in order. Each step requires the one before it.
+        </div>
+
+        {steps.map((step, i) => (
+          <div key={step.num} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
+            {/* Step indicator + connector line */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 36, flexShrink: 0 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 18, flexShrink: 0,
+                backgroundColor: step.color, display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontSize: 15, fontWeight: 800, color: '#fff',
+                boxShadow: `0 3px 10px ${step.color}40`,
+              }}>{step.num}</div>
+              {i < steps.length - 1 && (
+                <div style={{ width: 2, flex: 1, backgroundColor: C.border, marginTop: 4, minHeight: 16 }} />
+              )}
+            </div>
+
+            {/* Step card */}
+            <button
+              onClick={() => navigate(step.screen)}
+              style={{
+                flex: 1, textAlign: 'left', backgroundColor: C.white,
+                border: `1px solid ${C.border}`, borderLeft: `3px solid ${step.color}`,
+                borderRadius: 10, padding: '12px 14px', cursor: 'pointer',
+                marginBottom: i < steps.length - 1 ? 0 : 0,
+                boxShadow: '0 1px 4px rgba(26,39,68,0.06)',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
+                <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{step.icon} {step.title}</span>
+                <span style={{ fontSize: 16, color: C.border, marginLeft: 6 }}>›</span>
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: step.color, marginBottom: 4 }}>{step.sub}</div>
+              <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{step.purpose}</div>
+              {step.note && (
+                <div style={{ marginTop: 6, display: 'inline-block', backgroundColor: step.noteColor + '18', border: `1px solid ${step.noteColor}40`, borderRadius: 20, padding: '2px 10px', fontSize: 11, fontWeight: 700, color: step.noteColor }}>
+                  {step.note}
+                </div>
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* ── QUICK ACCESS (secondary) ── */}
+      <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 4 }}>
+          QUICK ACCESS
+        </div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 12 }}>
+          Already know the framework? Apply it now.
+        </div>
+        {[
+          { label: '💬 About to communicate with someone', screen: 'module2-anchor', color: C.interactive },
+          { label: '🗣 In the middle of an interaction',   screen: 'module2-anchor', color: C.calm },
+          { label: '🔁 Just finished an interaction',     screen: 'navigator',       color: DC[4] },
+          { label: '❓ I am not sure',                    screen: 'regulation',      color: C.secondary },
+        ].map(({ label, screen, color }, i) => (
+          <button key={i} onClick={() => navigate(screen)} style={{
+            display: 'block', width: '100%', minHeight: 48,
+            backgroundColor: C.white, border: `1px solid ${C.border}`,
+            borderLeft: `3px solid ${color}`, borderRadius: 10,
+            padding: '11px 14px', cursor: 'pointer', textAlign: 'left',
+            fontSize: 14, fontWeight: 600, color: C.primary, marginBottom: 8,
+          }}>{label}</button>
+        ))}
+      </div>
 
       {/* Weekly goal */}
       {goal && (
         <Card style={{ borderLeft: `4px solid ${C.calm}`, marginTop: 4 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.5, marginBottom: 6 }}>
-            THIS WEEK'S GOAL
-          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.5, marginBottom: 6 }}>THIS WEEK'S GOAL</div>
           <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.5 }}>{goal}</div>
         </Card>
       )}
 
-      {/* Module grid */}
-      <div style={{ marginTop: 16 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 10 }}>
-          ALL MODULES
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          {[
-            { label: '📖 My Reference', desc: 'Rules & Definitions', screen: 'navigator', color: C.interactive },
-            { label: '✉️ Before I Communicate', desc: 'Pre-Comm Checklist', screen: 'module2-anchor', color: C.calm },
-            { label: '📊 My Tracker', desc: 'Logs & Journals', screen: 'module3', color: C.activated },
-            { label: '🎯 Practice', desc: 'Scenarios & Cards', screen: 'module4', color: C.secondary },
-          ].map(({ label, desc, screen, color }, i) => (
-            <button
-              key={i}
-              onClick={() => navigate(screen)}
-              style={{
-                backgroundColor: C.white, border: `1px solid ${C.border}`,
-                borderTop: `3px solid ${color}`, borderRadius: 10,
-                padding: '12px', cursor: 'pointer', textAlign: 'left',
-              }}
-            >
-              <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, marginBottom: 4 }}>{label}</div>
-              <div style={{ fontSize: 12, color: C.secondary }}>{desc}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap' }}>
+      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
         <UDLBadge label="Engagement 7.1" />
-        <UDLBadge label="Expression 6.3" />
+        <UDLBadge label="Rep 3.2" />
         <UDLBadge label="Engagement 8.1" />
       </div>
 
       {/* Legal footer */}
-      <div style={{
-        marginTop: 16, paddingTop: 12,
-        borderTop: `1px solid ${C.border}`,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      }}>
+      <div style={{ marginTop: 16, paddingTop: 12, borderTop: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ fontSize: 11, color: C.secondary }}>CC BY-NC 4.0 · Catrina Wright · 2026</div>
-        <button onClick={() => navigate('legal')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive, textDecoration: 'underline' }}>
-          About &amp; Legal
-        </button>
+        <button onClick={() => navigate('legal')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive, textDecoration: 'underline' }}>About &amp; Legal</button>
       </div>
     </div>
   );
@@ -1430,8 +1474,25 @@ function Module2Anchor({ navigate, settings }) {
       <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 6 }}>
         Before I Communicate
       </div>
-      <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 20 }}>
+      <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 14 }}>
         Five questions before you send or say anything.
+      </div>
+
+      {/* Rule prerequisite prompt */}
+      <div style={{
+        backgroundColor: C.interactive + '0C', border: `1px solid ${C.interactive}40`,
+        borderRadius: 10, padding: '10px 14px', marginBottom: 16,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      }}>
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.interactive, marginBottom: 2 }}>STEP 2 OF 4</div>
+          <div style={{ fontSize: 13, color: C.primary }}>This checklist applies the rules. Review them first if needed.</div>
+        </div>
+        <button onClick={() => navigate('module1')} style={{
+          flexShrink: 0, marginLeft: 12, padding: '6px 12px', borderRadius: 8,
+          border: `1px solid ${C.interactive}60`, backgroundColor: C.interactive + '18',
+          cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive,
+        }}>Rules →</button>
       </div>
 
       {/* Physical anchor reminder */}
@@ -1781,102 +1842,143 @@ function PlaceholderScreen({ title, description, navigate }) {
 // ─── MODULE 1 SCREENS ────────────────────────────────────────────────────────
 
 function Module1Home({ navigate, setSelectedTerm, settings }) {
+  const [tab, setTab] = useState('rules');
   const [query, setQuery] = useState('');
-  const [activeDomain, setActiveDomain] = useState(0); // 0 = All
+  const [activeDomain, setActiveDomain] = useState(0);
+  const [activeCluster, setActiveCluster] = useState('All');
 
-  const filtered = TERMS.filter(t => {
+  const filteredTerms = TERMS.filter(t => {
     const matchDomain = activeDomain === 0 || t.domainNum === activeDomain;
     const matchQuery = !query || t.name.toLowerCase().includes(query.toLowerCase()) || t.plain.toLowerCase().includes(query.toLowerCase());
     return matchDomain && matchQuery;
   });
 
+  const filteredRules = RULES_FULL.filter(r => {
+    const matchCluster = activeCluster === 'All' || r.cluster === activeCluster;
+    const matchQuery = !query || r.title.toLowerCase().includes(query.toLowerCase()) || r.theRule.toLowerCase().includes(query.toLowerCase()) || r.protocol.some(s => s.toLowerCase().includes(query.toLowerCase()));
+    return matchCluster && matchQuery;
+  });
+
+  const clusterLabel = { Before: 'Before the Interaction', During: 'During the Interaction', After: 'After the Interaction', Periodic: 'Periodic Evaluation' };
+
   return (
     <div style={{ paddingTop: 4 }}>
-      {/* Quick access */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-        <button onClick={() => navigate('module1-rules')} style={{
-          flex: 1, padding: '10px 8px', borderRadius: 10, border: `1px solid ${C.border}`,
-          backgroundColor: C.white, cursor: 'pointer', textAlign: 'center',
-          fontSize: 13, fontWeight: 700, color: C.primary,
-        }}>📋 Rule Cards</button>
-        <button onClick={() => navigate('module1-map')} style={{
-          flex: 1, padding: '10px 8px', borderRadius: 10, border: `1px solid ${C.border}`,
-          backgroundColor: C.white, cursor: 'pointer', textAlign: 'center',
-          fontSize: 13, fontWeight: 700, color: C.primary,
-        }}>🗺 Framework Map</button>
-      </div>
-
-      {/* Search */}
-      <div style={{ position: 'relative', marginBottom: 12 }}>
-        <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 16 }}>🔍</span>
-        <input
-          type="text"
-          placeholder="Search terms or definitions..."
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          style={{
-            width: '100%', padding: '11px 12px 11px 36px',
-            border: `1.5px solid ${C.border}`, borderRadius: 10,
-            fontSize: 14, color: C.primary, fontFamily: 'system-ui',
-            boxSizing: 'border-box', backgroundColor: C.white, outline: 'none',
-          }}
-        />
-      </div>
-
-      {/* Domain tabs */}
-      <div style={{ display: 'flex', gap: 6, marginBottom: 16, overflowX: 'auto', paddingBottom: 4 }}>
-        {[{ id: 0, label: 'All' }, ...Object.entries(DOMAIN_LABELS).map(([k, v]) => ({ id: Number(k), label: v }))].map(({ id, label }) => (
-          <button
-            key={id}
-            onClick={() => setActiveDomain(id)}
-            style={{
-              flexShrink: 0, padding: '6px 12px', borderRadius: 20,
-              border: `1.5px solid ${activeDomain === id ? (id === 0 ? C.interactive : DC[id]) : C.border}`,
-              backgroundColor: activeDomain === id ? (id === 0 ? C.interactive : DC[id]) + '18' : 'transparent',
-              color: activeDomain === id ? (id === 0 ? C.interactive : DC[id]) : C.secondary,
-              cursor: 'pointer', fontSize: 12, fontWeight: activeDomain === id ? 700 : 500,
-              whiteSpace: 'nowrap',
-            }}
-          >{label}</button>
+      {/* Tab selector */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 14, backgroundColor: C.border + '60', borderRadius: 12, padding: 4 }}>
+        {[['definitions', '📖 Definitions', 17], ['rules', '📋 Rules', 13]].map(([id, label, count]) => (
+          <button key={id} onClick={() => { setTab(id); setQuery(''); }} style={{
+            flex: 1, padding: '10px 8px', borderRadius: 8, cursor: 'pointer', border: 'none',
+            backgroundColor: tab === id ? C.white : 'transparent',
+            color: tab === id ? C.primary : C.secondary,
+            fontWeight: tab === id ? 700 : 500, fontSize: 13,
+            boxShadow: tab === id ? '0 1px 4px rgba(26,39,68,0.10)' : 'none',
+            transition: 'all 0.15s',
+          }}>
+            {label} <span style={{ fontSize: 10, opacity: 0.55 }}>{count}</span>
+          </button>
         ))}
       </div>
 
-      {/* Results count */}
-      <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>
-        {filtered.length} {filtered.length === 1 ? 'TERM' : 'TERMS'}
+      {/* Shared search */}
+      <div style={{ position: 'relative', marginBottom: 12 }}>
+        <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 16 }}>🔍</span>
+        <input type="text"
+          placeholder={tab === 'definitions' ? 'Search definitions...' : 'Search rules by title or keyword...'}
+          value={query} onChange={e => setQuery(e.target.value)}
+          style={{ width: '100%', padding: '11px 12px 11px 36px', border: `1.5px solid ${C.border}`, borderRadius: 10, fontSize: 14, color: C.primary, fontFamily: 'system-ui', boxSizing: 'border-box', backgroundColor: C.white, outline: 'none' }}
+        />
       </div>
 
-      {/* Term cards */}
-      {filtered.map(term => (
-        <button
-          key={term.id}
-          onClick={() => { setSelectedTerm(term.id); navigate('module1-term'); }}
-          style={{
-            display: 'block', width: '100%', textAlign: 'left',
-            backgroundColor: C.white, border: `1px solid ${C.border}`,
-            borderLeft: `4px solid ${DC[term.domainNum]}`,
-            borderRadius: 10, padding: '12px 14px', cursor: 'pointer', marginBottom: 8,
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{term.metaphor.symbol} {term.name}</span>
-            <span style={{ fontSize: 18, color: C.border, marginLeft: 8 }}>›</span>
+      {/* ── DEFINITIONS TAB ── */}
+      {tab === 'definitions' && (
+        <>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 14, overflowX: 'auto', paddingBottom: 4 }}>
+            {[{ id: 0, label: 'All' }, ...Object.entries(DOMAIN_LABELS).map(([k, v]) => ({ id: Number(k), label: v }))].map(({ id, label }) => (
+              <button key={id} onClick={() => setActiveDomain(id)} style={{
+                flexShrink: 0, padding: '6px 12px', borderRadius: 20,
+                border: `1.5px solid ${activeDomain === id ? (id === 0 ? C.interactive : DC[id]) : C.border}`,
+                backgroundColor: activeDomain === id ? (id === 0 ? C.interactive : DC[id]) + '18' : 'transparent',
+                color: activeDomain === id ? (id === 0 ? C.interactive : DC[id]) : C.secondary,
+                cursor: 'pointer', fontSize: 12, fontWeight: activeDomain === id ? 700 : 500, whiteSpace: 'nowrap',
+              }}>{label}</button>
+            ))}
           </div>
-          <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{term.plain}</div>
-          <div style={{ marginTop: 6 }}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: DC[term.domainNum], backgroundColor: DC[term.domainNum] + '18', padding: '2px 8px', borderRadius: 10 }}>
-              {DOMAIN_LABELS[term.domainNum]}
-            </span>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>
+            {filteredTerms.length} {filteredTerms.length === 1 ? 'DEFINITION' : 'DEFINITIONS'}
           </div>
-        </button>
-      ))}
+          {filteredTerms.map(term => (
+            <button key={term.id} onClick={() => { setSelectedTerm(term.id); navigate('module1-term'); }} style={{
+              display: 'block', width: '100%', textAlign: 'left', backgroundColor: C.white,
+              border: `1px solid ${C.border}`, borderLeft: `4px solid ${DC[term.domainNum]}`,
+              borderRadius: 10, padding: '12px 14px', cursor: 'pointer', marginBottom: 8,
+              boxShadow: '0 1px 4px rgba(26,39,68,0.05)',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+                <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{term.metaphor.symbol} {term.name}</span>
+                <span style={{ fontSize: 18, color: C.border, marginLeft: 8 }}>›</span>
+              </div>
+              <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{term.plain}</div>
+              <div style={{ marginTop: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: DC[term.domainNum], backgroundColor: DC[term.domainNum] + '18', padding: '2px 8px', borderRadius: 10 }}>{DOMAIN_LABELS[term.domainNum]}</span>
+              </div>
+            </button>
+          ))}
+          {filteredTerms.length === 0 && <Card><div style={{ textAlign: 'center', color: C.secondary, fontSize: 14, padding: '16px 0' }}>No definitions match your search.</div></Card>}
+        </>
+      )}
 
-      {filtered.length === 0 && (
-        <Card>
-          <div style={{ textAlign: 'center', color: C.secondary, fontSize: 14, padding: '16px 0' }}>
-            No terms match your search.<br />Try a different word.
+      {/* ── RULES TAB ── */}
+      {tab === 'rules' && (
+        <>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 14, overflowX: 'auto', paddingBottom: 4 }}>
+            {[
+              { id: 'All', color: C.interactive },
+              { id: 'Before', color: DC[1] },
+              { id: 'During', color: DC[3] },
+              { id: 'After', color: DC[4] },
+              { id: 'Periodic', color: DC[5] },
+            ].map(({ id, color }) => (
+              <button key={id} onClick={() => setActiveCluster(id)} style={{
+                flexShrink: 0, padding: '6px 12px', borderRadius: 20,
+                border: `1.5px solid ${activeCluster === id ? color : C.border}`,
+                backgroundColor: activeCluster === id ? color + '18' : 'transparent',
+                color: activeCluster === id ? color : C.secondary,
+                cursor: 'pointer', fontSize: 12, fontWeight: activeCluster === id ? 700 : 500, whiteSpace: 'nowrap',
+              }}>{id}</button>
+            ))}
           </div>
-        </Card>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>
+            {filteredRules.length} {filteredRules.length === 1 ? 'RULE' : 'RULES'}
+          </div>
+          {filteredRules.map(rule => (
+            <button key={rule.num} onClick={() => navigate('module1-rule-' + rule.num)} style={{
+              display: 'block', width: '100%', textAlign: 'left', backgroundColor: C.white,
+              border: `1px solid ${C.border}`, borderLeft: `4px solid ${rule.color}`,
+              borderRadius: 10, padding: '12px 14px', cursor: 'pointer', marginBottom: 8,
+              boxShadow: '0 1px 4px rgba(26,39,68,0.05)',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: rule.color, backgroundColor: rule.color + '18', padding: '2px 7px', borderRadius: 8, flexShrink: 0 }}>Rule {rule.num}</span>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{rule.title}</span>
+                </div>
+                <span style={{ fontSize: 18, color: C.border, marginLeft: 8, flexShrink: 0 }}>›</span>
+              </div>
+              <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>
+                {rule.theRule.length > 110 ? rule.theRule.substring(0, 110) + '...' : rule.theRule}
+              </div>
+              <div style={{ marginTop: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: rule.color, backgroundColor: rule.color + '18', padding: '2px 8px', borderRadius: 10 }}>
+                  {clusterLabel[rule.cluster]}
+                </span>
+              </div>
+            </button>
+          ))}
+          {filteredRules.length === 0 && <Card><div style={{ textAlign: 'center', color: C.secondary, fontSize: 14, padding: '16px 0' }}>No rules match your search.</div></Card>}
+          <button onClick={() => navigate('module1-map')} style={{ display: 'block', width: '100%', padding: '11px', borderRadius: 10, border: `1px solid ${C.border}`, backgroundColor: C.white, cursor: 'pointer', fontSize: 13, fontWeight: 600, color: C.secondary, marginTop: 4 }}>
+            🗺 Framework Map →
+          </button>
+        </>
       )}
 
       <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
@@ -3942,7 +4044,7 @@ export default function App() {
         overflow: 'hidden',
         boxShadow: '0 0 80px rgba(0,0,0,0.5)',
       }}>
-        {showWelcome && <WelcomeScreen onStart={() => setShowWelcome(false)} />}
+        {showWelcome && <WelcomeScreen onStart={() => { setShowWelcome(false); navigate('module1'); }} />}
 
         {isEmergency ? (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
