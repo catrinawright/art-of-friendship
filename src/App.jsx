@@ -35,7 +35,7 @@ const QUESTIONS = [
   {
     id: 1,
     full: 'Am I naming my need directly?',
-    sub: 'Can I state what I need in one clear sentence — without embedding it in a story, an emotion, or a context designed to make refusal feel unkind?',
+    sub: 'Can I say what I need in one short sentence — just the need, nothing added around it?',
     symbol: '🎯',
     short: 'Name it\ndirectly?',
     yesLabel: 'Yes — one clear sentence',
@@ -46,7 +46,7 @@ const QUESTIONS = [
   {
     id: 2,
     full: 'Is the information I am sharing complete?',
-    sub: 'Am I including all relevant context — including information that might lead the other person to respond in a way I do not prefer?',
+    sub: 'Am I sharing the full picture — including the parts that might make them say no?',
     symbol: '✅',
     short: 'Full picture\nshared?',
     yesLabel: 'Yes — all context included',
@@ -57,7 +57,7 @@ const QUESTIONS = [
   {
     id: 3,
     full: 'Am I prepared to accept any response — including no?',
-    sub: 'If the other person declines, sets a limit, or offers a response that does not meet my need, am I prepared to accept that without argument, renegotiation, or escalating distress?',
+    sub: 'If they say no or give me something I did not want, can I accept that without arguing, pushing back, or falling apart?',
     symbol: '🤝',
     short: 'Accept\nany answer?',
     yesLabel: 'Yes — I can accept any response',
@@ -68,7 +68,7 @@ const QUESTIONS = [
   {
     id: 4,
     full: 'What will the other person feel?',
-    sub: 'During and after this communication, will the other person feel informed and free to choose — or obligated, guilty, or responsible for my emotional outcome?',
+    sub: 'Will they feel free to say whatever they really think? Or will they feel pressured or responsible for how I feel?',
     symbol: '🫶',
     short: 'Free to\nchoose?',
     yesLabel: 'Informed and free to choose',
@@ -79,7 +79,7 @@ const QUESTIONS = [
   {
     id: 5,
     full: 'What is my actual goal?',
-    sub: 'Is my goal to communicate my need clearly and allow the other person to respond freely — or is my goal to produce a specific response from the other person?',
+    sub: 'Am I trying to say my need clearly and let them choose freely? Or am I trying to get a specific answer?',
     symbol: '🏁',
     short: 'Clear comm\nor outcome?',
     yesLabel: 'Clear communication — free response',
@@ -356,7 +356,7 @@ const AUDIT_Q = [
   {
     id: 1, symbol: '🎯',
     full: 'Did I respect the relationship category?',
-    sub: 'Was my level of disclosure, investment, and behavioral expectation aligned with where this person actually sits on my continuum?',
+    sub: 'Did I act the right way for what ring this person is actually in? Or did I push for more than the relationship supports?',
     frame: 'In this interaction, I [respected / did not respect] the relationship category because...',
     words: ['I matched my behavior to their ring', 'I shared too much for this category', 'I expected more than the ring supports', 'I stayed within the continuum correctly'],
     yesLabel: 'Yes — my behavior matched the ring',
@@ -365,7 +365,7 @@ const AUDIT_Q = [
   {
     id: 2, symbol: '📡',
     full: 'Did I respond to signals?',
-    sub: 'Did the other person send explicit or implicit signals that I did not respond to, argued against, or rationalized away?',
+    sub: 'Did they send signals — quiet or direct — that I ignored, argued with, or talked myself out of noticing?',
     frame: 'I [did / did not] adjust when signals appeared. Specifically...',
     words: ['I noticed and adjusted', 'I missed the signals', 'I noticed but continued anyway', 'I checked in and they confirmed'],
     yesLabel: 'Yes — I adjusted when signals appeared',
@@ -374,7 +374,7 @@ const AUDIT_Q = [
   {
     id: 3, symbol: '🔍',
     full: 'Did I use any manipulation strategies?',
-    sub: 'Review the seven forms below. Did any occur in this interaction — deliberately or out of habit?',
+    sub: 'Look at the 7 forms below. Did any of them show up in this conversation — on purpose or just out of habit?',
     frame: 'In this interaction, [none / one or more] of the manipulation forms occurred. Specifically...',
     words: ['No manipulation forms occurred', 'Guilt induction', 'Selective disclosure', 'Emotional escalation', 'Reciprocity exploitation', 'Dependency cultivation', 'Boundary testing', 'Reframing accountability'],
     yesLabel: 'No — I communicated directly throughout',
@@ -384,7 +384,7 @@ const AUDIT_Q = [
   {
     id: 4, symbol: '🫂',
     full: 'Did I make the other person responsible for my emotional state?',
-    sub: 'At any point, did I express distress in a way designed to produce guilt, changed behavior, or continued engagement from the other person?',
+    sub: 'Did I make them feel responsible for how I was feeling — in a way that was meant to get something from them?',
     frame: 'I [did / did not] place my emotional state on the other person because...',
     words: ['I managed my own state', 'I expressed distress that placed responsibility on them', 'I used my state to redirect the conversation', 'I named my feeling directly without creating obligation'],
     yesLabel: 'No — I managed my own state',
@@ -393,7 +393,7 @@ const AUDIT_Q = [
   {
     id: 5, symbol: '🪞',
     full: 'What would this look like from the other person\'s perspective?',
-    sub: 'If the other person were completing this same audit about you right now, what would they report? Write the most honest version you can.',
+    sub: 'If they were filling this out about you right now, what would they honestly say? Write the hardest version to write.',
     frame: 'If the other person were completing this audit, they would likely report that I...',
     words: ['communicated clearly and respectfully', 'dominated the conversation', 'adjusted well when needed', 'pushed past their signals', 'made them feel heard', 'made them feel responsible for me', 'respected their boundaries'],
     isOpenEnded: true,
@@ -445,211 +445,212 @@ const RULES_FULL = [
   {
     num: 1, cluster: 'Before', color: DC[1],
     title: 'Classify Before You Engage',
-    theRule: 'Before initiating or deepening any social interaction, identify the relationship category of the other person using the Relational Proximity Continuum. All subsequent behavior in that interaction must align with the identified category.',
+    theRule: 'Know what ring this person is in before you talk to them. Act the right way for that ring the whole time.',
     defSource: 'Relational Proximity Continuum (Term 3) · Friendship (Term 1) · Acquaintance (Term 2)',
     protocol: [
-      'Before approaching or responding to another person, pause and ask: "Where does this person currently sit on my continuum?"',
-      'Assign them a ring (1 through 5) based on observable, behavioral evidence — not emotional feeling.',
-      'Select the level of disclosure, topic, and relational investment appropriate to that ring.',
-      'Do not advance the ring based on personal desire. Advancement requires behavioral evidence from the other person.',
+      'Stop before you say anything.',
+      'Ask yourself: What ring is this person in? Use what they do — not how you feel.',
+      'Pick the right way to talk and share for that ring.',
+      'Do not move someone to a closer ring just because you want to. They have to show you through their actions.',
     ],
-    violation: 'Sharing personal, sensitive, or emotionally significant information with a person who has not yet demonstrated trusted-friend behaviors. Treating an acquaintance as a close friend before mutuality is established.',
-    correction: 'Stop the current disclosure. Redirect to a neutral topic. Internally re-assign the person to their accurate ring. Resume the interaction at the appropriate level.',
+    violation: 'Sharing personal things with someone who has not earned that level yet.',
+    correction: 'Stop. Change the topic. Put the person back in the right ring. Start again from there.',
     linkedTerms: [1, 2, 3],
   },
   {
     num: 2, cluster: 'Before', color: DC[1],
     title: 'Qualify Before You Name It',
-    theRule: 'Do not refer to a person as a friend — internally or aloud — until at least three of the following five qualifying criteria have been met consistently over time by both people.',
+    theRule: 'Do not call someone a friend — even in your head — until you both have shown at least 3 of the 5 signs.',
     defSource: 'Friendship (Term 1) · Mutual Friendship (Term 4)',
     protocol: [
-      'When you feel positively toward a person, do not assign the friendship label immediately.',
-      'Check the five criteria: (1) Voluntary contact — both initiate independently. (2) Consistent investment — interaction occurs regularly, not only by chance. (3) Mutual disclosure — both share at a similar level. (4) Emotional support — both have offered and received support. (5) Expressed care — both have demonstrated interest in the other\'s wellbeing.',
-      'Check each criterion for evidence from both parties — not only from yourself.',
-      'If fewer than three criteria are met bilaterally, classify as casual acquaintance and interact accordingly.',
-      'Revisit the criteria assessment every four to six weeks as the relationship develops.',
+      'When you feel good about someone, wait. Do not say or think "friend" yet.',
+      'Check the 5 signs: (1) You both start contact on your own. (2) You both make time — not just by chance. (3) You both share at the same level. (4) You both give and get support. (5) You both show you care about the other person.',
+      'Check both sides — not just yours.',
+      'If fewer than 3 signs are there from both of you, they are a casual friend for now.',
+      'Check again every 4 to 6 weeks.',
     ],
-    violation: 'Referring to a person as a friend, investing at the friend level, or expecting friend-level reciprocity from someone who has not met the qualifying threshold.',
-    correction: 'Re-evaluate the relationship using the criteria checklist. Recalibrate expectations and interaction behavior to match the person\'s actual ring on the continuum. Do not communicate disappointment directly to the person.',
+    violation: 'Acting like someone is a friend — or expecting friend-level things — when the signs are not there from both of you yet.',
+    correction: 'Check the 5 signs again. Change how you act to match where the relationship really is. Do not tell the person you are doing this.',
     linkedTerms: [1, 4],
   },
   {
     num: 3, cluster: 'After', color: DC[4],
     title: 'Monitor Initiation Directionality',
-    theRule: 'Track who initiates social contact over time. If you have initiated contact three or more consecutive times without the other person initiating in return, pause all outreach and reassess the relational dynamic before continuing.',
+    theRule: 'Keep track of who reaches out first. If you have reached out 3 times in a row with no return, stop and wait.',
     defSource: 'One-Directional Social Interest (Term 5) · Mutual Friendship (Term 4)',
     protocol: [
-      'Maintain a simple mental or written log of who initiates each contact — you or the other person.',
-      'After three consecutive self-initiated contacts with no return initiation, stop outreach entirely for a defined period (minimum: one week).',
-      'During the pause, observe whether the other person initiates contact independently.',
-      'If they do not initiate within the pause window, bring the pattern to a trusted adult before resuming contact.',
-      'If they do initiate, resume interaction and continue monitoring directionality.',
+      'Keep a simple note of who reaches out first each time — you or them.',
+      'If you have reached out 3 times with no return reach-out, stop all contact for at least 1 week.',
+      'During that week, see if they reach out on their own.',
+      'If they do not, talk to your trusted adult before reaching out again.',
+      'If they do reach out, resume and keep tracking.',
     ],
-    violation: 'Continuing to initiate contact at an escalating frequency when the other person is not reciprocating initiation. Interpreting non-initiation as oversight rather than as a relational signal.',
-    correction: 'Immediately cease outreach. Document the pattern. Consult a trusted adult before resuming contact. Do not confront the other person about the imbalance directly without guidance.',
+    violation: 'Reaching out more and more when the other person is not reaching back.',
+    correction: 'Stop all reach-out right away. Write down what happened. Talk to your trusted adult before you reach out again. Do not bring up the imbalance directly without guidance.',
     linkedTerms: [4, 5],
   },
   {
     num: 4, cluster: 'During', color: DC[3],
     title: 'Respond to Explicit Signals Immediately',
-    theRule: 'When another person delivers an explicit social signal — a direct verbal statement about their availability, comfort level, or boundaries — respond to it immediately, adjust behavior accordingly, and do not negotiate, redirect, or continue the prior behavior.',
+    theRule: 'When someone tells you directly what they need or do not want, stop and change right away. No arguing or explaining.',
     defSource: 'Explicit Social Signal (Term 6)',
     protocol: [
-      'Listen for direct verbal statements that communicate discomfort, unavailability, or a limit.',
-      'Acknowledge the signal verbally: "Okay, I understand" or "No problem."',
-      'Adjust behavior immediately — do not complete the interrupted sentence, topic, or request.',
-      'Do not ask why the signal was given.',
-      'Do not revisit the restricted topic or behavior within the same interaction.',
+      'Listen for direct words that show discomfort, limits, or that they need space.',
+      'Say "Okay" or "No problem" — that is all.',
+      'Stop right away. Do not finish the sentence or topic you were on.',
+      'Do not ask why.',
+      'Do not bring the topic back in this same conversation.',
     ],
-    violation: 'Continuing a topic or behavior after a direct verbal signal has been given. Asking the person to explain or justify their signal. Returning to the restricted topic later in the same interaction.',
-    correction: 'Stop the current behavior immediately. Deliver a brief acknowledgment. Redirect to a neutral topic or close the interaction respectfully. If the signal was missed in the moment, acknowledge it at the earliest appropriate opportunity.',
+    violation: 'Keeping a topic or behavior going after someone has said directly that they do not want it.',
+    correction: 'Stop right away. Say a brief "Okay." Move to a new topic or close the conversation. If you missed the signal, name it at the next natural opening.',
     linkedTerms: [6],
   },
   {
     num: 5, cluster: 'During', color: DC[3],
     title: 'Read Implicit Signal Clusters',
-    theRule: 'When two or more implicit social signals appear within a single interaction, treat the combination as a collective message that the interaction requires adjustment. Do not wait for an explicit signal before changing course.',
+    theRule: 'When you see 2 or more quiet signs that someone is pulling back, stop and check in. Do not wait for them to say it out loud.',
     defSource: 'Implicit Social Signal (Term 7) · Response Latency (Term 8)',
     protocol: [
-      'During every interaction, actively observe four signal categories: Verbal (shorter responses, monosyllabic replies, subject changes). Tonal (flat affect, decreased vocal warmth, clipped phrasing). Physical (body turning away, reduced eye contact, physical distancing). Temporal (increased response latency, delayed replies in text-based communication).',
-      'When two or more signals from different categories appear, pause the current topic.',
-      'Perform a check-in using a direct, low-pressure question: "Is this a good time to talk?" or "Do you need to go?"',
-      'Accept the response — whatever it is — without argument.',
-      'If the check-in confirms disengagement, initiate a respectful closing.',
+      'Watch for 4 kinds of quiet signs: Word signs (short answers, one-word replies, changing the subject). Tone signs (flat voice, clipped words). Body signs (looking away, turning away). Time signs (longer waits before replying).',
+      'If you see 2 or more of these, pause what you are saying.',
+      'Ask in a calm, simple way: "Is this a good time?" or "Do you need to go?"',
+      'Take whatever answer you get. No arguing.',
+      'If they are done, start to close the conversation.',
     ],
-    violation: 'Continuing the current topic or escalating intensity after two or more implicit signals have appeared. Misreading implicit signals as agreement or neutral engagement.',
-    correction: 'Pause immediately. Deliver the check-in question. Accept the response and follow the appropriate protocol — either adjust the topic or initiate a closing.',
+    violation: 'Keeping the same topic going after 2 or more quiet signs have shown up.',
+    correction: 'Stop right away. Ask the check-in question. Follow where it leads.',
     linkedTerms: [7, 8],
   },
   {
     num: 6, cluster: 'After', color: DC[4],
     title: 'Respect Response Latency',
-    theRule: 'When a person\'s response time increases significantly beyond their established baseline, do not send follow-up messages, escalate contact, or interpret the delay as confirmation of interest. Allow space and revisit at a later time.',
+    theRule: 'If someone takes much longer than usual to reply, do not send more messages. Give them space.',
     defSource: 'Response Latency (Term 8)',
     protocol: [
-      'Establish a mental baseline for each person\'s typical response time based on past interactions.',
-      'When a delay significantly exceeds the baseline, do not send a second message within the same window.',
-      'Wait a minimum of 24 hours before any follow-up in text or digital communication.',
-      'If a response eventually arrives, resume communication without referencing the delay unless the other person raises it.',
-      'If no response arrives within 72 hours of a non-urgent message, send one brief, neutral follow-up and then stop.',
+      'Learn how fast this person usually replies. That is their normal.',
+      'When they take much longer than their normal, do not send a second message yet.',
+      'Wait at least 24 hours before any follow-up.',
+      'If they reply, go back to the conversation normally. Do not mention the wait.',
+      'If they have not replied in 72 hours to a low-urgency message, send one short, neutral follow-up. Then stop.',
     ],
-    violation: 'Sending multiple follow-up messages within a short window when a response has not yet arrived. Escalating urgency in tone when the original message was not urgent. Interpreting silence as an invitation to increase contact.',
-    correction: 'Stop all follow-up contact immediately. Set a waiting period of 24 to 72 hours. Resume communication only when the waiting period has passed or when the other person responds.',
+    violation: 'Sending many follow-up messages when you have not heard back. Making the tone more urgent when the first message was not urgent.',
+    correction: 'Stop all follow-up right away. Wait 24 to 72 hours. Only reach back out after the wait is done — or when they reply.',
     linkedTerms: [8],
   },
   {
     num: 7, cluster: 'During', color: DC[3],
     title: 'Maintain Conversational Balance',
-    theRule: 'For every three statements made about yourself or your personal interests, ask at least one genuine question about the other person. Monitor the balance of the conversation in real time and adjust accordingly.',
+    theRule: 'For every 3 things you say about yourself, ask 1 real question about the other person. Watch the balance as you go.',
     defSource: 'Reciprocal Communication (Term 9)',
     protocol: [
-      'During conversation, maintain an internal running count of self-referential statements.',
-      'At the count of three, pause and ask a genuine, open-ended question directed at the other person.',
-      'Before asking the question, acknowledge what the other person last said: "That makes sense" or "I did not know that about you."',
-      'After the other person responds, actively listen — do not use their response merely as a bridge back to your own topic.',
-      'If the conversation has been one-directional for an extended period, acknowledge it: "I realize I have been doing most of the talking. What has been going on with you?"',
+      'Keep a quiet count of how many times you talk about yourself.',
+      'At 3, stop and ask a real, open question about them.',
+      'Before you ask, say something about what they last said — "That makes sense" or "I did not know that."',
+      'After they answer, actually listen. Do not use their answer as a way to go back to talking about yourself.',
+      'If you have been going for a long time, say it: "I realize I have been doing most of the talking. What has been going on with you?"',
     ],
-    violation: 'Dominating the conversational floor with self-referential content for extended periods without acknowledging the other person\'s experience. Asking questions but immediately redirecting to a self-referential response without processing the answer.',
-    correction: 'Stop speaking. Deliver a genuine question. Listen fully to the response before speaking again. Do not return to the previous self-referential topic immediately after the other person answers.',
+    violation: 'Talking about yourself for a long time without asking about the other person. Asking a question and then going right back to talking about yourself.',
+    correction: 'Stop talking. Ask a real question. Listen all the way through before you speak again.',
     linkedTerms: [9],
   },
   {
     num: 8, cluster: 'Before', color: DC[1],
     title: 'Screen Topics Before Introducing Them',
-    theRule: 'Before introducing any personal, sensitive, or high-intensity topic into a conversation, run it through a two-part screening process: relationship category check and setting check. If either check fails, default to a neutral topic.',
+    theRule: 'Before you bring up a personal or heavy topic, check two things: Is the relationship close enough? Is this the right place and time?',
     defSource: 'Topic Appropriateness (Term 10)',
     protocol: [
-      'Part A — Relationship Category Check: General interests (Acquaintance or above). Personal opinions (Casual friend or above). Personal challenges or frustrations (Friend or above). Health, family, or financial concerns (Trusted friend only). Romantic or sexual topics (Trusted friend only, and only if mutually initiated).',
-      'Part B — Setting Check: Ask — "Is the current setting, the people present, and the timing appropriate for this topic?"',
-      'If both checks pass — proceed.',
-      'If either check fails — select a neutral topic and return to the original topic only when both checks can pass.',
+      'Check 1 — How close is the relationship? General topics: Acquaintance or closer. Personal opinions: Casual friend or closer. Personal problems: Friend or closer. Health, family, or money: Trusted friend only. Romantic or sexual topics: Trusted friend only, and only if they started it.',
+      'Check 2 — Is this the right setting? Ask: Is the place, the people around us, and the timing okay for this topic?',
+      'If both checks pass, go ahead.',
+      'If either check fails, pick a neutral topic instead. Come back to this one only when both checks pass.',
     ],
-    violation: 'Introducing sensitive or personal topics in public settings, with individuals in lower relationship categories, or without confirming the other person\'s readiness or comfort.',
-    correction: 'Acknowledge the misalignment briefly if the other person signals discomfort: "I may have jumped ahead there. We can talk about something else." Redirect to a neutral topic immediately.',
+    violation: 'Bringing up sensitive or personal topics in the wrong place, with someone not close enough, or without checking if they are ready.',
+    correction: 'If they seem uncomfortable, say simply: "I think I jumped ahead. Let us talk about something else." Move on right away.',
     linkedTerms: [10],
   },
   {
     num: 9, cluster: 'During', color: DC[3],
     title: 'Structure Every Interaction',
-    theRule: 'Every social interaction — regardless of length or setting — must include a deliberate opening, a reciprocal middle, and a signaled closing. No interaction ends without a verbal close.',
+    theRule: 'Every conversation needs a clear start, a back-and-forth middle, and a proper close. Never walk away without closing.',
     defSource: 'Social Interaction Structure (Term 11)',
     protocol: [
-      'Opening: Select a contextually appropriate greeting based on the relationship category and setting. Include a forward-looking statement or genuine question to establish purpose. Read the other person\'s initial signals before proceeding.',
-      'Middle: Apply Rules 7 and 8 throughout — maintain balance and screen topics. Monitor implicit signals continuously. Pace the interaction — do not rush through topics or extend beyond the other person\'s apparent comfort window.',
-      'Closing: When the interaction has reached a natural conclusion, initiate the close. Deliver a verbal acknowledgment of the exchange: "It was good catching up with you." Include a forward-looking statement: "I will talk to you soon." Allow the other person to respond before physically disengaging.',
-      'Do not re-open a new topic after the closing has been initiated.',
+      'Opening: Use the right greeting for this person and setting. Say something to start the conversation. Check how they seem before you keep going.',
+      'Middle: Use Rules 7 and 8. Watch for quiet signs. Do not rush. Do not go longer than they seem comfortable with.',
+      'Closing: When you reach a natural stop, close on purpose. Say something about the conversation: "It was good talking to you." Add a look-ahead: "I will talk to you soon." Let them respond before you leave.',
+      'Do not open a new topic after you have started to close.',
     ],
-    violation: 'Ending an interaction abruptly without a verbal close. Re-opening a new topic after the closing has begun. Delivering a closing that does not include acknowledgment of the exchange.',
-    correction: 'If an interaction ended without a proper close, address it at the next natural opportunity: "I realized last time I just left without saying goodbye properly — that was not intentional."',
+    violation: 'Ending a conversation without saying anything. Starting a new topic after the close has begun.',
+    correction: 'If you left without closing, bring it up next time: "I realized I left without saying goodbye properly — that was not on purpose."',
     linkedTerms: [11],
   },
   {
     num: 10, cluster: 'After', color: DC[4],
     title: 'Deploy Your Trigger Inventory',
-    theRule: 'Maintain an active, updated personal inventory of known social triggers. When a known trigger activates during an interaction, deploy the assigned regulation strategy before continuing the interaction. Do not allow the triggered response to govern the interaction.',
+    theRule: 'Know your triggers before they happen. When one shows up, use your plan right away — before the reaction takes over.',
     defSource: 'Social Trigger (Term 12)',
     protocol: [
-      'In a non-triggered state, develop and document a personal trigger inventory: the specific trigger, the physical or emotional signal that announces it, and the assigned regulation strategy.',
-      'Review and update the inventory regularly — at minimum, monthly.',
-      'During an interaction, monitor for the physical or emotional signals that precede a triggered response.',
-      'At the first signal, deploy the assigned strategy before the response escalates.',
-      'If the strategy is insufficient, use a structured exit: "Excuse me for a moment" or "I need a minute — I will be right back."',
-      'Do not return to the interaction until the triggered state has fully resolved.',
+      'When you are calm, write down your triggers: the specific thing that sets them off, the first feeling or sign that it is coming, and your plan for what to do.',
+      'Read the list at least once a month.',
+      'During conversations, watch for those first signs.',
+      'At the first sign, use your plan before the reaction goes further.',
+      'If the plan is not enough, use a calm exit: "Excuse me for a moment" or "I need a minute."',
+      'Do not come back until you are fully calm.',
     ],
-    violation: 'Allowing a triggered emotional or behavioral response to unfold within the social interaction without deploying a regulation strategy. Continuing the interaction in a dysregulated state.',
-    correction: 'Exit the interaction using the structured exit phrase. Regulate in a private space. Return only when the triggered state has fully resolved. If appropriate, acknowledge the disruption briefly upon return: "I apologize for stepping away — I needed a moment."',
+    violation: 'Letting a triggered reaction happen in the middle of a conversation without using your plan.',
+    correction: 'Leave using the calm exit phrase. Calm down on your own. Come back only when you are fully calm. If it fits, say briefly: "I am sorry for stepping away — I needed a moment."',
     linkedTerms: [12],
   },
   {
     num: 11, cluster: 'After', color: DC[4],
     title: 'Accept Boundaries Without Argument',
-    theRule: 'When another person communicates a boundary — explicitly or implicitly — accept it immediately, adjust behavior without argument, and do not revisit the restricted behavior within the same interaction or use the same approach in a future interaction.',
+    theRule: 'When someone sets a limit — by word or by action — accept it right away. No arguing. Do not try the same thing again.',
     defSource: 'Social Boundary (Term 13)',
     protocol: [
-      'Recognize boundary communication in both explicit and implicit forms. Explicit: "I do not want to talk about that," "Please do not do that," "I need some space." Implicit: Subject change, physical distancing, shortened responses, non-engagement with the restricted behavior.',
-      'Stop the restricted behavior immediately upon recognizing a boundary communication.',
-      'Deliver a brief, non-defensive acknowledgment: "Okay" or "Understood — I will not do that."',
-      'Do not ask why the boundary exists.',
-      'Do not explain or justify the behavior that triggered the boundary.',
-      'Do not attempt the same behavior again in the current interaction.',
-      'In future interactions, carry forward the awareness that this boundary exists.',
+      'Notice limits in both forms. Direct words: "I do not want to talk about that." Quiet signs: changing the subject, pulling back, shorter replies.',
+      'Stop the behavior right away when you notice.',
+      'Say a short, calm "Okay" or "Got it — I will not do that."',
+      'Do not ask why the limit is there.',
+      'Do not explain or defend what you did.',
+      'Do not try the same thing again in this conversation.',
+      'In future conversations, remember this limit is there.',
     ],
-    violation: 'Continuing the restricted behavior after a boundary has been communicated. Asking the person to explain or justify their boundary. Returning to the restricted behavior in the same or a subsequent interaction.',
-    correction: 'Stop immediately upon recognizing the violation. Deliver a brief, genuine acknowledgment of the impact — not the intent: "I understand that was uncomfortable. I will not do that again." Do not over-apologize or extend the moment unnecessarily.',
+    violation: 'Keeping the same behavior going after a limit has been given. Coming back to it in the same or a later conversation.',
+    correction: 'Stop right away. Say something brief and genuine about the effect — not your intent: "I understand that was uncomfortable. I will not do that again." Do not drag it out.',
     linkedTerms: [13],
   },
   {
     num: 12, cluster: 'Periodic', color: DC[5],
     title: 'Evaluate Relationships Periodically',
-    theRule: 'Periodically — at minimum every four to six weeks — evaluate any developing or existing relationship against the five healthy friendship criteria. Use the evaluation to calibrate investment level, not to assign blame or demand change from the other person.',
+    theRule: 'Every 4 to 6 weeks, score a relationship on 5 things. Use the score to decide how much to invest.',
     defSource: 'Healthy Friendship Pattern (Term 14)',
     protocol: [
-      'Apply the five-criteria evaluation: (1) Consistent mutuality — both of you initiate contact independently. (2) Boundary respect both directions — when either of you sets a limit, the other accepts it. (3) Emotional safety — you feel free to be yourself without fear of judgment. (4) Honest, clear communication — you can state needs directly. (5) Shared investment in wellbeing — both people have offered and received support.',
-      'Score each criterion: Yes / Partially / No.',
-      'Scoring logic: 5 criteria present → invest at trusted friend level. 3-4 criteria present → invest at friend level, continue monitoring. Fewer than 3 → recalibrate to a lower ring, consult a trusted adult before increasing investment.',
-      'Apply the evaluation standard to your own conduct in the relationship as well — not only to the other person\'s behavior.',
+      'Score these 5 things: (1) Do you both reach out on your own? (2) Do you both respect limits — both ways? (3) Do you feel safe being yourself? (4) Can you both say what you need without a fight? (5) Have you both given and received support?',
+      'Give each one a Yes, Partly, or No.',
+      'Scoring: All 5 Yes → invest at the closest level. 3 to 4 Yes → invest at the friend level, keep watching. Fewer than 3 → pull back to a farther ring, talk to your trusted adult first.',
+      'Check YOUR OWN behavior against the same 5 things — not only the other person's.',
     ],
-    violation: 'Investing at a higher relational level than the evaluation supports. Skipping the evaluation when the relationship feels positive — which is precisely when objective evaluation is most important.',
-    correction: 'Complete the evaluation. Adjust investment level to match the score. Do not announce the adjustment to the other person — simply recalibrate behavior accordingly.',
+    violation: 'Investing at a closer level than the score supports. Skipping the check when things feel good — which is exactly when the check matters most.',
+    correction: 'Do the check. Move your investment to match the score. Do not tell the person you are doing this — just change how you act.',
     linkedTerms: [14],
   },
   {
     num: 13, cluster: 'Periodic', color: DC[5],
     title: 'Bring Unsafe Patterns to a Trusted Adult',
-    theRule: 'If two or more unsafe relational pattern indicators are identified in a single relationship — in another person\'s conduct or in your own — do not attempt to resolve the concern independently. Bring it to a trusted adult or counselor before making any further investment.',
+    theRule: 'If you see 2 or more warning signs in a relationship — including your own behavior — do not try to fix it alone. Tell your trusted adult first.',
     defSource: 'Exploitative or Unsafe Pattern (Term 15) · Manipulation (Term 16)',
     protocol: [
-      'Monitor all active relationships for five unsafe pattern indicators: (1) Persistent boundary violations after correction. (2) Conditional affection — warmth is withdrawn when expectations are not met. (3) Social isolation pressure — discouragement of other friendships. (4) Emotional manipulation — guilt, fear, or obligation used to influence behavior. (5) Reciprocity refusal — consistently taking without offering equivalent investment.',
-      'If two or more indicators are present: do not increase contact or relational investment. Do not confront the person independently. Do not attempt to resolve the pattern through increased accommodation.',
-      'A trusted adult qualifies when: you have an established, safe relationship with them; they are emotionally and practically able to help you assess the situation; they hold a role — counselor, therapist, case manager, family member, or mentor — that makes them qualified to offer relational guidance.',
-      'Communicate the concern using factual, observable language: describe what you observed, not what you concluded.',
-      'Follow the guidance received before resuming or discontinuing the relationship.',
-      'Apply this rule to your own conduct as well — if two or more of these indicators appear in your behavior, bring them to a trusted adult proactively rather than waiting to be confronted.',
+      'Watch for these 5 warning signs: (1) They keep crossing limits even after you said something. (2) They are warm only when you do what they want. (3) They push you away from other people in your life. (4) They use guilt, fear, or pressure to get what they want. (5) They take but do not give back.',
+      'If you see 2 or more: Do not get closer. Do not confront them on your own. Do not try to fix it by giving more.',
+      'A trusted adult is someone you know and trust, who can help you think clearly, and who holds a caring role — like a counselor, therapist, case manager, family member, or mentor.',
+      'Tell them what you saw using facts — say what happened, not what you think it means.',
+      'Follow their guidance before you do anything else in that relationship.',
+      'Use this rule for YOUR OWN behavior too. If you see warning signs in how you are acting, tell your trusted adult before someone else has to.',
     ],
-    violation: 'Continuing to invest in a relationship where two or more unsafe indicators are present without seeking guidance. Attempting to resolve an unsafe pattern independently.',
-    correction: 'Pause all relational investment immediately. Document the observed indicators. Schedule a conversation with a trusted adult within 48 hours.',
+    violation: 'Staying close to a relationship — or a pattern in yourself — when 2 or more warning signs are there, without talking to anyone.',
+    correction: 'Stop investing right away. Write down what you saw. Talk to your trusted adult within 48 hours.',
     linkedTerms: [15, 16],
   },
+]
 ];
 
 // ─── MODULE 4 DATA ────────────────────────────────────────────────────────────
@@ -1103,7 +1104,7 @@ function HomeScreen({ navigate, regState, goal }) {
       num: 1, icon: '📖', screen: 'module1',
       title: 'My Reference',
       sub: '13 Rules · 17 Definitions',
-      purpose: 'Learn the framework. Read the rules before anything else.',
+      purpose: 'Learn the rules and definitions. This is where every session starts.',
       note: 'Start here — every session',
       noteColor: C.calm,
       color: C.interactive,
@@ -1112,21 +1113,21 @@ function HomeScreen({ navigate, regState, goal }) {
       num: 2, icon: '🎯', screen: 'module4',
       title: 'Practice',
       sub: 'Scenarios · Flashcards · Trivia',
-      purpose: 'Test what you know before applying it in real situations.',
+      purpose: 'See what you know before you use it for real.',
       color: DC[3],
     },
     {
       num: 3, icon: '✉️', screen: 'module2-anchor',
       title: 'Before I Communicate',
       sub: '5-Question Checklist',
-      purpose: 'Apply the rules to a real communication before you send or say anything.',
+      purpose: 'Use the rules before you text or say something to someone.',
       color: DC[5],
     },
     {
       num: 4, icon: '📊', screen: 'module3',
       title: 'My Tracker',
       sub: 'Self-Audit · Journals · Logs',
-      purpose: 'Reflect on your conduct and monitor your patterns over time.',
+      purpose: 'Look back at what you did. Track what you notice over time.',
       color: DC[4],
     },
   ];
@@ -1155,7 +1156,7 @@ function HomeScreen({ navigate, regState, goal }) {
           YOUR LEARNING PATH
         </div>
         <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 14 }}>
-          Work through these in order. Each step requires the one before it.
+          Do these in order. Each step builds on the one before it.
         </div>
 
         {steps.map((step, i) => (
@@ -1206,12 +1207,12 @@ function HomeScreen({ navigate, regState, goal }) {
           QUICK ACCESS
         </div>
         <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 12 }}>
-          Already know the framework? Apply it now.
+          Know the rules already? Use them now.
         </div>
         {[
-          { label: '💬 About to communicate with someone', screen: 'module2-anchor', color: C.interactive },
-          { label: '🗣 In the middle of an interaction',   screen: 'module2-anchor', color: C.calm },
-          { label: '🔁 Just finished an interaction',     screen: 'navigator',       color: DC[4] },
+          { label: '💬 I want to text or say something to someone', screen: 'module2-anchor', color: C.interactive },
+          { label: '🗣 I am talking to someone right now',   screen: 'module2-anchor', color: C.calm },
+          { label: '🔁 I just finished talking to someone',     screen: 'navigator',       color: DC[4] },
           { label: '❓ I am not sure',                    screen: 'regulation',      color: C.secondary },
         ].map(({ label, screen, color }, i) => (
           <button key={i} onClick={() => navigate(screen)} style={{
@@ -1301,7 +1302,7 @@ function RegulationScreen({ navigate, onSetReg, regState }) {
       color: C.activated,
       icon: '🟡',
       label: 'Activated',
-      desc: 'My thoughts feel fast or stuck. I can still function but it takes effort.',
+      desc: 'My thoughts feel fast or stuck. I can keep going but it takes more work.',
       proceed: true,
     },
     {
@@ -1320,7 +1321,7 @@ function RegulationScreen({ navigate, onSetReg, regState }) {
         Before you continue
       </div>
       <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 20 }}>
-        Check in with yourself right now. Choose the description that fits best.
+        Check in with yourself. Pick the one that fits right now.
       </div>
 
       {states.map(({ key, color, icon, label, desc, proceed }) => (
@@ -1486,7 +1487,7 @@ function Module2Anchor({ navigate, settings }) {
       }}>
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: C.interactive, marginBottom: 2 }}>STEP 2 OF 4</div>
-          <div style={{ fontSize: 13, color: C.primary }}>This checklist applies the rules. Review them first if needed.</div>
+          <div style={{ fontSize: 13, color: C.primary }}>This checklist uses the rules. Know the rules before you start.</div>
         </div>
         <button onClick={() => navigate('module1')} style={{
           flexShrink: 0, marginLeft: 12, padding: '6px 12px', borderRadius: 8,
@@ -2431,7 +2432,7 @@ function Module3Home({ navigate, setDest, goal }) {
       )}
 
       <div style={{ fontSize: 12, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 12 }}>
-        A REGULATION CHECK-IN OPENS BEFORE EACH TOOL
+        YOU WILL CHECK IN BEFORE EACH TOOL
       </div>
 
       {tools.map(tool => (
@@ -2473,7 +2474,7 @@ function Module3Gate({ navigate, dest, onSetReg, regState }) {
     <div style={{ paddingTop: 8 }}>
       <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 6 }}>Before you open this tool</div>
       <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 20 }}>
-        Check in with yourself. This tool requires some level of processing capacity. Choose the description that fits best.
+        Check in with yourself. This tool needs some thinking. Pick the one that fits right now.
       </div>
       {states.map(({ key, color, icon, label, desc, action }) => (
         <button key={key} onClick={action} style={{
@@ -3732,7 +3733,7 @@ function WelcomeScreen({ onStart }) {
         The Art of Friendship
       </div>
       <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.72)', lineHeight: 1.7, marginBottom: 6, maxWidth: 290 }}>
-        A structured framework for understanding, building, and protecting your relationships — one rule at a time.
+        A set of rules and tools to help you build and protect your relationships.
       </div>
       <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 36 }}>
         Developed by Catrina Wright, MAT
