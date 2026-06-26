@@ -434,6 +434,22 @@ const HEALTH_CRITERIA = [
   { id: 5, label: 'Shared investment',            indicator: 'Both people have offered and received support — not only one person giving.' },
 ];
 
+const GOAL_SUGGESTIONS = [
+  { ruleNum: 1,  cluster: 'Before',   text: 'I want to check what ring someone is in before I start talking to them.' },
+  { ruleNum: 2,  cluster: 'Before',   text: 'I want to check the 5 signs before I call someone a friend this week.' },
+  { ruleNum: 8,  cluster: 'Before',   text: 'I want to check the relationship and the setting before I bring up a personal topic.' },
+  { ruleNum: 4,  cluster: 'During',   text: 'I want to stop right away the next time someone gives me a direct signal.' },
+  { ruleNum: 5,  cluster: 'During',   text: 'I want to notice quiet signs and check in before they have to say it out loud.' },
+  { ruleNum: 7,  cluster: 'During',   text: 'I want to ask one real question about the other person for every 3 things I say.' },
+  { ruleNum: 9,  cluster: 'During',   text: 'I want to close every conversation on purpose this week — say goodbye before I leave.' },
+  { ruleNum: 3,  cluster: 'After',    text: 'I want to notice who reaches out first in one relationship I am tracking.' },
+  { ruleNum: 6,  cluster: 'After',    text: 'I want to wait at least 24 hours before sending a second message this week.' },
+  { ruleNum: 10, cluster: 'After',    text: 'I want to use my trigger plan before the reaction takes over — at least once.' },
+  { ruleNum: 11, cluster: 'After',    text: 'I want to accept one limit without arguing or coming back to it later.' },
+  { ruleNum: 12, cluster: 'Periodic', text: 'I want to check one relationship against the 5 healthy friendship criteria.' },
+  { ruleNum: 13, cluster: 'Periodic', text: 'I want to name one warning sign I have noticed and bring it to my trusted adult.' },
+];
+
 const SKILL_RATINGS = [
   { value: 'internalized', label: 'I do this automatically', color: C.calm },
   { value: 'developing',   label: 'I do this when I remember', color: C.activated },
@@ -2504,12 +2520,14 @@ function Module1FrameworkMap({ navigate, setSelectedTerm }) {
 
 function Module3Home({ navigate, setDest, goal }) {
   const tools = [
-    { id: 'module3-audit',      icon: '🔍', title: 'Self-Audit',             desc: 'Review an interaction across five questions. Three formats available.', badge: 'After interaction' },
+    { id: 'module3-audit',      icon: '🔍', title: 'Self-Audit',              desc: 'Review an interaction across five questions. Three formats available.', badge: 'After interaction' },
     { id: 'module3-applied',    icon: '✅', title: 'Rule I Applied Today',    desc: 'Log one moment you deliberately used a framework rule.', badge: 'Daily' },
     { id: 'module3-skill',      icon: '📊', title: 'Skill Tracker',           desc: 'Self-rate all 13 rules — where you are today, not where you should be.', badge: 'Weekly' },
     { id: 'module3-initiation', icon: '📨', title: 'Initiation Tracker',      desc: 'Track who initiates contact in each relationship. Alerts at three consecutive.', badge: 'Ongoing' },
     { id: 'module3-journal',    icon: '📓', title: 'Bilateral Journal',        desc: 'What I observed in others. What I observed in myself.', badge: 'Weekly' },
     { id: 'module3-health',     icon: '💚', title: 'Relationship Health Check', desc: 'Score a relationship against five criteria. Calibrate investment.', badge: 'Monthly' },
+    { id: 'module3-progress',   icon: '📈', title: 'Progress Summary',         desc: 'A snapshot of your logged applications, outcomes, and patterns across sessions.', badge: 'Ongoing' },
+    { id: 'module3-quarterly',  icon: '🔎', title: 'Quarterly Self-Assessment', desc: 'Three reflective questions. Do this every 3 months.', badge: 'Quarterly' },
   ];
 
   return (
@@ -3362,6 +3380,210 @@ function Module3HealthCheck({ navigate }) {
 
 // ─── MODULE 4 SCREENS ────────────────────────────────────────────────────────
 
+function Module3Progress({ navigate }) {
+  const entries = (() => { try { return JSON.parse(localStorage.getItem('aof-applied-log') || '[]'); } catch { return []; } })();
+  const goal    = (() => { try { return localStorage.getItem('aof-weekly-goal') || ''; } catch { return ''; } })();
+
+  const realLife = entries.filter(e => e.context === 'real');
+  const practice = entries.filter(e => e.context === 'practice');
+  const outcomes = {
+    well:      entries.filter(e => e.outcome === 'well').length,
+    partly:    entries.filter(e => e.outcome === 'partly').length,
+    needsWork: entries.filter(e => e.outcome === 'needs-work').length,
+  };
+  const ruleCounts = {};
+  entries.forEach(e => { ruleCounts[e.rule] = (ruleCounts[e.rule] || 0) + 1; });
+  const topRules = Object.entries(ruleCounts).sort((a, b) => b[1] - a[1]).slice(0, 3)
+    .map(([num, count]) => ({ num: parseInt(num), count, name: RULES_SIMPLE.find(r => r.num === parseInt(num))?.title }));
+
+  const buildSummary = () => [
+    'Progress Summary',
+    goal ? `Current goal: ${goal}` : '',
+    '',
+    `Total applications logged: ${entries.length}`,
+    `Real-life applications (🌱): ${realLife.length}`,
+    `Practice sessions (📖): ${practice.length}`,
+    '',
+    outcomes.well > 0 ? `Went well: ${outcomes.well}` : '',
+    outcomes.partly > 0 ? `Partly successful: ${outcomes.partly}` : '',
+    outcomes.needsWork > 0 ? `Needs more work: ${outcomes.needsWork}` : '',
+    topRules.length > 0 ? `\nMost practiced: ${topRules.map(r => `Rule ${r.num} (${r.count}x)`).join(', ')}` : '',
+  ].filter(Boolean).join('\n');
+
+  if (entries.length === 0 && !goal) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 8 }}>Progress Summary</div>
+      <Card>
+        <div style={{ textAlign: 'center', color: C.secondary, fontSize: 14, padding: '20px 0', lineHeight: 1.6 }}>
+          No data yet. Set a goal and log some rule applications to see your progress here.
+        </div>
+      </Card>
+      <Btn label="Log a rule application →" onClick={() => navigate('module3-applied')} variant="secondary" />
+    </div>
+  );
+
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Progress Summary</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
+        A snapshot of your work across sessions. Based on your log entries.
+      </div>
+
+      {goal && (
+        <Card style={{ borderLeft: `4px solid ${C.calm}` }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4, marginBottom: 6 }}>CURRENT GOAL</div>
+          <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.6 }}>{goal}</div>
+        </Card>
+      )}
+
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 12 }}>APPLICATIONS LOGGED</div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {[
+            [entries.length, 'Total', C.primary, C.bg],
+            [realLife.length, '🌱 Real life', C.calm, C.calm + '12'],
+            [practice.length, '📖 Practice', C.interactive, C.interactive + '10'],
+          ].map(([count, label, color, bg]) => (
+            <div key={label} style={{ flex: 1, textAlign: 'center', padding: 12, backgroundColor: bg, borderRadius: 10 }}>
+              <div style={{ fontSize: 28, fontWeight: 800, color }}>{count}</div>
+              <div style={{ fontSize: 11, color, fontWeight: 600, marginTop: 4 }}>{label}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {entries.length > 0 && (
+        <Card>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>OUTCOMES</div>
+          {[['✅ Went well', C.calm, outcomes.well], ['⚡ Partly', C.activated, outcomes.partly], ['📌 Needs work', C.secondary, outcomes.needsWork]]
+            .filter(([, , count]) => count > 0)
+            .map(([label, color, count]) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <div style={{ width: 90, fontSize: 12, color, fontWeight: 600 }}>{label}</div>
+                <div style={{ flex: 1, height: 8, backgroundColor: C.bg, borderRadius: 4 }}>
+                  <div style={{ width: `${(count / entries.length) * 100}%`, height: 8, backgroundColor: color, borderRadius: 4 }} />
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 700, color, width: 20, textAlign: 'right' }}>{count}</div>
+              </div>
+          ))}
+        </Card>
+      )}
+
+      {topRules.length > 0 && (
+        <Card>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>MOST PRACTICED RULES</div>
+          {topRules.map(r => (
+            <div key={r.num} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: `1px solid ${C.border}` }}>
+              <span style={{ fontSize: 12, fontWeight: 800, color: RULES_SIMPLE.find(rs => rs.num === r.num)?.color, backgroundColor: C.border + '60', padding: '3px 8px', borderRadius: 8, flexShrink: 0 }}>R{r.num}</span>
+              <div style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.primary }}>{r.name}</div>
+              <span style={{ fontSize: 12, color: C.secondary, fontWeight: 600 }}>{r.count}×</span>
+            </div>
+          ))}
+        </Card>
+      )}
+
+      <Card style={{ backgroundColor: C.primary + '06', borderColor: C.primary + '20' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>NOTICE</div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7 }}>
+          Look at your log. What do you notice about your own patterns? What shows up most — and what is missing?
+        </div>
+      </Card>
+
+      <FacilitatorShareButton summary={buildSummary()} />
+
+      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
+        <UDLBadge label="Engagement 6.4" />
+        <UDLBadge label="Engagement 9.3" />
+      </div>
+    </div>
+  );
+}
+
+function Module3Quarterly({ navigate }) {
+  const [responses, setResponses] = useState({ q1: '', q2: '', q3: '' });
+  const [saved, setSaved] = useState(false);
+
+  const questions = [
+    { id: 'q1', label: 'PATTERNS', prompt: 'What patterns do you notice in your own behavior when you look back at your entries?' },
+    { id: 'q2', label: 'SURPRISE',  prompt: 'What surprised you the most when you reviewed your log?' },
+    { id: 'q3', label: 'NEXT FOCUS', prompt: 'What do you want to focus on next?' },
+  ];
+
+  const handleSave = () => {
+    try {
+      const entry = { date: new Date().toLocaleDateString(), ...responses };
+      const past = JSON.parse(localStorage.getItem('aof-quarterly') || '[]');
+      localStorage.setItem('aof-quarterly', JSON.stringify([entry, ...past].slice(0, 4)));
+    } catch(e) {}
+    setSaved(true);
+    setTimeout(() => setSaved(false), 6000);
+  };
+
+  const buildSummary = () => [
+    'Quarterly Self-Assessment',
+    new Date().toLocaleDateString(),
+    '',
+    'Patterns I notice:',
+    responses.q1 || '(no response)',
+    '',
+    'What surprised me:',
+    responses.q2 || '(no response)',
+    '',
+    'What I want to focus on next:',
+    responses.q3 || '(no response)',
+  ].join('\n');
+
+  const allAnswered = questions.every(q => responses[q.id].trim());
+
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Quarterly Self-Assessment</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 6 }}>
+        Do this every 3 months. Look back at your entries and answer honestly.
+      </div>
+      <div style={{ padding: '8px 12px', backgroundColor: C.interactive + '0C', border: `1px solid ${C.interactive}30`, borderRadius: 8, marginBottom: 16, fontSize: 12, color: C.secondary }}>
+        Review your Progress Summary before answering. There are no wrong answers.
+      </div>
+
+      {questions.map((q, i) => (
+        <Card key={q.id} style={{ borderLeft: `4px solid ${[DC[1], DC[3], C.calm][i]}` }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: [DC[1], DC[3], C.calm][i], letterSpacing: 0.5, marginBottom: 6 }}>{q.label}</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, lineHeight: 1.5, marginBottom: 10 }}>{q.prompt}</div>
+          <textarea
+            value={responses[q.id]}
+            onChange={e => setResponses(p => ({ ...p, [q.id]: e.target.value }))}
+            placeholder="Write your honest answer here..."
+            rows={3}
+            style={{
+              width: '100%', padding: '10px 12px',
+              border: `1.5px solid ${responses[q.id] ? [DC[1], DC[3], C.calm][i] : C.border}`,
+              borderRadius: 10, fontSize: 14, color: C.primary,
+              fontFamily: 'system-ui', resize: 'none', outline: 'none',
+              boxSizing: 'border-box', lineHeight: 1.5, transition: 'border-color 0.15s',
+            }}
+          />
+        </Card>
+      ))}
+
+      <Btn label="Save assessment" onClick={handleSave} variant={allAnswered ? 'primary' : 'ghost'} style={{ marginBottom: 4 }} />
+
+      {saved && (
+        <>
+          <MasteryCard message="You looked at yourself honestly and wrote it down. That takes more courage than most people realize." />
+          <FacilitatorShareButton summary={buildSummary()} />
+        </>
+      )}
+
+      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
+        <UDLBadge label="Engagement 9.3" />
+        <UDLBadge label="Engagement 6.4" />
+      </div>
+    </div>
+  );
+}
+
+// ─── OLD MODULE 4 SCREENS LABEL (kept for reference) ──────────────────────────
+
 function Module4Home({ navigate }) {
   const tools = [
     { id: 'module4-scenarios',  icon: '🃏', title: 'Scenario Cards',       desc: '8 pre-built scenarios with bilateral analysis. Three support levels.', badge: 'Bilateral practice' },
@@ -4075,6 +4297,11 @@ function GoalStrip({ goal, onEdit }) {
 function GoalEditor({ goal, onSave }) {
   const [editing, setEditing] = useState(!goal);
   const [draft, setDraft] = useState(goal || '');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeCluster, setActiveCluster] = useState('Before');
+
+  const clusterColors = { Before: DC[1], During: DC[3], After: DC[4], Periodic: DC[5] };
+  const filtered = GOAL_SUGGESTIONS.filter(s => s.cluster === activeCluster);
 
   if (!editing && goal) {
     return (
@@ -4083,10 +4310,9 @@ function GoalEditor({ goal, onSave }) {
           THIS WEEK'S GOAL
         </div>
         <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.6, marginBottom: 8 }}>{goal}</div>
-        <button onClick={() => setEditing(true)} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          fontSize: 12, fontWeight: 700, color: C.calm,
-        }}>Change goal →</button>
+        <button onClick={() => setEditing(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.calm }}>
+          Change goal →
+        </button>
       </Card>
     );
   }
@@ -4099,6 +4325,62 @@ function GoalEditor({ goal, onSave }) {
       <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 10 }}>
         Which rule do you want to practice this week?
       </div>
+
+      {/* Suggestions toggle */}
+      <button
+        onClick={() => setShowSuggestions(s => !s)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10,
+          background: 'none', border: `1px solid ${C.border}`, borderRadius: 8,
+          padding: '6px 12px', cursor: 'pointer', fontSize: 12, fontWeight: 700,
+          color: showSuggestions ? C.calm : C.secondary,
+          backgroundColor: showSuggestions ? C.calm + '10' : 'transparent',
+        }}
+      >
+        <span>💡</span>
+        <span>{showSuggestions ? 'Hide suggestions' : 'Need an idea? See suggested goals'}</span>
+        <span style={{ fontSize: 10, marginLeft: 2 }}>{showSuggestions ? '▲' : '▼'}</span>
+      </button>
+
+      {showSuggestions && (
+        <div style={{ marginBottom: 12, padding: '12px', backgroundColor: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
+          {/* Cluster tabs */}
+          <div style={{ display: 'flex', gap: 4, marginBottom: 10, overflowX: 'auto' }}>
+            {['Before', 'During', 'After', 'Periodic'].map(cl => (
+              <button
+                key={cl}
+                onClick={() => setActiveCluster(cl)}
+                style={{
+                  flexShrink: 0, padding: '5px 10px', borderRadius: 16, cursor: 'pointer',
+                  border: `1.5px solid ${activeCluster === cl ? clusterColors[cl] : C.border}`,
+                  backgroundColor: activeCluster === cl ? clusterColors[cl] + '18' : 'transparent',
+                  color: activeCluster === cl ? clusterColors[cl] : C.secondary,
+                  fontSize: 11, fontWeight: activeCluster === cl ? 700 : 500,
+                }}
+              >{cl}</button>
+            ))}
+          </div>
+
+          {/* Suggestion chips */}
+          {filtered.map(s => (
+            <button
+              key={s.ruleNum}
+              onClick={() => { setDraft(s.text); setShowSuggestions(false); }}
+              style={{
+                display: 'block', width: '100%', textAlign: 'left',
+                padding: '9px 12px', marginBottom: 6, borderRadius: 8, cursor: 'pointer',
+                backgroundColor: C.white, border: `1px solid ${clusterColors[s.cluster]}40`,
+                fontSize: 13, color: C.primary, lineHeight: 1.5,
+              }}
+            >
+              <span style={{ fontSize: 10, fontWeight: 800, color: clusterColors[s.cluster], marginRight: 6 }}>R{s.ruleNum}</span>
+              {s.text}
+            </button>
+          ))}
+          <div style={{ fontSize: 11, color: C.secondary, marginTop: 4 }}>Tap any suggestion to use it — then edit as needed.</div>
+        </div>
+      )}
+
       <textarea
         value={draft}
         onChange={e => setDraft(e.target.value)}
@@ -4114,7 +4396,7 @@ function GoalEditor({ goal, onSave }) {
       />
       <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
         <button
-          onClick={() => { if (draft.trim()) { onSave(draft.trim()); setEditing(false); } }}
+          onClick={() => { if (draft.trim()) { onSave(draft.trim()); setEditing(false); setShowSuggestions(false); } }}
           style={{
             flex: 1, padding: '11px', borderRadius: 8, cursor: 'pointer', border: 'none',
             backgroundColor: draft.trim() ? C.calm : C.border,
@@ -4123,7 +4405,7 @@ function GoalEditor({ goal, onSave }) {
           }}
         >Save goal</button>
         {goal && (
-          <button onClick={() => { setDraft(goal); setEditing(false); }} style={{
+          <button onClick={() => { setDraft(goal); setEditing(false); setShowSuggestions(false); }} style={{
             padding: '11px 14px', borderRadius: 8, cursor: 'pointer',
             border: `1px solid ${C.border}`, backgroundColor: 'transparent',
             color: C.secondary, fontWeight: 600, fontSize: 13,
@@ -4398,6 +4680,8 @@ export default function App() {
     'module3-initiation': 'Initiation Tracker',
     'module3-journal': 'Bilateral Journal',
     'module3-health': 'Health Check',
+    'module3-progress':  'Progress Summary',
+    'module3-quarterly': 'Quarterly Self-Assessment',
     'module2-anchor': 'Module 2',
     'module2-q1': 'Pre-Comm Checklist',
     'module2-q2': 'Pre-Comm Checklist',
@@ -4447,6 +4731,8 @@ export default function App() {
     if (screen === 'module3-initiation') return <Module3InitiationTracker navigate={navigate} />;
     if (screen === 'module3-journal') return <Module3Journal navigate={navigate} />;
     if (screen === 'module3-health') return <Module3HealthCheck navigate={navigate} />;
+    if (screen === 'module3-progress')  return <Module3Progress navigate={navigate} />;
+    if (screen === 'module3-quarterly') return <Module3Quarterly navigate={navigate} />;
     if (screen === 'module4') return <Module4Home navigate={navigate} />;
     if (screen === 'module4-scenarios') return <Module4Scenarios navigate={navigate} />;
     if (screen === 'module4-trivia') return <Module4Trivia navigate={navigate} />;
