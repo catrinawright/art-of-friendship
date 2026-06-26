@@ -650,7 +650,6 @@ const RULES_FULL = [
     correction: 'Stop investing right away. Write down what you saw. Talk to your trusted adult within 48 hours.',
     linkedTerms: [15, 16],
   },
-]
 ];
 
 // ─── MODULE 4 DATA ────────────────────────────────────────────────────────────
