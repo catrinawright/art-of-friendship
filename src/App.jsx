@@ -627,7 +627,7 @@ const RULES_FULL = [
       'Score these 5 things: (1) Do you both reach out on your own? (2) Do you both respect limits — both ways? (3) Do you feel safe being yourself? (4) Can you both say what you need without a fight? (5) Have you both given and received support?',
       'Give each one a Yes, Partly, or No.',
       'Scoring: All 5 Yes → invest at the closest level. 3 to 4 Yes → invest at the friend level, keep watching. Fewer than 3 → pull back to a farther ring, talk to your trusted adult first.',
-      'Check YOUR OWN behavior against the same 5 things — not only the other person's.',
+      'Check YOUR OWN behavior against the same 5 things — not only the other person\'s.',
     ],
     violation: 'Investing at a closer level than the score supports. Skipping the check when things feel good — which is exactly when the check matters most.',
     correction: 'Do the check. Move your investment to match the score. Do not tell the person you are doing this — just change how you act.',
