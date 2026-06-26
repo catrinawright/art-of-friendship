@@ -440,6 +440,218 @@ const SKILL_RATINGS = [
   { value: 'not-yet',      label: 'I know it but do not do it yet', color: C.secondary },
 ];
 
+// ─── COMPLETE RULES DATA ──────────────────────────────────────────────────────
+const RULES_FULL = [
+  {
+    num: 1, cluster: 'Before', color: DC[1],
+    title: 'Classify Before You Engage',
+    theRule: 'Before initiating or deepening any social interaction, identify the relationship category of the other person using the Relational Proximity Continuum. All subsequent behavior in that interaction must align with the identified category.',
+    defSource: 'Relational Proximity Continuum (Term 3) · Friendship (Term 1) · Acquaintance (Term 2)',
+    protocol: [
+      'Before approaching or responding to another person, pause and ask: "Where does this person currently sit on my continuum?"',
+      'Assign them a ring (1 through 5) based on observable, behavioral evidence — not emotional feeling.',
+      'Select the level of disclosure, topic, and relational investment appropriate to that ring.',
+      'Do not advance the ring based on personal desire. Advancement requires behavioral evidence from the other person.',
+    ],
+    violation: 'Sharing personal, sensitive, or emotionally significant information with a person who has not yet demonstrated trusted-friend behaviors. Treating an acquaintance as a close friend before mutuality is established.',
+    correction: 'Stop the current disclosure. Redirect to a neutral topic. Internally re-assign the person to their accurate ring. Resume the interaction at the appropriate level.',
+    linkedTerms: [1, 2, 3],
+  },
+  {
+    num: 2, cluster: 'Before', color: DC[1],
+    title: 'Qualify Before You Name It',
+    theRule: 'Do not refer to a person as a friend — internally or aloud — until at least three of the following five qualifying criteria have been met consistently over time by both people.',
+    defSource: 'Friendship (Term 1) · Mutual Friendship (Term 4)',
+    protocol: [
+      'When you feel positively toward a person, do not assign the friendship label immediately.',
+      'Check the five criteria: (1) Voluntary contact — both initiate independently. (2) Consistent investment — interaction occurs regularly, not only by chance. (3) Mutual disclosure — both share at a similar level. (4) Emotional support — both have offered and received support. (5) Expressed care — both have demonstrated interest in the other\'s wellbeing.',
+      'Check each criterion for evidence from both parties — not only from yourself.',
+      'If fewer than three criteria are met bilaterally, classify as casual acquaintance and interact accordingly.',
+      'Revisit the criteria assessment every four to six weeks as the relationship develops.',
+    ],
+    violation: 'Referring to a person as a friend, investing at the friend level, or expecting friend-level reciprocity from someone who has not met the qualifying threshold.',
+    correction: 'Re-evaluate the relationship using the criteria checklist. Recalibrate expectations and interaction behavior to match the person\'s actual ring on the continuum. Do not communicate disappointment directly to the person.',
+    linkedTerms: [1, 4],
+  },
+  {
+    num: 3, cluster: 'After', color: DC[4],
+    title: 'Monitor Initiation Directionality',
+    theRule: 'Track who initiates social contact over time. If you have initiated contact three or more consecutive times without the other person initiating in return, pause all outreach and reassess the relational dynamic before continuing.',
+    defSource: 'One-Directional Social Interest (Term 5) · Mutual Friendship (Term 4)',
+    protocol: [
+      'Maintain a simple mental or written log of who initiates each contact — you or the other person.',
+      'After three consecutive self-initiated contacts with no return initiation, stop outreach entirely for a defined period (minimum: one week).',
+      'During the pause, observe whether the other person initiates contact independently.',
+      'If they do not initiate within the pause window, bring the pattern to a trusted adult before resuming contact.',
+      'If they do initiate, resume interaction and continue monitoring directionality.',
+    ],
+    violation: 'Continuing to initiate contact at an escalating frequency when the other person is not reciprocating initiation. Interpreting non-initiation as oversight rather than as a relational signal.',
+    correction: 'Immediately cease outreach. Document the pattern. Consult a trusted adult before resuming contact. Do not confront the other person about the imbalance directly without guidance.',
+    linkedTerms: [4, 5],
+  },
+  {
+    num: 4, cluster: 'During', color: DC[3],
+    title: 'Respond to Explicit Signals Immediately',
+    theRule: 'When another person delivers an explicit social signal — a direct verbal statement about their availability, comfort level, or boundaries — respond to it immediately, adjust behavior accordingly, and do not negotiate, redirect, or continue the prior behavior.',
+    defSource: 'Explicit Social Signal (Term 6)',
+    protocol: [
+      'Listen for direct verbal statements that communicate discomfort, unavailability, or a limit.',
+      'Acknowledge the signal verbally: "Okay, I understand" or "No problem."',
+      'Adjust behavior immediately — do not complete the interrupted sentence, topic, or request.',
+      'Do not ask why the signal was given.',
+      'Do not revisit the restricted topic or behavior within the same interaction.',
+    ],
+    violation: 'Continuing a topic or behavior after a direct verbal signal has been given. Asking the person to explain or justify their signal. Returning to the restricted topic later in the same interaction.',
+    correction: 'Stop the current behavior immediately. Deliver a brief acknowledgment. Redirect to a neutral topic or close the interaction respectfully. If the signal was missed in the moment, acknowledge it at the earliest appropriate opportunity.',
+    linkedTerms: [6],
+  },
+  {
+    num: 5, cluster: 'During', color: DC[3],
+    title: 'Read Implicit Signal Clusters',
+    theRule: 'When two or more implicit social signals appear within a single interaction, treat the combination as a collective message that the interaction requires adjustment. Do not wait for an explicit signal before changing course.',
+    defSource: 'Implicit Social Signal (Term 7) · Response Latency (Term 8)',
+    protocol: [
+      'During every interaction, actively observe four signal categories: Verbal (shorter responses, monosyllabic replies, subject changes). Tonal (flat affect, decreased vocal warmth, clipped phrasing). Physical (body turning away, reduced eye contact, physical distancing). Temporal (increased response latency, delayed replies in text-based communication).',
+      'When two or more signals from different categories appear, pause the current topic.',
+      'Perform a check-in using a direct, low-pressure question: "Is this a good time to talk?" or "Do you need to go?"',
+      'Accept the response — whatever it is — without argument.',
+      'If the check-in confirms disengagement, initiate a respectful closing.',
+    ],
+    violation: 'Continuing the current topic or escalating intensity after two or more implicit signals have appeared. Misreading implicit signals as agreement or neutral engagement.',
+    correction: 'Pause immediately. Deliver the check-in question. Accept the response and follow the appropriate protocol — either adjust the topic or initiate a closing.',
+    linkedTerms: [7, 8],
+  },
+  {
+    num: 6, cluster: 'After', color: DC[4],
+    title: 'Respect Response Latency',
+    theRule: 'When a person\'s response time increases significantly beyond their established baseline, do not send follow-up messages, escalate contact, or interpret the delay as confirmation of interest. Allow space and revisit at a later time.',
+    defSource: 'Response Latency (Term 8)',
+    protocol: [
+      'Establish a mental baseline for each person\'s typical response time based on past interactions.',
+      'When a delay significantly exceeds the baseline, do not send a second message within the same window.',
+      'Wait a minimum of 24 hours before any follow-up in text or digital communication.',
+      'If a response eventually arrives, resume communication without referencing the delay unless the other person raises it.',
+      'If no response arrives within 72 hours of a non-urgent message, send one brief, neutral follow-up and then stop.',
+    ],
+    violation: 'Sending multiple follow-up messages within a short window when a response has not yet arrived. Escalating urgency in tone when the original message was not urgent. Interpreting silence as an invitation to increase contact.',
+    correction: 'Stop all follow-up contact immediately. Set a waiting period of 24 to 72 hours. Resume communication only when the waiting period has passed or when the other person responds.',
+    linkedTerms: [8],
+  },
+  {
+    num: 7, cluster: 'During', color: DC[3],
+    title: 'Maintain Conversational Balance',
+    theRule: 'For every three statements made about yourself or your personal interests, ask at least one genuine question about the other person. Monitor the balance of the conversation in real time and adjust accordingly.',
+    defSource: 'Reciprocal Communication (Term 9)',
+    protocol: [
+      'During conversation, maintain an internal running count of self-referential statements.',
+      'At the count of three, pause and ask a genuine, open-ended question directed at the other person.',
+      'Before asking the question, acknowledge what the other person last said: "That makes sense" or "I did not know that about you."',
+      'After the other person responds, actively listen — do not use their response merely as a bridge back to your own topic.',
+      'If the conversation has been one-directional for an extended period, acknowledge it: "I realize I have been doing most of the talking. What has been going on with you?"',
+    ],
+    violation: 'Dominating the conversational floor with self-referential content for extended periods without acknowledging the other person\'s experience. Asking questions but immediately redirecting to a self-referential response without processing the answer.',
+    correction: 'Stop speaking. Deliver a genuine question. Listen fully to the response before speaking again. Do not return to the previous self-referential topic immediately after the other person answers.',
+    linkedTerms: [9],
+  },
+  {
+    num: 8, cluster: 'Before', color: DC[1],
+    title: 'Screen Topics Before Introducing Them',
+    theRule: 'Before introducing any personal, sensitive, or high-intensity topic into a conversation, run it through a two-part screening process: relationship category check and setting check. If either check fails, default to a neutral topic.',
+    defSource: 'Topic Appropriateness (Term 10)',
+    protocol: [
+      'Part A — Relationship Category Check: General interests (Acquaintance or above). Personal opinions (Casual friend or above). Personal challenges or frustrations (Friend or above). Health, family, or financial concerns (Trusted friend only). Romantic or sexual topics (Trusted friend only, and only if mutually initiated).',
+      'Part B — Setting Check: Ask — "Is the current setting, the people present, and the timing appropriate for this topic?"',
+      'If both checks pass — proceed.',
+      'If either check fails — select a neutral topic and return to the original topic only when both checks can pass.',
+    ],
+    violation: 'Introducing sensitive or personal topics in public settings, with individuals in lower relationship categories, or without confirming the other person\'s readiness or comfort.',
+    correction: 'Acknowledge the misalignment briefly if the other person signals discomfort: "I may have jumped ahead there. We can talk about something else." Redirect to a neutral topic immediately.',
+    linkedTerms: [10],
+  },
+  {
+    num: 9, cluster: 'During', color: DC[3],
+    title: 'Structure Every Interaction',
+    theRule: 'Every social interaction — regardless of length or setting — must include a deliberate opening, a reciprocal middle, and a signaled closing. No interaction ends without a verbal close.',
+    defSource: 'Social Interaction Structure (Term 11)',
+    protocol: [
+      'Opening: Select a contextually appropriate greeting based on the relationship category and setting. Include a forward-looking statement or genuine question to establish purpose. Read the other person\'s initial signals before proceeding.',
+      'Middle: Apply Rules 7 and 8 throughout — maintain balance and screen topics. Monitor implicit signals continuously. Pace the interaction — do not rush through topics or extend beyond the other person\'s apparent comfort window.',
+      'Closing: When the interaction has reached a natural conclusion, initiate the close. Deliver a verbal acknowledgment of the exchange: "It was good catching up with you." Include a forward-looking statement: "I will talk to you soon." Allow the other person to respond before physically disengaging.',
+      'Do not re-open a new topic after the closing has been initiated.',
+    ],
+    violation: 'Ending an interaction abruptly without a verbal close. Re-opening a new topic after the closing has begun. Delivering a closing that does not include acknowledgment of the exchange.',
+    correction: 'If an interaction ended without a proper close, address it at the next natural opportunity: "I realized last time I just left without saying goodbye properly — that was not intentional."',
+    linkedTerms: [11],
+  },
+  {
+    num: 10, cluster: 'After', color: DC[4],
+    title: 'Deploy Your Trigger Inventory',
+    theRule: 'Maintain an active, updated personal inventory of known social triggers. When a known trigger activates during an interaction, deploy the assigned regulation strategy before continuing the interaction. Do not allow the triggered response to govern the interaction.',
+    defSource: 'Social Trigger (Term 12)',
+    protocol: [
+      'In a non-triggered state, develop and document a personal trigger inventory: the specific trigger, the physical or emotional signal that announces it, and the assigned regulation strategy.',
+      'Review and update the inventory regularly — at minimum, monthly.',
+      'During an interaction, monitor for the physical or emotional signals that precede a triggered response.',
+      'At the first signal, deploy the assigned strategy before the response escalates.',
+      'If the strategy is insufficient, use a structured exit: "Excuse me for a moment" or "I need a minute — I will be right back."',
+      'Do not return to the interaction until the triggered state has fully resolved.',
+    ],
+    violation: 'Allowing a triggered emotional or behavioral response to unfold within the social interaction without deploying a regulation strategy. Continuing the interaction in a dysregulated state.',
+    correction: 'Exit the interaction using the structured exit phrase. Regulate in a private space. Return only when the triggered state has fully resolved. If appropriate, acknowledge the disruption briefly upon return: "I apologize for stepping away — I needed a moment."',
+    linkedTerms: [12],
+  },
+  {
+    num: 11, cluster: 'After', color: DC[4],
+    title: 'Accept Boundaries Without Argument',
+    theRule: 'When another person communicates a boundary — explicitly or implicitly — accept it immediately, adjust behavior without argument, and do not revisit the restricted behavior within the same interaction or use the same approach in a future interaction.',
+    defSource: 'Social Boundary (Term 13)',
+    protocol: [
+      'Recognize boundary communication in both explicit and implicit forms. Explicit: "I do not want to talk about that," "Please do not do that," "I need some space." Implicit: Subject change, physical distancing, shortened responses, non-engagement with the restricted behavior.',
+      'Stop the restricted behavior immediately upon recognizing a boundary communication.',
+      'Deliver a brief, non-defensive acknowledgment: "Okay" or "Understood — I will not do that."',
+      'Do not ask why the boundary exists.',
+      'Do not explain or justify the behavior that triggered the boundary.',
+      'Do not attempt the same behavior again in the current interaction.',
+      'In future interactions, carry forward the awareness that this boundary exists.',
+    ],
+    violation: 'Continuing the restricted behavior after a boundary has been communicated. Asking the person to explain or justify their boundary. Returning to the restricted behavior in the same or a subsequent interaction.',
+    correction: 'Stop immediately upon recognizing the violation. Deliver a brief, genuine acknowledgment of the impact — not the intent: "I understand that was uncomfortable. I will not do that again." Do not over-apologize or extend the moment unnecessarily.',
+    linkedTerms: [13],
+  },
+  {
+    num: 12, cluster: 'Periodic', color: DC[5],
+    title: 'Evaluate Relationships Periodically',
+    theRule: 'Periodically — at minimum every four to six weeks — evaluate any developing or existing relationship against the five healthy friendship criteria. Use the evaluation to calibrate investment level, not to assign blame or demand change from the other person.',
+    defSource: 'Healthy Friendship Pattern (Term 14)',
+    protocol: [
+      'Apply the five-criteria evaluation: (1) Consistent mutuality — both of you initiate contact independently. (2) Boundary respect both directions — when either of you sets a limit, the other accepts it. (3) Emotional safety — you feel free to be yourself without fear of judgment. (4) Honest, clear communication — you can state needs directly. (5) Shared investment in wellbeing — both people have offered and received support.',
+      'Score each criterion: Yes / Partially / No.',
+      'Scoring logic: 5 criteria present → invest at trusted friend level. 3-4 criteria present → invest at friend level, continue monitoring. Fewer than 3 → recalibrate to a lower ring, consult a trusted adult before increasing investment.',
+      'Apply the evaluation standard to your own conduct in the relationship as well — not only to the other person\'s behavior.',
+    ],
+    violation: 'Investing at a higher relational level than the evaluation supports. Skipping the evaluation when the relationship feels positive — which is precisely when objective evaluation is most important.',
+    correction: 'Complete the evaluation. Adjust investment level to match the score. Do not announce the adjustment to the other person — simply recalibrate behavior accordingly.',
+    linkedTerms: [14],
+  },
+  {
+    num: 13, cluster: 'Periodic', color: DC[5],
+    title: 'Bring Unsafe Patterns to a Trusted Adult',
+    theRule: 'If two or more unsafe relational pattern indicators are identified in a single relationship — in another person\'s conduct or in your own — do not attempt to resolve the concern independently. Bring it to a trusted adult or counselor before making any further investment.',
+    defSource: 'Exploitative or Unsafe Pattern (Term 15) · Manipulation (Term 16)',
+    protocol: [
+      'Monitor all active relationships for five unsafe pattern indicators: (1) Persistent boundary violations after correction. (2) Conditional affection — warmth is withdrawn when expectations are not met. (3) Social isolation pressure — discouragement of other friendships. (4) Emotional manipulation — guilt, fear, or obligation used to influence behavior. (5) Reciprocity refusal — consistently taking without offering equivalent investment.',
+      'If two or more indicators are present: do not increase contact or relational investment. Do not confront the person independently. Do not attempt to resolve the pattern through increased accommodation.',
+      'A trusted adult qualifies when: you have an established, safe relationship with them; they are emotionally and practically able to help you assess the situation; they hold a role — counselor, therapist, case manager, family member, or mentor — that makes them qualified to offer relational guidance.',
+      'Communicate the concern using factual, observable language: describe what you observed, not what you concluded.',
+      'Follow the guidance received before resuming or discontinuing the relationship.',
+      'Apply this rule to your own conduct as well — if two or more of these indicators appear in your behavior, bring them to a trusted adult proactively rather than waiting to be confronted.',
+    ],
+    violation: 'Continuing to invest in a relationship where two or more unsafe indicators are present without seeking guidance. Attempting to resolve an unsafe pattern independently.',
+    correction: 'Pause all relational investment immediately. Document the observed indicators. Schedule a conversation with a trusted adult within 48 hours.',
+    linkedTerms: [15, 16],
+  },
+];
+
 // ─── MODULE 4 DATA ────────────────────────────────────────────────────────────
 
 const SCENARIOS = [
@@ -1870,7 +2082,7 @@ function Module1RuleCards({ navigate }) {
   return (
     <div style={{ paddingTop: 4 }}>
       <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
-        The 13 rules organized into four clusters. Carry the cluster that fits your current moment.
+        The 13 rules organized into four clusters. Tap any rule to read the full protocol.
       </div>
 
       {RULE_CARDS.map((cluster, ci) => (
@@ -1899,7 +2111,13 @@ function Module1RuleCards({ navigate }) {
                     <span style={{ fontSize: 11, fontWeight: 800, color: cluster.color, backgroundColor: cluster.color + '18', padding: '2px 7px', borderRadius: 8, flexShrink: 0 }}>Rule {rule.num}</span>
                     <span style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>{rule.title}</span>
                   </div>
-                  <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, paddingLeft: 4 }}>{rule.plain}</div>
+                  <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, paddingLeft: 4, marginBottom: 8 }}>{rule.plain}</div>
+                  <button onClick={() => navigate('module1-rule-' + rule.num)} style={{
+                    background: 'none', border: `1px solid ${cluster.color}60`,
+                    borderRadius: 8, padding: '5px 12px', cursor: 'pointer',
+                    fontSize: 12, fontWeight: 700, color: cluster.color,
+                    backgroundColor: cluster.color + '0C',
+                  }}>Read full rule →</button>
                 </div>
               ))}
             </div>
@@ -1911,6 +2129,110 @@ function Module1RuleCards({ navigate }) {
         <UDLBadge label="Rep 1.1" />
         <UDLBadge label="Expr 6.3" />
         <UDLBadge label="Engagement 8.1" />
+      </div>
+    </div>
+  );
+}
+
+function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm }) {
+  const rule = RULES_FULL.find(r => r.num === ruleNum) || RULES_FULL[0];
+  const clusterLabels = { Before: 'Before the Interaction', During: 'During the Interaction', After: 'After the Interaction', Periodic: 'Periodic Evaluation' };
+
+  return (
+    <div style={{ paddingTop: 4 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+        <div style={{
+          width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+          backgroundColor: rule.color + '18', border: `1.5px solid ${rule.color}40`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 14, fontWeight: 800, color: rule.color,
+        }}>R{rule.num}</div>
+        <div>
+          <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, lineHeight: 1.2 }}>{rule.title}</div>
+          <span style={{ fontSize: 11, fontWeight: 700, color: rule.color, backgroundColor: rule.color + '18', padding: '2px 8px', borderRadius: 10 }}>
+            {clusterLabels[rule.cluster]}
+          </span>
+        </div>
+      </div>
+
+      {/* The Rule */}
+      <div style={{ backgroundColor: rule.color + '0E', borderRadius: 12, borderLeft: `4px solid ${rule.color}`, padding: 14, marginBottom: 12 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: rule.color, letterSpacing: 0.4, marginBottom: 6 }}>THE RULE</div>
+        <div style={{ fontSize: 15, fontWeight: 700, color: C.primary, lineHeight: 1.6 }}>{rule.theRule}</div>
+      </div>
+
+      {/* Definition Source */}
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 6 }}>DERIVED FROM</div>
+        <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>{rule.defSource}</div>
+        {rule.linkedTerms.length > 0 && (
+          <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+            {rule.linkedTerms.map(id => {
+              const term = TERMS.find(t => t.id === id);
+              return term ? (
+                <button key={id} onClick={() => { setSelectedTerm(id); navigate('module1-term'); }} style={{
+                  padding: '4px 10px', borderRadius: 8, cursor: 'pointer',
+                  border: `1px solid ${DC[term.domainNum]}60`,
+                  backgroundColor: DC[term.domainNum] + '12',
+                  fontSize: 12, fontWeight: 600, color: DC[term.domainNum],
+                }}>{term.metaphor.symbol} {term.name} →</button>
+              ) : null;
+            })}
+          </div>
+        )}
+      </Card>
+
+      {/* Behavioral Protocol */}
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>BEHAVIORAL PROTOCOL</div>
+        {rule.protocol.map((step, i) => (
+          <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
+            <div style={{
+              width: 22, height: 22, borderRadius: 11, flexShrink: 0,
+              backgroundColor: rule.color + '18', border: `1px solid ${rule.color}40`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 11, fontWeight: 800, color: rule.color, marginTop: 1,
+            }}>{i + 1}</div>
+            <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65, flex: 1 }}>{step}</div>
+          </div>
+        ))}
+      </Card>
+
+      {/* Violation Indicator */}
+      <Card style={{ borderLeft: `4px solid ${C.activated}` }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.activated, letterSpacing: 0.4, marginBottom: 6 }}>VIOLATION INDICATOR</div>
+        <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65 }}>{rule.violation}</div>
+      </Card>
+
+      {/* Correction Pathway */}
+      <Card style={{ borderLeft: `4px solid ${C.calm}` }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4, marginBottom: 6 }}>CORRECTION PATHWAY</div>
+        <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65 }}>{rule.correction}</div>
+      </Card>
+
+      {/* Navigation */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+        {rule.num > 1 && (
+          <button onClick={() => navigate('module1-rule-' + (rule.num - 1))} style={{
+            flex: 1, padding: '12px', borderRadius: 10, cursor: 'pointer',
+            border: `1px solid ${C.border}`, backgroundColor: C.white,
+            fontSize: 13, fontWeight: 600, color: C.secondary,
+          }}>← Rule {rule.num - 1}</button>
+        )}
+        {rule.num < 13 && (
+          <button onClick={() => navigate('module1-rule-' + (rule.num + 1))} style={{
+            flex: 1, padding: '12px', borderRadius: 10, cursor: 'pointer',
+            border: `1px solid ${C.border}`, backgroundColor: C.white,
+            fontSize: 13, fontWeight: 600, color: C.secondary,
+          }}>Rule {rule.num + 1} →</button>
+        )}
+      </div>
+
+      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
+        <UDLBadge label="Rep 2.5" />
+        <UDLBadge label="Rep 3.2" />
+        <UDLBadge label="Expr 6.3" />
       </div>
     </div>
   );
@@ -3483,6 +3805,7 @@ export default function App() {
   });
   const [answers, setAnswers] = useState({});
   const [selectedTermId, setSelectedTermId] = useState(1);
+  const [selectedRule, setSelectedRule] = useState(1);
   const [module3Dest, setModule3Dest] = useState('module3-audit');
 
   const weekly_goal = "This week I will practice Rule 4 when I notice someone changing the subject.";
@@ -3524,6 +3847,7 @@ export default function App() {
     'module1-term': 'Term Detail',
     'module1-rules': 'Rule Cards',
     'module1-map': 'Framework Map',
+    'module1-rule': 'Rule Detail',
     module4: 'Practice',
     'module4-scenarios': 'Scenario Cards',
     'module4-trivia': 'Rule Trivia',
@@ -3551,6 +3875,9 @@ export default function App() {
   };
 
   const showBack = screen !== 'home' && screen !== 'emergency';
+  const screenTitle = screen.startsWith('module1-rule-')
+    ? 'Rule ' + screen.replace('module1-rule-', '')
+    : screenTitles[screen];
 
   const renderScreen = () => {
     if (screen === 'home') return <HomeScreen navigate={navigate} regState={regState} goal={weekly_goal} />;
@@ -3570,6 +3897,11 @@ export default function App() {
     if (screen === 'module1-term') return <Module1TermDetail navigate={navigate} termId={selectedTermId} settings={settings} />;
     if (screen === 'module1-rules') return <Module1RuleCards navigate={navigate} />;
     if (screen === 'module1-map') return <Module1FrameworkMap navigate={navigate} setSelectedTerm={setSelectedTermId} />;
+    // Rule detail — handles module1-rule-1 through module1-rule-13
+    if (screen.startsWith('module1-rule-')) {
+      const num = parseInt(screen.replace('module1-rule-', ''));
+      return <Module1RuleDetail navigate={navigate} ruleNum={num} setSelectedTerm={setSelectedTermId} />;
+    }
     if (screen === 'module3') return <Module3Home navigate={navigate} setDest={setModule3Dest} goal={weekly_goal} />;
     if (screen === 'module3-gate') return <Module3Gate navigate={navigate} dest={module3Dest} onSetReg={setRegState} regState={regState} />;
     if (screen === 'module3-audit') return <Module3SelfAudit navigate={navigate} settings={settings} />;
@@ -3622,7 +3954,7 @@ export default function App() {
         ) : (
           <Shell
             regState={regState}
-            title={screenTitles[screen]}
+            title={screenTitle}
             onBack={showBack ? goBack : null}
             onEmergency={handleEmergency}
             onSettings={() => setShowSettings(true)}
