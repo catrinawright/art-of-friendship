@@ -2016,8 +2016,25 @@ function Module1TermDetail({ navigate, termId, settings }) {
   const term = TERMS.find(t => t.id === termId) || TERMS[0];
 
   const handleAudio = () => {
+    if (!window.speechSynthesis) {
+      setAudioState('done');
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(term.audioText);
+    utterance.rate = 0.88;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    utterance.onstart = () => setAudioState('playing');
+    utterance.onend = () => setAudioState('done');
+    utterance.onerror = () => setAudioState('done');
     setAudioState('playing');
-    setTimeout(() => setAudioState('done'), 1800);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleAudioStop = () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    setAudioState('idle');
   };
 
   const tabs = [
@@ -2144,20 +2161,31 @@ function Module1TermDetail({ navigate, termId, settings }) {
                 cursor: 'pointer', fontSize: 32, color: '#fff',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 margin: '0 auto 16px',
+                boxShadow: `0 4px 16px ${DC[term.domainNum]}44`,
               }}>▶</button>
             )}
             {audioState === 'playing' && (
-              <div style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: C.calm + '22', border: `2px solid ${C.calm}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 28 }}>
-                🎵
-              </div>
+              <button onClick={handleAudioStop} style={{
+                width: 72, height: 72, borderRadius: 36,
+                backgroundColor: C.overwhelmed, border: 'none',
+                cursor: 'pointer', fontSize: 28, color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 16px',
+                boxShadow: `0 4px 16px ${C.overwhelmed}44`,
+              }}>⏹</button>
             )}
             {audioState === 'done' && (
-              <div style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: C.calm + '22', border: `2px solid ${C.calm}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 28 }}>
-                ✓
-              </div>
+              <button onClick={handleAudio} style={{
+                width: 72, height: 72, borderRadius: 36,
+                backgroundColor: C.calm, border: 'none',
+                cursor: 'pointer', fontSize: 28, color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 16px',
+                boxShadow: `0 4px 16px ${C.calm}44`,
+              }}>↺</button>
             )}
-            <div style={{ fontSize: 12, color: C.secondary }}>
-              {audioState === 'idle' ? 'Tap to play' : audioState === 'playing' ? 'Playing...' : 'Complete'}
+            <div style={{ fontSize: 13, color: C.secondary, fontWeight: 600 }}>
+              {audioState === 'idle' ? 'Tap to hear the definition' : audioState === 'playing' ? 'Playing — tap ⏹ to stop' : 'Tap ↺ to play again'}
             </div>
           </Card>
 
@@ -2176,7 +2204,7 @@ function Module1TermDetail({ navigate, termId, settings }) {
       )}
 
       {/* Rule link */}
-      <button onClick={() => navigate('module1-rules')} style={{
+      <button onClick={() => navigate('module1-rule-' + term.linkedRule)} style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         width: '100%', padding: '12px 14px', marginTop: 8,
         backgroundColor: C.white, border: `1px solid ${C.border}`,
@@ -2403,12 +2431,16 @@ function Module1FrameworkMap({ navigate, setSelectedTerm }) {
                 <div style={{ fontSize: 11, color: C.secondary, marginBottom: 4 }}>↓ Generates</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                   {[...new Set(domainTerms.map(t => t.linkedRule))].sort((a,b) => a-b).map(ruleNum => (
-                    <span key={ruleNum} style={{
-                      padding: '4px 8px', borderRadius: 8,
-                      backgroundColor: '#F0F4F8',
-                      border: `1px solid ${C.border}`,
-                      fontSize: 11, fontWeight: 700, color: C.secondary,
-                    }}>Rule {ruleNum}</span>
+                    <button
+                      key={ruleNum}
+                      onClick={() => navigate('module1-rule-' + ruleNum)}
+                      style={{
+                        padding: '4px 10px', borderRadius: 8, cursor: 'pointer',
+                        backgroundColor: C.interactive + '12',
+                        border: `1px solid ${C.interactive}50`,
+                        fontSize: 11, fontWeight: 700, color: C.interactive,
+                      }}
+                    >Rule {ruleNum} →</button>
                   ))}
                 </div>
               </div>
