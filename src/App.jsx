@@ -856,13 +856,14 @@ function Footer({ onGrounding, state }) {
   );
 }
 
-function Shell({ children, regState, onEmergency, onSettings, onGrounding, title, onBack, noFooter }) {
+function Shell({ children, regState, onEmergency, onSettings, onGrounding, title, onBack, noFooter, goal, onGoalEdit }) {
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', height: '100%',
       backgroundColor: C.bg, overflow: 'hidden',
     }}>
       <RegBar state={regState} />
+      <GoalStrip goal={goal} onEdit={onGoalEdit} />
       <Header
         title={title} onBack={onBack}
         onEmergency={onEmergency} onSettings={onSettings}
@@ -1097,7 +1098,7 @@ function SettingsPanel({ settings, onChange, onClose }) {
 
 // ─── SCREENS ──────────────────────────────────────────────────────────────────
 
-function HomeScreen({ navigate, regState, goal }) {
+function HomeScreen({ navigate, regState, goal, saveGoal }) {
   const steps = [
     {
       num: 1, icon: '📖', screen: 'module1',
@@ -1224,13 +1225,8 @@ function HomeScreen({ navigate, regState, goal }) {
         ))}
       </div>
 
-      {/* Weekly goal */}
-      {goal && (
-        <Card style={{ borderLeft: `4px solid ${C.calm}`, marginTop: 4 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.5, marginBottom: 6 }}>THIS WEEK'S GOAL</div>
-          <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.5 }}>{goal}</div>
-        </Card>
-      )}
+      {/* Goal editor */}
+      <GoalEditor goal={goal} onSave={saveGoal} />
 
       <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
         <UDLBadge label="Engagement 7.1" />
@@ -1467,7 +1463,7 @@ function EmergencyScreen({ navigate }) {
 
 // ─── MODULE 2 SCREENS ─────────────────────────────────────────────────────────
 
-function Module2Anchor({ navigate, settings }) {
+function Module2Anchor({ navigate, settings, showTerm }) {
   const isActivated = settings.activatedMode;
   return (
     <div style={{ paddingTop: 8 }}>
@@ -1495,7 +1491,29 @@ function Module2Anchor({ navigate, settings }) {
         }}>Rules →</button>
       </div>
 
-      {/* Physical anchor reminder */}
+      {/* Related terms — tap to preview without leaving */}
+      <div style={{ marginBottom: 18 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>
+          TERMS USED IN THIS CHECKLIST
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {[9, 13, 15, 16, 6, 14].map(id => {
+            const term = TERMS.find(t => t.id === id);
+            return term ? (
+              <button key={id} onClick={() => showTerm(id)} style={{
+                padding: '5px 11px', borderRadius: 8, cursor: 'pointer',
+                border: `1px solid ${DC[term.domainNum]}60`,
+                backgroundColor: DC[term.domainNum] + '12',
+                fontSize: 12, fontWeight: 600, color: DC[term.domainNum],
+                display: 'flex', alignItems: 'center', gap: 4,
+              }}>
+                {term.metaphor.symbol} {term.name}
+                <span style={{ fontSize: 10, opacity: 0.7 }}>ⓘ</span>
+              </button>
+            ) : null;
+          })}
+        </div>
+      </div>
       <div style={{
         backgroundColor: C.calm + '18',
         border: `1.5px solid ${C.calm}`,
@@ -2236,7 +2254,7 @@ function Module1RuleCards({ navigate }) {
   );
 }
 
-function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm }) {
+function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
   const rule = RULES_FULL.find(r => r.num === ruleNum) || RULES_FULL[0];
   const clusterLabels = { Before: 'Before the Interaction', During: 'During the Interaction', After: 'After the Interaction', Periodic: 'Periodic Evaluation' };
 
@@ -2273,12 +2291,16 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm }) {
             {rule.linkedTerms.map(id => {
               const term = TERMS.find(t => t.id === id);
               return term ? (
-                <button key={id} onClick={() => { setSelectedTerm(id); navigate('module1-term'); }} style={{
-                  padding: '4px 10px', borderRadius: 8, cursor: 'pointer',
+                <button key={id} onClick={() => showTerm(id)} style={{
+                  padding: '5px 11px', borderRadius: 8, cursor: 'pointer',
                   border: `1px solid ${DC[term.domainNum]}60`,
                   backgroundColor: DC[term.domainNum] + '12',
                   fontSize: 12, fontWeight: 600, color: DC[term.domainNum],
-                }}>{term.metaphor.symbol} {term.name} →</button>
+                  display: 'flex', alignItems: 'center', gap: 4,
+                }}>
+                  {term.metaphor.symbol} {term.name}
+                  <span style={{ fontSize: 10, opacity: 0.7 }}>ⓘ</span>
+                </button>
               ) : null;
             })}
           </div>
@@ -3710,6 +3732,167 @@ Respond with ONLY valid JSON, no markdown, no explanation:
 
 
 
+// ─── TERM POPUP ───────────────────────────────────────────────────────────────
+
+function TermPopup({ termId, onClose, onNavigate }) {
+  const term = TERMS.find(t => t.id === termId);
+  if (!term) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'absolute', inset: 0, zIndex: 250,
+        backgroundColor: 'rgba(26,39,68,0.55)',
+        display: 'flex', alignItems: 'flex-end',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: '100%', backgroundColor: C.white,
+          borderRadius: '20px 20px 0 0',
+          padding: '20px 20px 28px',
+          boxShadow: '0 -6px 32px rgba(26,39,68,0.18)',
+        }}
+      >
+        {/* Drag handle */}
+        <div style={{ width: 36, height: 4, borderRadius: 2, backgroundColor: C.border, margin: '0 auto 16px' }} />
+
+        {/* Term identity */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: 12, flexShrink: 0,
+            backgroundColor: DC[term.domainNum] + '18',
+            border: `1.5px solid ${DC[term.domainNum]}40`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24,
+          }}>{term.metaphor.symbol}</div>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 3 }}>{term.name}</div>
+            <span style={{ fontSize: 10, fontWeight: 700, color: DC[term.domainNum], backgroundColor: DC[term.domainNum] + '18', padding: '2px 8px', borderRadius: 10 }}>
+              {DOMAIN_LABELS[term.domainNum]}
+            </span>
+          </div>
+        </div>
+
+        {/* Plain definition */}
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 10 }}>
+          {term.plain}
+        </div>
+
+        {/* Boundary clause */}
+        <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6, marginBottom: 18, padding: '8px 12px', backgroundColor: C.bg, borderRadius: 8 }}>
+          <span style={{ fontWeight: 700 }}>Limit: </span>{term.boundary}
+        </div>
+
+        {/* Actions */}
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={onNavigate} style={{
+            flex: 1, padding: '13px', borderRadius: 10, cursor: 'pointer', border: 'none',
+            backgroundColor: C.interactive, color: '#fff', fontWeight: 700, fontSize: 14,
+            boxShadow: '0 3px 10px rgba(61,95,200,0.3)',
+          }}>See full definition →</button>
+          <button onClick={onClose} style={{
+            padding: '13px 16px', borderRadius: 10, cursor: 'pointer',
+            border: `1px solid ${C.border}`, backgroundColor: 'transparent',
+            color: C.secondary, fontWeight: 600, fontSize: 13,
+          }}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── GOAL STRIP ───────────────────────────────────────────────────────────────
+
+function GoalStrip({ goal, onEdit }) {
+  if (!goal) return null;
+  return (
+    <div style={{
+      backgroundColor: C.calm + '14',
+      borderBottom: `1px solid ${C.calm}28`,
+      padding: '5px 16px',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      flexShrink: 0, minHeight: 32,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 0 }}>
+        <span style={{ fontSize: 11, flexShrink: 0 }}>🎯</span>
+        <div style={{ fontSize: 12, color: C.primary, lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <span style={{ fontWeight: 700, color: C.calm }}>This week: </span>
+          <span>{goal}</span>
+        </div>
+      </div>
+      <button onClick={onEdit} style={{
+        flexShrink: 0, marginLeft: 8, background: 'none', border: 'none',
+        cursor: 'pointer', fontSize: 11, fontWeight: 700, color: C.calm, padding: '2px 4px',
+      }}>Edit</button>
+    </div>
+  );
+}
+
+// ─── GOAL EDITOR ──────────────────────────────────────────────────────────────
+
+function GoalEditor({ goal, onSave }) {
+  const [editing, setEditing] = useState(!goal);
+  const [draft, setDraft] = useState(goal || '');
+
+  if (!editing && goal) {
+    return (
+      <Card style={{ borderLeft: `4px solid ${C.calm}` }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.5, marginBottom: 6 }}>
+          THIS WEEK'S GOAL
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.6, marginBottom: 8 }}>{goal}</div>
+        <button onClick={() => setEditing(true)} style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontSize: 12, fontWeight: 700, color: C.calm,
+        }}>Change goal →</button>
+      </Card>
+    );
+  }
+
+  return (
+    <Card style={{ borderLeft: `4px solid ${C.calm}` }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.5, marginBottom: 4 }}>
+        {goal ? 'CHANGE THIS WEEK\'S GOAL' : 'SET YOUR GOAL FOR THIS WEEK'}
+      </div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 10 }}>
+        Which rule do you want to practice this week?
+      </div>
+      <textarea
+        value={draft}
+        onChange={e => setDraft(e.target.value)}
+        placeholder="I want to practice..."
+        rows={2}
+        style={{
+          width: '100%', padding: '10px 12px',
+          border: `1.5px solid ${draft ? C.calm : C.border}`, borderRadius: 10,
+          fontSize: 14, color: C.primary, fontFamily: 'system-ui',
+          resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5,
+          transition: 'border-color 0.15s',
+        }}
+      />
+      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+        <button
+          onClick={() => { if (draft.trim()) { onSave(draft.trim()); setEditing(false); } }}
+          style={{
+            flex: 1, padding: '11px', borderRadius: 8, cursor: 'pointer', border: 'none',
+            backgroundColor: draft.trim() ? C.calm : C.border,
+            color: '#fff', fontWeight: 700, fontSize: 14,
+            boxShadow: draft.trim() ? '0 3px 10px rgba(42,157,143,0.3)' : 'none',
+          }}
+        >Save goal</button>
+        {goal && (
+          <button onClick={() => { setDraft(goal); setEditing(false); }} style={{
+            padding: '11px 14px', borderRadius: 8, cursor: 'pointer',
+            border: `1px solid ${C.border}`, backgroundColor: 'transparent',
+            color: C.secondary, fontWeight: 600, fontSize: 13,
+          }}>Cancel</button>
+        )}
+      </div>
+    </Card>
+  );
+}
+
 // ─── WELCOME SCREEN ───────────────────────────────────────────────────────────
 
 function WelcomeScreen({ onStart }) {
@@ -3910,7 +4093,18 @@ export default function App() {
   const [selectedRule, setSelectedRule] = useState(1);
   const [module3Dest, setModule3Dest] = useState('module3-audit');
 
-  const weekly_goal = "This week I will practice Rule 4 when I notice someone changing the subject.";
+  // Goal — persisted in localStorage so it survives browser close
+  const [weeklyGoal, setWeeklyGoal] = useState(() => {
+    try { return localStorage.getItem('aof-weekly-goal') || ''; } catch { return ''; }
+  });
+  const saveGoal = (goal) => {
+    setWeeklyGoal(goal);
+    try { localStorage.setItem('aof-weekly-goal', goal); } catch (e) {}
+  };
+
+  // Term popup — shows a term definition without leaving the current screen
+  const [termPopupId, setTermPopupId] = useState(null);
+  const showTerm = (id) => setTermPopupId(id);
 
   const navigate = (to) => {
     setPrevScreen(screen);
@@ -3982,12 +4176,12 @@ export default function App() {
     : screenTitles[screen];
 
   const renderScreen = () => {
-    if (screen === 'home') return <HomeScreen navigate={navigate} regState={regState} goal={weekly_goal} />;
+    if (screen === 'home') return <HomeScreen navigate={navigate} regState={regState} goal={weeklyGoal} saveGoal={saveGoal} />;
     if (screen === 'navigator') return <NavigatorScreen navigate={navigate} setDest={setModule3Dest} />;
     if (screen === 'regulation') return <RegulationScreen navigate={navigate} onSetReg={setRegState} regState={regState} />;
     if (screen === 'overwhelmed-stop') return <OverwhelmedStop navigate={navigate} onEmergency={handleEmergency} />;
     if (screen === 'emergency') return <EmergencyScreen navigate={navigate} />;
-    if (screen === 'module2-anchor') return <Module2Anchor navigate={navigate} settings={settings} />;
+    if (screen === 'module2-anchor') return <Module2Anchor navigate={navigate} settings={settings} showTerm={showTerm} />;
     if (screen === 'module2-q1') return <Module2Question qNum={1} navigate={navigate} answers={answers} onAnswer={handleAnswer} settings={settings} />;
     if (screen === 'module2-q2') return <Module2Question qNum={2} navigate={navigate} answers={answers} onAnswer={handleAnswer} settings={settings} />;
     if (screen === 'module2-q3') return <Module2Question qNum={3} navigate={navigate} answers={answers} onAnswer={handleAnswer} settings={settings} />;
@@ -4002,9 +4196,9 @@ export default function App() {
     // Rule detail — handles module1-rule-1 through module1-rule-13
     if (screen.startsWith('module1-rule-')) {
       const num = parseInt(screen.replace('module1-rule-', ''));
-      return <Module1RuleDetail navigate={navigate} ruleNum={num} setSelectedTerm={setSelectedTermId} />;
+      return <Module1RuleDetail navigate={navigate} ruleNum={num} setSelectedTerm={setSelectedTermId} showTerm={showTerm} />;
     }
-    if (screen === 'module3') return <Module3Home navigate={navigate} setDest={setModule3Dest} goal={weekly_goal} />;
+    if (screen === 'module3') return <Module3Home navigate={navigate} setDest={setModule3Dest} goal={weeklyGoal} />;
     if (screen === 'module3-gate') return <Module3Gate navigate={navigate} dest={module3Dest} onSetReg={setRegState} regState={regState} />;
     if (screen === 'module3-audit') return <Module3SelfAudit navigate={navigate} settings={settings} />;
     if (screen === 'module3-skill') return <Module3SkillTracker navigate={navigate} />;
@@ -4018,7 +4212,7 @@ export default function App() {
     if (screen === 'module4-flashcards') return <Module4Flashcards navigate={navigate} />;
     if (screen === 'module4-generator') return <Module4Generator navigate={navigate} />;
     if (screen === 'legal') return <LegalScreen navigate={navigate} />;
-    return <HomeScreen navigate={navigate} regState={regState} goal={weekly_goal} />;
+    return <HomeScreen navigate={navigate} regState={regState} goal={weeklyGoal} saveGoal={saveGoal} />;
   };
 
   const isEmergency = screen === 'emergency';
@@ -4061,11 +4255,20 @@ export default function App() {
             onEmergency={handleEmergency}
             onSettings={() => setShowSettings(true)}
             onGrounding={() => setShowGrounding(true)}
+            goal={weeklyGoal}
+            onGoalEdit={() => navigate('home')}
           >
             {renderScreen()}
           </Shell>
         )}
 
+        {termPopupId && (
+          <TermPopup
+            termId={termPopupId}
+            onClose={() => setTermPopupId(null)}
+            onNavigate={() => { setSelectedTermId(termPopupId); setTermPopupId(null); navigate('module1-term'); }}
+          />
+        )}
         {showGrounding && (
           <GroundingOverlay
             onClose={() => setShowGrounding(false)}
