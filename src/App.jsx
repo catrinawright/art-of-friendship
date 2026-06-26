@@ -2829,9 +2829,17 @@ function Module3SelfAudit({ navigate, settings }) {
         </Card>
 
         <div style={{ padding: 12, backgroundColor: '#F8F4FF', border: `1px solid ${C.secondary + '40'}`, borderRadius: 10, marginTop: 4 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 6 }}>FACILITATOR SHARE</div>
-          <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>If you want to review this with your facilitator, tap below to generate a summary.</div>
-          <Btn label="Generate summary to share" onClick={() => {}} variant="ghost" small style={{ marginTop: 8 }} />
+          <FacilitatorShareButton summary={[
+            'Self-Audit Completed',
+            '',
+            ...activeQIds.map(id => {
+              const q = AUDIT_Q.find(x => x.id === id);
+              const ans = answers[id];
+              return `${q.symbol} ${q.full}: ${ans === true ? 'Handled well' : ans === false ? 'Pattern to examine' : 'Response recorded'}`;
+            }),
+            '',
+            `Pattern: ${mastery.text}`,
+          ].join('\n')} />
         </div>
 
         <Btn label="Return to My Tracker" onClick={() => navigate('module3')} variant="primary" style={{ marginTop: 12 }} />
@@ -2924,30 +2932,80 @@ function Module3SkillTracker({ navigate }) {
 
 function Module3Applied({ navigate }) {
   const [ruleNum, setRuleNum] = useState(null);
+  const [context, setContext] = useState('real'); // 'real' | 'practice'
   const [mode, setMode] = useState('frame');
   const [text, setText] = useState('');
   const [words, setWords] = useState([]);
-  const [entries, setEntries] = useState([]);
+  const [outcome, setOutcome] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [lastEntry, setLastEntry] = useState(null);
+  const [entries, setEntries] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('aof-applied-log') || '[]'); } catch { return []; }
+  });
 
   const wordBank = ['listened carefully', 'adjusted when I noticed signals', 'gave the other person space', 'checked in before continuing', 'used a closing statement', 'paused before responding', 'respected the ring', 'asked a question about them'];
+  const realLifeCount = entries.filter(e => e.context === 'real').length;
 
   const handleSave = () => {
-    if (!ruleNum) return;
-    const entry = { rule: ruleNum, text: text || words.join(', '), date: 'Today' };
-    setEntries(p => [entry, ...p]);
+    if (!ruleNum || !outcome) return;
+    const ruleName = RULES_SIMPLE.find(r => r.num === ruleNum)?.title || 'Rule ' + ruleNum;
+    const entry = { rule: ruleNum, ruleName, context, text: text || words.join(', '), outcome, date: new Date().toLocaleDateString() };
+    const newEntries = [entry, ...entries].slice(0, 30);
+    setEntries(newEntries);
+    setLastEntry(entry);
+    try { localStorage.setItem('aof-applied-log', JSON.stringify(newEntries)); } catch(e) {}
     setSaved(true);
-    setText(''); setWords([]); setRuleNum(null);
-    setTimeout(() => setSaved(false), 3000);
+    setText(''); setWords([]); setRuleNum(null); setOutcome(null);
+    setTimeout(() => setSaved(false), 6000);
   };
+
+  const buildSummary = (e) => [
+    'Rule Applied Log Entry',
+    '',
+    `Rule ${e.rule}: ${e.ruleName}`,
+    `Setting: ${e.context === 'real' ? 'Real-life situation (natural environment)' : 'Practice session'}`,
+    `How it went: ${e.outcome === 'well' ? 'Went well' : e.outcome === 'partly' ? 'Partly successful' : 'Needs more work'}`,
+    e.text ? `Notes: ${e.text}` : '',
+    '',
+    `Session real-life total: ${realLifeCount + (e.context === 'real' ? 1 : 0)}`,
+  ].filter(Boolean).join('\n');
 
   return (
     <div style={{ paddingTop: 8 }}>
       <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Rule I Applied Today</div>
+
+      {realLifeCount > 0 && (
+        <div style={{ backgroundColor: C.calm + '12', border: `1px solid ${C.calm}30`, borderRadius: 10, padding: '7px 12px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span>🌱</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: C.calm }}>{realLifeCount} real-life {realLifeCount === 1 ? 'application' : 'applications'} logged this session</span>
+        </div>
+      )}
+
       <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
         Record one moment you deliberately used a framework rule. Noticing competence is the practice.
       </div>
 
+      {/* Context — real life vs practice */}
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHERE DID THIS HAPPEN?</div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {[
+            ['real', '🌱 Real life', C.calm, 'You applied this without a prompt.'],
+            ['practice', '📖 Practice session', C.interactive, 'You applied this in a structured session.'],
+          ].map(([val, label, color, note]) => (
+            <button key={val} onClick={() => setContext(val)} style={{
+              flex: 1, padding: '10px 8px', borderRadius: 8, cursor: 'pointer',
+              border: `1.5px solid ${context === val ? color : C.border}`,
+              backgroundColor: context === val ? color + '14' : 'transparent',
+              color: context === val ? color : C.secondary,
+              fontSize: 13, fontWeight: context === val ? 700 : 400,
+            }}>{label}</button>
+          ))}
+        </div>
+        {context === 'real' && <div style={{ fontSize: 11, color: C.calm, marginTop: 6, fontWeight: 600 }}>Natural environment — this is what generalization looks like.</div>}
+      </Card>
+
+      {/* Rule selection */}
       <Card>
         <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHICH RULE?</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 4 }}>
@@ -2958,50 +3016,55 @@ function Module3Applied({ navigate }) {
         {ruleNum && <div style={{ fontSize: 12, color: C.secondary, marginTop: 4 }}>Rule {ruleNum}: {RULES_SIMPLE.find(r => r.num === ruleNum)?.title}</div>}
       </Card>
 
+      {/* Composition mode */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
         {[['frame', '✍️ Sentence frame'], ['words', '🔘 Word bank'], ['free', '📝 Free entry']].map(([id, label]) => (
           <button key={id} onClick={() => setMode(id)} style={{ flex: 1, padding: '7px 4px', borderRadius: 8, cursor: 'pointer', border: `1.5px solid ${mode === id ? C.interactive : C.border}`, backgroundColor: mode === id ? C.interactive + '10' : 'transparent', color: mode === id ? C.interactive : C.secondary, fontSize: 11, fontWeight: mode === id ? 700 : 400, textAlign: 'center' }}>{label}</button>
         ))}
       </div>
+      {mode === 'frame' && <Card><div style={{ fontSize: 13, color: C.secondary, marginBottom: 6, fontStyle: 'italic' }}>Today I applied Rule {ruleNum || '___'} when I...</div><textarea value={text} onChange={e => setText(e.target.value)} placeholder="describe the situation briefly..." style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, lineHeight: 1.5, resize: 'none', fontFamily: 'system-ui', minHeight: 64, boxSizing: 'border-box' }} /></Card>}
+      {mode === 'words' && <Card><div style={{ fontSize: 12, color: C.secondary, marginBottom: 8 }}>Today I applied Rule {ruleNum || '___'} when I...</div><div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>{wordBank.map(w => { const sel = words.includes(w); return <button key={w} onClick={() => setWords(p => sel ? p.filter(x => x !== w) : [...p, w])} style={{ padding: '6px 10px', borderRadius: 20, border: `1.5px solid ${sel ? C.interactive : C.border}`, backgroundColor: sel ? C.interactive + '14' : 'transparent', color: sel ? C.interactive : C.primary, fontSize: 12, fontWeight: sel ? 700 : 400, cursor: 'pointer' }}>{w}</button>; })}</div></Card>}
+      {mode === 'free' && <Card><textarea value={text} onChange={e => setText(e.target.value)} placeholder="Write freely about the moment..." style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, lineHeight: 1.5, resize: 'none', fontFamily: 'system-ui', minHeight: 80, boxSizing: 'border-box' }} /></Card>}
 
-      {mode === 'frame' && (
-        <Card>
-          <div style={{ fontSize: 13, color: C.secondary, marginBottom: 6, fontStyle: 'italic' }}>Today I applied Rule {ruleNum || '___'} when I...</div>
-          <textarea value={text} onChange={e => setText(e.target.value)} placeholder="describe the situation briefly..." style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, lineHeight: 1.5, resize: 'none', fontFamily: 'system-ui', minHeight: 64, boxSizing: 'border-box' }} />
-        </Card>
-      )}
-      {mode === 'words' && (
-        <Card>
-          <div style={{ fontSize: 12, color: C.secondary, marginBottom: 8 }}>Today I applied Rule {ruleNum || '___'} when I...</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {wordBank.map(w => { const sel = words.includes(w); return <button key={w} onClick={() => setWords(p => sel ? p.filter(x => x !== w) : [...p, w])} style={{ padding: '6px 10px', borderRadius: 20, border: `1.5px solid ${sel ? C.interactive : C.border}`, backgroundColor: sel ? C.interactive + '14' : 'transparent', color: sel ? C.interactive : C.primary, fontSize: 12, fontWeight: sel ? 700 : 400, cursor: 'pointer' }}>{w}</button>; })}
-          </div>
-        </Card>
-      )}
-      {mode === 'free' && (
-        <Card>
-          <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Write freely about the moment..." style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, lineHeight: 1.5, resize: 'none', fontFamily: 'system-ui', minHeight: 80, boxSizing: 'border-box' }} />
-        </Card>
-      )}
-
-      <Btn label="Log this moment ✓" onClick={handleSave} variant={ruleNum ? 'calm' : 'ghost'} style={{ marginBottom: 12 }} />
-
-      {saved && (
-        <div style={{ padding: 12, backgroundColor: C.greenBg, border: `1px solid ${C.calm + '60'}`, borderRadius: 10, marginBottom: 12 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.calm }}>Logged ✓</div>
-          <div style={{ fontSize: 13, color: C.primary, marginTop: 4, lineHeight: 1.5 }}>Noticing this means the framework is working.</div>
+      {/* Outcome */}
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>HOW DID IT GO?</div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[['well', '✅ Went well', C.calm], ['partly', '⚡ Partly', C.activated], ['needs-work', '📌 Needs work', C.secondary]].map(([val, label, color]) => (
+            <button key={val} onClick={() => setOutcome(val)} style={{ flex: 1, padding: '9px 4px', borderRadius: 8, cursor: 'pointer', textAlign: 'center', border: `1.5px solid ${outcome === val ? color : C.border}`, backgroundColor: outcome === val ? color + '14' : 'transparent', color: outcome === val ? color : C.secondary, fontSize: 12, fontWeight: outcome === val ? 700 : 400 }}>{label}</button>
+          ))}
         </div>
+      </Card>
+
+      <Btn label="Log this moment ✓" onClick={handleSave} variant={ruleNum && outcome ? 'calm' : 'ghost'} style={{ marginBottom: 12 }} />
+
+      {saved && lastEntry && (
+        <>
+          <div style={{ padding: 12, backgroundColor: C.greenBg, border: `1px solid ${C.calm + '60'}`, borderRadius: 10, marginBottom: 4 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: C.calm }}>Logged ✓ {lastEntry.context === 'real' ? '🌱 Real-life application' : '📖 Practice session'}</div>
+          </div>
+          <MasteryCard message={lastEntry.context === 'real' ? 'You used this in real life without a prompt. That is what generalization looks like.' : 'Noticing where you applied the framework is how the rules become automatic.'} />
+          <FacilitatorShareButton summary={buildSummary(lastEntry)} />
+        </>
       )}
 
       {entries.length > 0 && (
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>RECENT LOG</div>
-          {entries.slice(0, 5).map((e, i) => (
+        <div style={{ marginTop: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>LOG HISTORY</div>
+          {entries.slice(0, 8).map((e, i) => (
             <div key={i} style={{ display: 'flex', gap: 8, padding: '8px 0', borderBottom: `1px solid ${C.border}` }}>
-              <span style={{ fontSize: 11, fontWeight: 800, color: RULES_SIMPLE.find(r => r.num === e.rule)?.color || C.interactive, backgroundColor: C.border + '60', padding: '2px 6px', borderRadius: 6, flexShrink: 0 }}>R{e.rule}</span>
+              <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: RULES_SIMPLE.find(r => r.num === e.rule)?.color || C.interactive, backgroundColor: C.border + '60', padding: '2px 6px', borderRadius: 6 }}>R{e.rule}</span>
+                <span style={{ fontSize: 12 }}>{e.context === 'real' ? '🌱' : '📖'}</span>
+              </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, color: C.primary }}>{e.text || '(word bank selection)'}</div>
-                <div style={{ fontSize: 11, color: C.secondary }}>{e.date}</div>
+                <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.4 }}>{e.text || '(word bank)'}</div>
+                <div style={{ display: 'flex', gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 11, color: C.secondary }}>{e.date}</span>
+                  {e.outcome && <span style={{ fontSize: 11, fontWeight: 700, color: e.outcome === 'well' ? C.calm : e.outcome === 'partly' ? C.activated : C.secondary }}>
+                    {e.outcome === 'well' ? '✅ Well' : e.outcome === 'partly' ? '⚡ Partly' : '📌 Needs work'}
+                  </span>}
+                </div>
               </div>
             </div>
           ))}
@@ -3009,9 +3072,10 @@ function Module3Applied({ navigate }) {
       )}
 
       <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
+        <UDLBadge label="Rep 3.4" />
+        <UDLBadge label="Expr 6.4" />
+        <UDLBadge label="Engagement 8.3" />
         <UDLBadge label="Engagement 8.4" />
-        <UDLBadge label="Expr 5.2" />
-        <UDLBadge label="Engagement 9.3" />
       </div>
     </div>
   );
@@ -3281,6 +3345,14 @@ function Module3HealthCheck({ navigate }) {
           <strong>Important:</strong> Do not change any relationship behavior based on this form alone. Bring your completed form to your next facilitator session before acting.
         </div>
         <MasteryCard message="You completed a bilateral evaluation. That is Level 5 work — the most advanced skill in this framework." />
+        <FacilitatorShareButton summary={[
+          `Relationship Health Check — ${relName}`,
+          '',
+          ...HEALTH_CRITERIA.map(c => `${c.label}: ${answers[c.id] === 'yes' ? 'Yes' : answers[c.id] === 'partial' ? 'Partial' : 'No'}`),
+          '',
+          `Result: ${score().level}`,
+          `Recommended action: ${score().action}`,
+        ].join('\n')} />
         <Btn label="Return to My Tracker" onClick={() => navigate('module3')} variant="primary" style={{ marginTop: 12 }} />
       </div>
     );
@@ -3879,6 +3951,76 @@ function TermPopup({ termId, onClose, onNavigate }) {
           }}>Close</button>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── FACILITATOR SHARE ────────────────────────────────────────────────────────
+
+function FacilitatorShareButton({ summary }) {
+  const [state, setState] = useState('idle'); // idle | copied | error
+
+  const handleShare = async () => {
+    const formatted = [
+      'THE ART OF FRIENDSHIP — Facilitator Note',
+      new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+      '',
+      summary,
+      '',
+      '— The Art of Friendship · catrinawright.github.io/art-of-friendship',
+    ].join('\n');
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(formatted);
+      } else {
+        const el = document.createElement('textarea');
+        el.value = formatted;
+        el.style.cssText = 'position:fixed;opacity:0;';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      }
+      setState('copied');
+      setTimeout(() => setState('idle'), 4500);
+    } catch (e) {
+      setState('error');
+      setTimeout(() => setState('idle'), 4500);
+    }
+  };
+
+  return (
+    <div style={{
+      backgroundColor: '#F4F0FA', border: `1px solid ${C.secondary}28`,
+      borderRadius: 12, padding: '12px 14px', marginTop: 10,
+    }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 6 }}>
+        FACILITATOR SHARE
+      </div>
+      {state === 'idle' && (
+        <>
+          <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.5, marginBottom: 10 }}>
+            Copy a summary to share with your facilitator by text, email, or message.
+          </div>
+          <button onClick={handleShare} style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '9px 16px', borderRadius: 8, cursor: 'pointer',
+            backgroundColor: C.primary, border: 'none',
+            color: '#fff', fontWeight: 700, fontSize: 13,
+          }}>📋 Copy summary to clipboard</button>
+        </>
+      )}
+      {state === 'copied' && (
+        <div style={{ fontSize: 14, fontWeight: 700, color: C.calm, lineHeight: 1.5 }}>
+          ✓ Copied — paste into a message to your facilitator.
+        </div>
+      )}
+      {state === 'error' && (
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>
+          Could not copy automatically. Take a screenshot of this screen to share with your facilitator.
+        </div>
+      )}
     </div>
   );
 }
