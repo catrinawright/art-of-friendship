@@ -455,6 +455,7 @@ const RULES_FULL = [
     ],
     violation: 'Sharing personal things with someone who has not earned that level yet.',
     correction: 'Stop. Change the topic. Put the person back in the right ring. Start again from there.',
+    activationPrompt: 'Think of one person you talked to recently. What ring are they actually in — and how do you know? What did they actually do that tells you?',
     linkedTerms: [1, 2, 3],
   },
   {
@@ -471,6 +472,7 @@ const RULES_FULL = [
     ],
     violation: 'Acting like someone is a friend — or expecting friend-level things — when the signs are not there from both of you yet.',
     correction: 'Check the 5 signs again. Change how you act to match where the relationship really is. Do not tell the person you are doing this.',
+    activationPrompt: 'Think of someone you call a friend. Have you both reached out on your own at least once? Have you both shared at the same level?',
     linkedTerms: [1, 4],
   },
   {
@@ -487,6 +489,7 @@ const RULES_FULL = [
     ],
     violation: 'Reaching out more and more when the other person is not reaching back.',
     correction: 'Stop all reach-out right away. Write down what happened. Talk to your trusted adult before you reach out again. Do not bring up the imbalance directly without guidance.',
+    activationPrompt: 'Think about your last few messages to one person. Who sent the first one each time — you or them?',
     linkedTerms: [4, 5],
   },
   {
@@ -503,6 +506,7 @@ const RULES_FULL = [
     ],
     violation: 'Keeping a topic or behavior going after someone has said directly that they do not want it.',
     correction: 'Stop right away. Say a brief "Okay." Move to a new topic or close the conversation. If you missed the signal, name it at the next natural opening.',
+    activationPrompt: 'Think of a time someone changed the subject or said they were busy. What did you do right after that?',
     linkedTerms: [6],
   },
   {
@@ -519,6 +523,7 @@ const RULES_FULL = [
     ],
     violation: 'Keeping the same topic going after 2 or more quiet signs have shown up.',
     correction: 'Stop right away. Ask the check-in question. Follow where it leads.',
+    activationPrompt: 'In your last conversation, did the other person give short answers or look away? What did you do when that happened?',
     linkedTerms: [7, 8],
   },
   {
@@ -535,6 +540,7 @@ const RULES_FULL = [
     ],
     violation: 'Sending many follow-up messages when you have not heard back. Making the tone more urgent when the first message was not urgent.',
     correction: 'Stop all follow-up right away. Wait 24 to 72 hours. Only reach back out after the wait is done — or when they reply.',
+    activationPrompt: 'Think of a time you sent a message and waited for a reply. How long before you sent another one?',
     linkedTerms: [8],
   },
   {
@@ -551,6 +557,7 @@ const RULES_FULL = [
     ],
     violation: 'Talking about yourself for a long time without asking about the other person. Asking a question and then going right back to talking about yourself.',
     correction: 'Stop talking. Ask a real question. Listen all the way through before you speak again.',
+    activationPrompt: 'In your last conversation, did you ask the other person a question about them — not the topic — even once?',
     linkedTerms: [9],
   },
   {
@@ -566,6 +573,7 @@ const RULES_FULL = [
     ],
     violation: 'Bringing up sensitive or personal topics in the wrong place, with someone not close enough, or without checking if they are ready.',
     correction: 'If they seem uncomfortable, say simply: "I think I jumped ahead. Let us talk about something else." Move on right away.',
+    activationPrompt: 'Think of a sensitive topic you brought up recently. Did you check first whether the setting and the relationship were ready for it?',
     linkedTerms: [10],
   },
   {
@@ -581,6 +589,7 @@ const RULES_FULL = [
     ],
     violation: 'Ending a conversation without saying anything. Starting a new topic after the close has begun.',
     correction: 'If you left without closing, bring it up next time: "I realized I left without saying goodbye properly — that was not on purpose."',
+    activationPrompt: 'How did your last conversation end? Did you say goodbye — or did it just stop?',
     linkedTerms: [11],
   },
   {
@@ -598,6 +607,7 @@ const RULES_FULL = [
     ],
     violation: 'Letting a triggered reaction happen in the middle of a conversation without using your plan.',
     correction: 'Leave using the calm exit phrase. Calm down on your own. Come back only when you are fully calm. If it fits, say briefly: "I am sorry for stepping away — I needed a moment."',
+    activationPrompt: 'What is one thing that has thrown off a conversation for you before? Did you have a plan for it before it happened?',
     linkedTerms: [12],
   },
   {
@@ -616,6 +626,7 @@ const RULES_FULL = [
     ],
     violation: 'Keeping the same behavior going after a limit has been given. Coming back to it in the same or a later conversation.',
     correction: 'Stop right away. Say something brief and genuine about the effect — not your intent: "I understand that was uncomfortable. I will not do that again." Do not drag it out.',
+    activationPrompt: 'Think of the last time someone said they did not want to continue something. What did you do right after?',
     linkedTerms: [13],
   },
   {
@@ -631,6 +642,7 @@ const RULES_FULL = [
     ],
     violation: 'Investing at a closer level than the score supports. Skipping the check when things feel good — which is exactly when the check matters most.',
     correction: 'Do the check. Move your investment to match the score. Do not tell the person you are doing this — just change how you act.',
+    activationPrompt: 'Think of your closest relationship. When did you last check whether the effort is actually going both ways?',
     linkedTerms: [14],
   },
   {
@@ -648,6 +660,7 @@ const RULES_FULL = [
     ],
     violation: 'Staying close to a relationship — or a pattern in yourself — when 2 or more warning signs are there, without talking to anyone.',
     correction: 'Stop investing right away. Write down what you saw. Talk to your trusted adult within 48 hours.',
+    activationPrompt: 'Think of a relationship that has felt off lately. Have you talked to anyone about it yet?',
     linkedTerms: [15, 16],
   },
 ];
@@ -2284,6 +2297,7 @@ function Module1RuleCards({ navigate }) {
 
 function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
   const rule = RULES_FULL.find(r => r.num === ruleNum) || RULES_FULL[0];
+  const [showActivation, setShowActivation] = useState(true);
   const clusterLabels = { Before: 'Before the Interaction', During: 'During the Interaction', After: 'After the Interaction', Periodic: 'Periodic Evaluation' };
 
   return (
@@ -2303,6 +2317,29 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
           </span>
         </div>
       </div>
+
+      {/* Activation prompt — shows first, dismissible */}
+      {showActivation && rule.activationPrompt && (
+        <div style={{
+          backgroundColor: C.activated + '0E', borderRadius: 12,
+          border: `1.5px solid ${C.activated}40`, padding: '14px 14px 12px', marginBottom: 16,
+        }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.activated, letterSpacing: 0.5, marginBottom: 8 }}>
+            BEFORE YOU READ — Connect to your own experience
+          </div>
+          <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 12 }}>
+            {rule.activationPrompt}
+          </div>
+          <button
+            onClick={() => setShowActivation(false)}
+            style={{
+              padding: '8px 16px', borderRadius: 8, cursor: 'pointer',
+              backgroundColor: C.activated, border: 'none',
+              color: '#fff', fontWeight: 700, fontSize: 13,
+            }}
+          >I thought about it — show the rule →</button>
+        </div>
+      )}
 
       {/* The Rule */}
       <div style={{ backgroundColor: rule.color + '0E', borderRadius: 12, borderLeft: `4px solid ${rule.color}`, padding: 14, marginBottom: 12 }}>
@@ -2984,6 +3021,7 @@ function Module3InitiationTracker({ navigate }) {
   const [relName, setRelName] = useState('');
   const [entries, setEntries] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
+  const [lastLogged, setLastLogged] = useState(false);
 
   const grouped = entries.reduce((acc, e) => { acc[e.rel] = acc[e.rel] || []; acc[e.rel].push(e); return acc; }, {});
 
@@ -3001,6 +3039,8 @@ function Module3InitiationTracker({ navigate }) {
     setEntries(p => [...p, { rel: relName.trim(), who, date: new Date().toLocaleDateString() }]);
     setShowAdd(false);
     setRelName('');
+    setLastLogged(true);
+    setTimeout(() => setLastLogged(false), 4000);
   };
 
   return (
@@ -3011,6 +3051,7 @@ function Module3InitiationTracker({ navigate }) {
       </div>
 
       <Btn label="+ Log a contact" onClick={() => setShowAdd(true)} variant="primary" style={{ marginBottom: 16 }} />
+      {lastLogged && <MasteryCard message="Logged. Tracking this pattern is how you protect yourself and respect others at the same time." />}
 
       {showAdd && (
         <Card style={{ borderLeft: `4px solid ${C.interactive}` }}>
@@ -3137,7 +3178,12 @@ function Module3Journal({ navigate }) {
       )}
 
       <Btn label="Save this entry" onClick={handleSave} variant="primary" style={{ marginTop: 4 }} />
-      {saved && <div style={{ padding: 10, backgroundColor: C.greenBg, border: `1px solid ${C.calm + '60'}`, borderRadius: 10, marginTop: 8, fontSize: 13, color: C.calm, fontWeight: 700 }}>Entry saved ✓</div>}
+      {saved && (
+        <>
+          <div style={{ padding: 10, backgroundColor: C.greenBg, border: `1px solid ${C.calm + '60'}`, borderRadius: 10, marginTop: 8, fontSize: 13, color: C.calm, fontWeight: 700 }}>Entry saved ✓</div>
+          <MasteryCard message="You put it on paper. That is the first step in seeing your own patterns." />
+        </>
+      )}
 
       <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
         <UDLBadge label="Expr 5.2" />
@@ -3234,6 +3280,7 @@ function Module3HealthCheck({ navigate }) {
         <div style={{ padding: 12, backgroundColor: C.amberBg, border: `1px solid ${C.amber + '60'}`, borderRadius: 10, fontSize: 13, color: C.primary, lineHeight: 1.6 }}>
           <strong>Important:</strong> Do not change any relationship behavior based on this form alone. Bring your completed form to your next facilitator session before acting.
         </div>
+        <MasteryCard message="You completed a bilateral evaluation. That is Level 5 work — the most advanced skill in this framework." />
         <Btn label="Return to My Tracker" onClick={() => navigate('module3')} variant="primary" style={{ marginTop: 12 }} />
       </div>
     );
@@ -3454,9 +3501,10 @@ function Module4Trivia({ navigate }) {
       <div style={{ fontSize: 22, fontWeight: 800, color: C.primary, marginBottom: 12 }}>Deck Complete</div>
       <Card style={{ textAlign: 'left', borderLeft: `4px solid ${tierColors[tier]}` }}>
         <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7 }}>
-          The questions that surprised you are the ones most worth revisiting. Save them for your next session.
+          The questions that surprised you are the ones most worth revisiting. Note them for your next session.
         </div>
       </Card>
+      <MasteryCard message="You worked through the full deck. Recall under pressure is how rules become automatic — not just understood." />
       <Btn label="Try another tier" onClick={() => { setTier(null); setQIdx(0); setRevealed(false); setDone(false); }} variant="secondary" style={{ marginTop: 12 }} />
       <Btn label="← Back to Practice" onClick={() => navigate('module4')} variant="ghost" small style={{ marginTop: 8 }} />
     </div>
@@ -3529,6 +3577,7 @@ function Module4Flashcards({ navigate }) {
           return count > 0 ? <div key={v} style={{ fontSize: 13, color: c, fontWeight: 700, marginBottom: 4 }}>{l}: {count} terms</div> : null;
         })}
       </Card>
+      <MasteryCard message="You reviewed all 17 definitions. That is the vocabulary the rules are built on. The terms you marked Not yet are your next targets." />
       <Btn label="Restart deck" onClick={() => { setIdx(0); setFlipped(false); setRatings({}); setDone(false); }} variant="secondary" style={{ marginTop: 12 }} />
       <Btn label="← Back to Practice" onClick={() => navigate('module4')} variant="ghost" small style={{ marginTop: 8 }} />
     </div>
@@ -3830,6 +3879,24 @@ function TermPopup({ termId, onClose, onNavigate }) {
           }}>Close</button>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── MASTERY CARD ─────────────────────────────────────────────────────────────
+
+function MasteryCard({ message }) {
+  return (
+    <div style={{
+      backgroundColor: C.calm + '14',
+      border: `1.5px solid ${C.calm}45`,
+      borderRadius: 12, padding: '12px 14px',
+      marginTop: 10, marginBottom: 4,
+    }}>
+      <div style={{ fontSize: 10, fontWeight: 700, color: C.calm, letterSpacing: 0.5, marginBottom: 5 }}>
+        COMPETENCY ACKNOWLEDGMENT
+      </div>
+      <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.6 }}>{message}</div>
     </div>
   );
 }
