@@ -303,6 +303,31 @@ const TERMS = [
     audioText: 'When someone withdraws, four things activate in the other person simultaneously: the attachment alarm, the scarcity response, the self-concept threat, and the pressure to justify prior investment. The chase is not a choice — it is a conditioned response. Neurological shutdown is not manipulative. But it produces the same impact. The responsibility zone is disclosure: before, during when possible, and after.',
     activationPrompt: 'Have you ever texted someone more after they went quiet? That response is the chase. Understanding why it happens is how you start to manage it.',
   },
+  {
+    id: 18, domainNum: 5, linkedRule: 13,
+    name: 'Gaslighting',
+    plain: 'Gaslighting is when someone deliberately causes you to doubt your own perception, memory, or experience of what happened.',
+    definition: 'A pattern of psychological manipulation in which one person systematically causes another to question the accuracy of their own perceptions, memories, or understanding of events — not through providing evidence, but through persistent denial, contradiction, or reframing of the other person's account.',
+    boundary: 'This is a pattern, not a single incident. One disagreement about what happened is not gaslighting. One person misremembering is not gaslighting. Two people perceiving an interaction differently is not gaslighting. Gaslighting is systematic and deliberate — a pattern in which one person specifically targets the other person's perceptual credibility.',
+    ruleAnchor: 'When this pattern is present in a relationship, Rule 13 applies: do not attempt to resolve the concern independently. Bring it to a trusted adult before making any further investment.',
+    metaphor: { symbol: '🌫️', concept: 'Fog that is deliberately made', explanation: 'Natural fog is disorienting but no one caused it. Deliberate fog is disorienting because someone is creating it. The difference is the cause — not the experience of confusion.' },
+    audioText: 'Gaslighting is a pattern in which someone deliberately causes you to doubt your own perception, memory, or experience. It is not disagreement. It is not misremembering. It is one person systematically telling another that what they saw, heard, or felt did not happen the way they experienced it.',
+    activationPrompt: 'Think of a time you were certain about what you experienced, and someone told you that you were wrong about it. Did they offer evidence — or did they simply insist that your perception was incorrect?',
+  },
+  {
+    id: 19, domainNum: 5, linkedRule: 11,
+    name: 'Accountability',
+    plain: 'Accountability means acknowledging what your behavior did to another person — not what you meant to do, but what actually happened.',
+    definition: 'Taking responsibility for the observable impact of your conduct on another person. Accountability addresses behavior and its effect — not intent, character, or identity. It does not require agreeing that you intended harm. It requires acknowledging that your behavior produced a particular effect on another person and adjusting your behavior accordingly.',
+    boundary: 'Accountability is not performing an apology in a format someone else specifies. It is not agreeing with another person's interpretation of your character. It is not submitting to a consequence someone else determines. Accountability is bilateral — the same standard that applies to your conduct applies to the conduct of anyone you are in relationship with. You are not accountable to one standard while others are held to a different one.',
+    ruleAnchor: 'The correction pathways throughout this framework are accountability mechanisms. Rule 11 most directly operationalizes accountability: stop the behavior, acknowledge the impact without argument or negotiation, and adjust.',
+    metaphor: { symbol: '⚖️', concept: 'A scale with impact on one side — not intent', explanation: 'Accountability weighs what happened, not what was meant. Intent sits on a different scale entirely. Both matter. They are not the same measurement.' },
+    audioText: 'Accountability means taking responsibility for the impact of your conduct on another person. It is about what happened — not what you intended. It is not performing an apology in a specific format. It is not agreeing that you are a bad person. It is naming what occurred and changing what you do. And it applies to everyone in the relationship — not only to you.',
+    activationPrompt: 'Think of a time when someone asked you to be accountable for something. Were they asking you to acknowledge an impact — or were they asking you to accept a verdict about who you are? What is the difference between those two things?',
+  },
+];
+
+
 ];
 
 // ─── RULE CARDS DATA ──────────────────────────────────────────────────────────
@@ -532,7 +557,8 @@ const RULES_FULL = [
     defSource: 'Implicit Social Signal (Term 7) · Response Latency (Term 8)',
     protocol: [
       'Watch for 4 kinds of quiet signs: Word signs (short answers, one-word replies, changing the subject). Tone signs (flat voice, clipped words). Body signs (looking away, turning away). Time signs (longer waits before replying).',
-      'If you see 2 or more of these, pause what you are saying.',
+      'When signals are ambiguous — meaning they could indicate disengagement OR could have a neutral explanation unrelated to you — do not interpret yet. Pause and check in first. Not every quiet moment is directed at you.',
+      'If you see 2 or more clear signals, pause what you are saying.',
       'Ask in a calm, simple way: "Is this a good time?" or "Do you need to go?"',
       'Take whatever answer you get. No arguing.',
       'If they are done, start to close the conversation.',
@@ -643,7 +669,7 @@ const RULES_FULL = [
     violation: 'Keeping the same behavior going after a limit has been given. Coming back to it in the same or a later conversation.',
     correction: 'Stop right away. Say something brief and genuine about the effect — not your intent: "I understand that was uncomfortable. I will not do that again." Do not drag it out.',
     activationPrompt: 'Think of the last time someone said they did not want to continue something. What did you do right after?',
-    linkedTerms: [13],
+    linkedTerms: [13, 19],
   },
   {
     num: 12, cluster: 'Periodic', color: DC[5],
@@ -677,7 +703,7 @@ const RULES_FULL = [
     violation: 'Staying close to a relationship — or a pattern in yourself — when 2 or more warning signs are there, without talking to anyone.',
     correction: 'Stop investing right away. Write down what you saw. Talk to your trusted adult within 48 hours.',
     activationPrompt: 'Think of a relationship that has felt off lately. Have you talked to anyone about it yet?',
-    linkedTerms: [15, 16],
+    linkedTerms: [15, 16, 18],
   },
 ];
 
@@ -1131,7 +1157,7 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
   const steps = [
     {
       num: 1, icon: '📖', screen: 'module1',
-      title: 'My Reference',
+      title: 'The Framework',
       sub: '13 Rules · 17 Definitions',
       purpose: 'Learn the rules and definitions. This is where every session starts.',
       note: 'Start here — every session',
@@ -1168,26 +1194,13 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
         background: 'linear-gradient(135deg, #1A2744 0%, #3D5FC8 100%)',
         borderRadius: 16, padding: '18px 18px 16px', marginBottom: 20,
       }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: 1.5, marginBottom: 4 }}>
-          YOUR PERSONAL FRAMEWORK
-        </div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>
           The Art of Friendship
-        </div>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
-          A structured path for developing relationship skills.
         </div>
       </div>
 
-      {/* ── LEARNING PATH (primary) ── */}
+      {/* Sequential steps */}
       <div style={{ marginBottom: 4 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 4 }}>
-          YOUR LEARNING PATH
-        </div>
-        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 14 }}>
-          Do these in order. Each step builds on the one before it.
-        </div>
-
         {steps.map((step, i) => (
           <div key={step.num} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
             {/* Step indicator + connector line */}
@@ -1218,8 +1231,7 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
                 <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{step.icon} {step.title}</span>
                 <span style={{ fontSize: 16, color: C.border, marginLeft: 6 }}>›</span>
               </div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: step.color, marginBottom: 4 }}>{step.sub}</div>
-              <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{step.purpose}</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: step.color, marginBottom: step.note ? 4 : 0 }}>{step.sub}</div>
               {step.note && (
                 <div style={{ marginTop: 6, display: 'inline-block', backgroundColor: step.noteColor + '18', border: `1px solid ${step.noteColor}40`, borderRadius: 20, padding: '2px 10px', fontSize: 11, fontWeight: 700, color: step.noteColor }}>
                   {step.note}
@@ -1230,14 +1242,8 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
         ))}
       </div>
 
-      {/* ── QUICK ACCESS (secondary) ── */}
-      <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 4 }}>
-          QUICK ACCESS
-        </div>
-        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5, marginBottom: 12 }}>
-          Know the rules already? Use them now.
-        </div>
+      {/* ── Situational buttons ── */}
+      <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
         {[
           { label: '💬 I want to text or say something to someone', screen: 'module2-anchor', color: C.interactive },
           { label: '🗣 I am talking to someone right now',   screen: 'module2-anchor', color: C.calm },
@@ -2314,10 +2320,38 @@ function Module1RuleCards({ navigate }) {
 function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
   const rule = RULES_FULL.find(r => r.num === ruleNum) || RULES_FULL[0];
   const [showActivation, setShowActivation] = useState(true);
+  const [paused, setPaused] = useState(false);
   const clusterLabels = { Before: 'Before the Interaction', During: 'During the Interaction', After: 'After the Interaction', Periodic: 'Periodic Evaluation' };
 
   return (
-    <div style={{ paddingTop: 4 }}>
+    <div style={{ paddingTop: 4, position: 'relative' }}>
+
+      {/* Mid-content pause overlay */}
+      {paused && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 50,
+          backgroundColor: 'rgba(247,243,238,0.97)',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          padding: 32, textAlign: 'center',
+          borderRadius: 12,
+        }}>
+          <div style={{ fontSize: 36, marginBottom: 16 }}>⏸</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: C.primary, marginBottom: 12 }}>
+            Take the time you need.
+          </div>
+          <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 28, maxWidth: 260 }}>
+            The content is still here. There is no hurry.
+          </div>
+          <button onClick={() => setPaused(false)} style={{
+            padding: '13px 32px', borderRadius: 10, cursor: 'pointer',
+            backgroundColor: C.interactive, border: 'none',
+            color: '#fff', fontWeight: 700, fontSize: 15,
+            boxShadow: '0 3px 10px rgba(61,95,200,0.3)',
+          }}>Continue reading</button>
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
         <div style={{
@@ -2326,15 +2360,21 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 14, fontWeight: 800, color: rule.color,
         }}>R{rule.num}</div>
-        <div>
+        <div style={{ flex: 1 }}>
           <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, lineHeight: 1.2 }}>{rule.title}</div>
           <span style={{ fontSize: 11, fontWeight: 700, color: rule.color, backgroundColor: rule.color + '18', padding: '2px 8px', borderRadius: 10 }}>
             {clusterLabels[rule.cluster]}
           </span>
         </div>
+        {/* Pause button */}
+        <button onClick={() => setPaused(true)} style={{
+          flexShrink: 0, background: 'none', border: `1px solid ${C.border}`,
+          borderRadius: 8, padding: '5px 10px', cursor: 'pointer',
+          fontSize: 12, color: C.secondary, fontWeight: 600,
+        }}>⏸</button>
       </div>
 
-      {/* Activation prompt — shows first, dismissible */}
+      {/* Activation prompt */}
       {showActivation && rule.activationPrompt && (
         <div style={{
           backgroundColor: C.activated + '0E', borderRadius: 12,
@@ -2346,20 +2386,20 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
           <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 12 }}>
             {rule.activationPrompt}
           </div>
-          <button
-            onClick={() => setShowActivation(false)}
-            style={{
-              padding: '8px 16px', borderRadius: 8, cursor: 'pointer',
-              backgroundColor: C.activated, border: 'none',
-              color: '#fff', fontWeight: 700, fontSize: 13,
-            }}
-          >I thought about it — show the rule →</button>
+          <button onClick={() => setShowActivation(false)} style={{
+            padding: '8px 16px', borderRadius: 8, cursor: 'pointer',
+            backgroundColor: C.activated, border: 'none',
+            color: '#fff', fontWeight: 700, fontSize: 13,
+          }}>I thought about it — show the rule →</button>
         </div>
       )}
 
       {/* The Rule */}
       <div style={{ backgroundColor: rule.color + '0E', borderRadius: 12, borderLeft: `4px solid ${rule.color}`, padding: 14, marginBottom: 12 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: rule.color, letterSpacing: 0.4, marginBottom: 6 }}>THE RULE</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: rule.color, letterSpacing: 0.4 }}>THE RULE</div>
+          <SpeakButton text={rule.theRule} />
+        </div>
         <div style={{ fontSize: 15, fontWeight: 700, color: C.primary, lineHeight: 1.6 }}>{rule.theRule}</div>
       </div>
 
@@ -2390,7 +2430,10 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
 
       {/* Behavioral Protocol */}
       <Card>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>BEHAVIORAL PROTOCOL</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4 }}>BEHAVIORAL PROTOCOL</div>
+          <SpeakButton text={rule.protocol.join('. ')} />
+        </div>
         {rule.protocol.map((step, i) => (
           <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
             <div style={{
@@ -2406,13 +2449,33 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
 
       {/* Violation Indicator */}
       <Card style={{ borderLeft: `4px solid ${C.activated}` }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.activated, letterSpacing: 0.4, marginBottom: 6 }}>VIOLATION INDICATOR</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.activated, letterSpacing: 0.4 }}>VIOLATION INDICATOR</div>
+          <SpeakButton text={rule.violation} />
+        </div>
         <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65 }}>{rule.violation}</div>
       </Card>
 
+      {/* Revelation acknowledgment — between violation and correction */}
+      <div style={{
+        padding: '10px 14px', marginBottom: 8,
+        backgroundColor: C.primary + '07',
+        border: `1px solid ${C.primary}18`,
+        borderRadius: 10,
+        display: 'flex', alignItems: 'flex-start', gap: 10,
+      }}>
+        <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1, opacity: 0.4 }}>◦</span>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.7, fontStyle: 'italic' }}>
+          If you recognized yourself here — that recognition is the beginning of the work. A behavior can be corrected. A behavior is not who you are.
+        </div>
+      </div>
+
       {/* Correction Pathway */}
       <Card style={{ borderLeft: `4px solid ${C.calm}` }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4, marginBottom: 6 }}>CORRECTION PATHWAY</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4 }}>CORRECTION PATHWAY</div>
+          <SpeakButton text={rule.correction} />
+        </div>
         <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65 }}>{rule.correction}</div>
       </Card>
 
@@ -2442,6 +2505,7 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
     </div>
   );
 }
+
 
 function Module1FrameworkMap({ navigate, setSelectedTerm }) {
   return (
@@ -2608,6 +2672,7 @@ function Module3Gate({ navigate, dest, onSetReg, regState }) {
 function Module3SelfAudit({ navigate, settings }) {
   const [step, setStep] = useState('format');
   const [format, setFormat] = useState('written');
+  const [paused, setPaused] = useState(false);
   const [mode, setMode] = useState('full');
   const [answers, setAnswers] = useState({});
   const [writtenText, setWrittenText] = useState({});
@@ -2702,13 +2767,31 @@ function Module3SelfAudit({ navigate, settings }) {
   if (step.startsWith('q') && currentQ) {
     const qTotal = activeQIds.length;
     return (
-      <div style={{ paddingTop: 8 }}>
+      <div style={{ paddingTop: 8, position: 'relative' }}>
+
+        {/* Pause overlay */}
+        {paused && (
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 50,
+            backgroundColor: 'rgba(247,243,238,0.97)',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            padding: 32, textAlign: 'center', borderRadius: 12,
+          }}>
+            <div style={{ fontSize: 36, marginBottom: 16 }}>⏸</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: C.primary, marginBottom: 12 }}>Take the time you need.</div>
+            <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 28, maxWidth: 260 }}>The question is still here. There is no hurry.</div>
+            <button onClick={() => setPaused(false)} style={{ padding: '13px 32px', borderRadius: 10, cursor: 'pointer', backgroundColor: C.interactive, border: 'none', color: '#fff', fontWeight: 700, fontSize: 15, boxShadow: '0 3px 10px rgba(61,95,200,0.3)' }}>Continue</button>
+          </div>
+        )}
+
         {/* Progress */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
           <div style={{ flex: 1, height: 4, backgroundColor: C.border, borderRadius: 2 }}>
             <div style={{ width: `${(currentQPos / qTotal) * 100}%`, height: 4, backgroundColor: C.interactive, borderRadius: 2 }} />
           </div>
           <span style={{ fontSize: 13, fontWeight: 700, color: C.secondary, whiteSpace: 'nowrap' }}>Q{currentQPos} of {qTotal}</span>
+          <button onClick={() => setPaused(true)} style={{ background: 'none', border: `1px solid ${C.border}`, borderRadius: 6, padding: '3px 8px', cursor: 'pointer', fontSize: 11, color: C.secondary, fontWeight: 600 }}>⏸</button>
         </div>
 
         <div style={{ fontSize: 24, marginBottom: 8 }}>{currentQ.symbol}</div>
@@ -4265,6 +4348,38 @@ function MasteryCard({ message }) {
   );
 }
 
+// ─── SPEAK BUTTON ─────────────────────────────────────────────────────────────
+
+function SpeakButton({ text }) {
+  const [state, setState] = useState('idle');
+  const handle = (e) => {
+    e.stopPropagation();
+    if (!window.speechSynthesis) return;
+    if (state === 'playing') {
+      window.speechSynthesis.cancel();
+      setState('idle');
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
+    u.onstart = () => setState('playing');
+    u.onend = () => setState('idle');
+    u.onerror = () => setState('idle');
+    setState('playing');
+    window.speechSynthesis.speak(u);
+  };
+  return (
+    <button onClick={handle} style={{
+      background: 'none',
+      border: `1px solid ${state === 'playing' ? C.overwhelmed : C.border}`,
+      borderRadius: 6, padding: '3px 9px', cursor: 'pointer',
+      fontSize: 11, color: state === 'playing' ? C.overwhelmed : C.secondary,
+      fontWeight: 600, flexShrink: 0, lineHeight: 1.4,
+    }}>{state === 'playing' ? '⏹' : '🔊'}</button>
+  );
+}
+
 // ─── GOAL STRIP ───────────────────────────────────────────────────────────────
 
 function GoalStrip({ goal, onEdit }) {
@@ -4419,74 +4534,83 @@ function GoalEditor({ goal, onSave }) {
 // ─── WELCOME SCREEN ───────────────────────────────────────────────────────────
 
 function WelcomeScreen({ onStart }) {
+  const [audioState, setAudioState] = useState('idle');
+  const welcomeText = 'Nothing is required right now. You can leave at any time. You do not need to be ready. When you want to begin, the door is open.';
+
+  const handleAudio = (e) => {
+    e.stopPropagation();
+    if (!window.speechSynthesis) return;
+    if (audioState === 'playing') {
+      window.speechSynthesis.cancel();
+      setAudioState('idle');
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(welcomeText);
+    u.rate = 0.82; u.pitch = 1.05; u.volume = 1.0;
+    u.onstart = () => setAudioState('playing');
+    u.onend = () => setAudioState('done');
+    u.onerror = () => setAudioState('idle');
+    setAudioState('playing');
+    window.speechSynthesis.speak(u);
+  };
+
+  const handleContinue = () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    onStart();
+  };
+
   return (
-    <div style={{
-      position: 'absolute', inset: 0, zIndex: 300,
-      background: 'linear-gradient(160deg, #1A2744 0%, #243672 55%, #3D5FC8 100%)',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      padding: '32px 28px', textAlign: 'center',
-    }}>
-      {/* Icon */}
-      <div style={{ fontSize: 72, marginBottom: 20, filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.3))' }}>🌱</div>
-
-      {/* Identity */}
-      <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: 2, marginBottom: 8 }}>
-        YOUR PERSONAL FRAMEWORK
-      </div>
-      <div style={{ fontSize: 30, fontWeight: 800, color: '#fff', lineHeight: 1.15, marginBottom: 12 }}>
-        The Art of Friendship
-      </div>
-      <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.72)', lineHeight: 1.7, marginBottom: 6, maxWidth: 290 }}>
-        A set of rules and tools to help you build and protect your relationships.
-      </div>
-      <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 36 }}>
-        Developed by Catrina Wright, MAT
-      </div>
-
-      {/* CTA */}
-      <button
-        onClick={onStart}
-        style={{
-          backgroundColor: '#fff', color: '#1A2744',
-          border: 'none', borderRadius: 14,
-          padding: '17px 48px',
-          fontSize: 16, fontWeight: 800,
-          cursor: 'pointer', letterSpacing: 0.2,
-          boxShadow: '0 6px 24px rgba(0,0,0,0.25)',
-          width: '100%', maxWidth: 280,
-        }}
-      >
-        Get Started
-      </button>
-
-      {/* Module preview */}
-      <div style={{ display: 'flex', gap: 8, marginTop: 28, flexWrap: 'wrap', justifyContent: 'center' }}>
+    <div
+      onClick={handleContinue}
+      style={{
+        position: 'absolute', inset: 0, zIndex: 300,
+        background: 'linear-gradient(160deg, #1A2744 0%, #243672 55%, #3D5FC8 100%)',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        padding: '40px 36px', cursor: 'pointer',
+      }}
+    >
+      {/* Four sentences */}
+      <div style={{ maxWidth: 300, width: '100%' }}>
         {[
-          { icon: '📖', label: 'My Reference' },
-          { icon: '✉️', label: 'Before I Communicate' },
-          { icon: '📊', label: 'My Tracker' },
-          { icon: '🎯', label: 'Practice' },
-        ].map(m => (
-          <div key={m.label} style={{
-            backgroundColor: 'rgba(255,255,255,0.10)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            borderRadius: 20, padding: '5px 12px',
-            fontSize: 12, color: 'rgba(255,255,255,0.65)',
-          }}>
-            {m.icon} {m.label}
-          </div>
+          { text: 'Nothing is required right now.', weight: 800, opacity: 1,    size: 22 },
+          { text: 'You can leave at any time.',     weight: 700, opacity: 0.90, size: 20 },
+          { text: 'You do not need to be ready.',   weight: 700, opacity: 0.85, size: 20 },
+          { text: 'When you want to begin,\nthe door is open.', weight: 500, opacity: 0.70, size: 18 },
+        ].map((s, i) => (
+          <div key={i} style={{
+            fontSize: s.size,
+            fontWeight: s.weight,
+            color: `rgba(255,255,255,${s.opacity})`,
+            lineHeight: 1.4,
+            marginBottom: i < 3 ? 24 : 0,
+            whiteSpace: 'pre-line',
+          }}>{s.text}</div>
         ))}
       </div>
 
-      {/* Legal */}
-      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginTop: 20 }}>
-        Educational tool · Not a clinical service · CC BY-NC 4.0
-      </div>
+      {/* Audio — unobtrusive, does not trigger navigation */}
+      <button
+        onClick={handleAudio}
+        style={{
+          marginTop: 40, padding: '8px 18px', borderRadius: 20,
+          border: '1px solid rgba(255,255,255,0.25)',
+          background: audioState === 'playing' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)',
+          color: 'rgba(255,255,255,0.55)', fontSize: 12, fontWeight: 600,
+          cursor: 'pointer', letterSpacing: 0.3,
+        }}
+      >{audioState === 'idle' ? '🔊 Hear this' : audioState === 'playing' ? '⏹ Stop' : '↺ Again'}</button>
+
+      {/* Tap cue */}
+      <div style={{
+        position: 'absolute', bottom: 32,
+        fontSize: 10, color: 'rgba(255,255,255,0.25)',
+        letterSpacing: 1.5, textTransform: 'uppercase',
+      }}>tap anywhere to continue</div>
     </div>
   );
 }
-
 // ─── LEGAL SCREEN ─────────────────────────────────────────────────────────────
 
 function LegalScreen({ navigate }) {
@@ -4662,7 +4786,7 @@ export default function App() {
     regulation: 'Check In',
     'overwhelmed-stop': 'Stop Here',
     emergency: null,
-    module1: 'My Reference',
+    module1: 'The Framework',
     'module1-term': 'Term Detail',
     'module1-rules': 'Rule Cards',
     'module1-map': 'Framework Map',
@@ -4690,7 +4814,7 @@ export default function App() {
     'module2-q5': 'Pre-Comm Checklist',
     'module2-result': 'Your Result',
     'module2-prepare': 'Prepare for This',
-    'module1': 'My Reference',
+    'module1': 'The Framework',
     'module3': 'My Tracker',
     'module4': 'Practice',
   };
