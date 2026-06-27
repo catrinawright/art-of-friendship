@@ -307,8 +307,8 @@ const TERMS = [
     id: 18, domainNum: 5, linkedRule: 13,
     name: 'Gaslighting',
     plain: 'Gaslighting is when someone deliberately causes you to doubt your own perception, memory, or experience of what happened.',
-    definition: 'A pattern of psychological manipulation in which one person systematically causes another to question the accuracy of their own perceptions, memories, or understanding of events — not through providing evidence, but through persistent denial, contradiction, or reframing of the other person's account.',
-    boundary: 'This is a pattern, not a single incident. One disagreement about what happened is not gaslighting. One person misremembering is not gaslighting. Two people perceiving an interaction differently is not gaslighting. Gaslighting is systematic and deliberate — a pattern in which one person specifically targets the other person's perceptual credibility.',
+    definition: 'A pattern of psychological manipulation in which one person systematically causes another to question the accuracy of their own perceptions, memories, or understanding of events — not through providing evidence, but through persistent denial, contradiction, or reframing of what the other person reported.',
+    boundary: 'This is a pattern, not a single incident. One disagreement about what happened is not gaslighting. One person misremembering is not gaslighting. Two people perceiving an interaction differently is not gaslighting. Gaslighting is systematic and deliberate — a pattern in which one person specifically targets the perceptual credibility of the other person.',
     ruleAnchor: 'When this pattern is present in a relationship, Rule 13 applies: do not attempt to resolve the concern independently. Bring it to a trusted adult before making any further investment.',
     metaphor: { symbol: '🌫️', concept: 'Fog that is deliberately made', explanation: 'Natural fog is disorienting but no one caused it. Deliberate fog is disorienting because someone is creating it. The difference is the cause — not the experience of confusion.' },
     audioText: 'Gaslighting is a pattern in which someone deliberately causes you to doubt your own perception, memory, or experience. It is not disagreement. It is not misremembering. It is one person systematically telling another that what they saw, heard, or felt did not happen the way they experienced it.',
@@ -319,15 +319,12 @@ const TERMS = [
     name: 'Accountability',
     plain: 'Accountability means acknowledging what your behavior did to another person — not what you meant to do, but what actually happened.',
     definition: 'Taking responsibility for the observable impact of your conduct on another person. Accountability addresses behavior and its effect — not intent, character, or identity. It does not require agreeing that you intended harm. It requires acknowledging that your behavior produced a particular effect on another person and adjusting your behavior accordingly.',
-    boundary: 'Accountability is not performing an apology in a format someone else specifies. It is not agreeing with another person's interpretation of your character. It is not submitting to a consequence someone else determines. Accountability is bilateral — the same standard that applies to your conduct applies to the conduct of anyone you are in relationship with. You are not accountable to one standard while others are held to a different one.',
+    boundary: 'Accountability is not performing an apology in a format someone else specifies. It is not agreeing with how another person interprets your character. It is not submitting to a consequence someone else determines. Accountability is bilateral — the same standard that applies to your conduct applies to the conduct of anyone you are in relationship with. You are not accountable to one standard while others are held to a different one.',
     ruleAnchor: 'The correction pathways throughout this framework are accountability mechanisms. Rule 11 most directly operationalizes accountability: stop the behavior, acknowledge the impact without argument or negotiation, and adjust.',
     metaphor: { symbol: '⚖️', concept: 'A scale with impact on one side — not intent', explanation: 'Accountability weighs what happened, not what was meant. Intent sits on a different scale entirely. Both matter. They are not the same measurement.' },
     audioText: 'Accountability means taking responsibility for the impact of your conduct on another person. It is about what happened — not what you intended. It is not performing an apology in a specific format. It is not agreeing that you are a bad person. It is naming what occurred and changing what you do. And it applies to everyone in the relationship — not only to you.',
     activationPrompt: 'Think of a time when someone asked you to be accountable for something. Were they asking you to acknowledge an impact — or were they asking you to accept a verdict about who you are? What is the difference between those two things?',
   },
-];
-
-
 ];
 
 // ─── RULE CARDS DATA ──────────────────────────────────────────────────────────
