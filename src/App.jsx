@@ -983,39 +983,23 @@ function Chip({ label, color }) {
   );
 }
 
-function UDLBadge({ label }) {
-  return (
-    <span style={{
-      display: 'inline-block', padding: '2px 8px',
-      borderRadius: 12, fontSize: 10, fontWeight: 700,
-      backgroundColor: '#EEF2F6', color: C.secondary,
-      border: `1px solid ${C.border}`,
-      letterSpacing: 0.4, marginRight: 4, marginBottom: 4,
-    }}>UDL: {label}</span>
-  );
-}
 
 // ─── OVERLAYS ─────────────────────────────────────────────────────────────────
 
 function GroundingOverlay({ onClose, onEmergency, regState }) {
   const [step, setStep] = useState(0);
   const steps = [
-    {
-      icon: '🫁',
-      title: 'Feel your feet on the floor.',
-      body: 'Press them down. Notice the pressure. You are here.',
-    },
-    {
-      icon: '👁️',
-      title: 'Name one thing you can see.',
-      body: 'Look around. Pick one object. Say its name — out loud or in your head.',
-    },
-    {
-      icon: '✋',
-      title: 'Notice what your hands feel.',
-      body: 'Are they warm or cool? Tight or loose? Just notice.',
-    },
+    { icon: '🫁', title: 'Feel your feet on the floor.', body: 'Press them down. Notice the pressure. You are here.' },
+    { icon: '👁️', title: 'Name one thing you can see.', body: 'Look around. Pick one object. Say its name — out loud or in your head.' },
+    { icon: '✋', title: 'Notice what your hands feel.', body: 'Are they warm or cool? Tight or loose? Just notice.' },
   ];
+  const speakStep = () => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(steps[step].title + ' ' + steps[step].body);
+    u.rate = 0.80; u.pitch = 1.0; u.volume = 1.0;
+    window.speechSynthesis.speak(u);
+  };
   return (
     <div style={{
       position: 'absolute', inset: 0,
@@ -1023,33 +1007,21 @@ function GroundingOverlay({ onClose, onEmergency, regState }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       zIndex: 100, padding: 20,
     }}>
-      <div style={{
-        backgroundColor: C.white, borderRadius: 16,
-        padding: 24, width: '100%', maxWidth: 340,
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 12 }}>
-          GROUNDING PAUSE
+      <div style={{ backgroundColor: C.white, borderRadius: 16, padding: 24, width: '100%', maxWidth: 340 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5 }}>GROUNDING PAUSE</div>
+          <SpeakButton text={steps[step].title + ' ' + steps[step].body} />
         </div>
-        <div style={{ fontSize: 40, textAlign: 'center', marginBottom: 12 }}>
-          {steps[step].icon}
-        </div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: C.primary, marginBottom: 8, textAlign: 'center' }}>
-          {steps[step].title}
-        </div>
-        <div style={{ fontSize: 15, color: C.secondary, lineHeight: 1.6, textAlign: 'center', marginBottom: 20 }}>
-          {steps[step].body}
-        </div>
+        <div style={{ fontSize: 40, textAlign: 'center', marginBottom: 12 }}>{steps[step].icon}</div>
+        <div style={{ fontSize: 20, fontWeight: 700, color: C.primary, marginBottom: 8, textAlign: 'center' }}>{steps[step].title}</div>
+        <div style={{ fontSize: 15, color: C.secondary, lineHeight: 1.6, textAlign: 'center', marginBottom: 20 }}>{steps[step].body}</div>
         <div style={{ display: 'flex', gap: 8, flexDirection: 'column' }}>
           {step < steps.length - 1 ? (
             <Btn label="Next →" onClick={() => setStep(s => s + 1)} variant="primary" />
           ) : (
-            <Btn label="Return to where I was" onClick={onClose} variant="calm" />
+            <Btn label="Return to where I was" onClick={() => { window.speechSynthesis && window.speechSynthesis.cancel(); onClose(); }} variant="calm" />
           )}
           <Btn label="I need more help →" onClick={onEmergency} variant="ghost" small />
-        </div>
-        <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-          <UDLBadge label="Engagement 9.2" />
-          <UDLBadge label="Expression 4.1" />
         </div>
       </div>
     </div>
@@ -1136,11 +1108,6 @@ function SettingsPanel({ settings, onChange, onClose }) {
         </div>
 
         <div style={{ marginTop: 'auto' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            <UDLBadge label="Representation 1.1" />
-            <UDLBadge label="Expression 4.1" />
-            <UDLBadge label="Engagement 7.3" />
-          </div>
         </div>
       </div>
       <div onClick={onClose} style={{ flex: 1, height: '100%' }} />
@@ -1155,9 +1122,9 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
     {
       num: 1, icon: '📖', screen: 'module1',
       title: 'The Framework',
-      sub: '13 Rules · 17 Definitions',
-      purpose: 'Learn the rules and definitions. This is where every session starts.',
-      note: 'Start here — every session',
+      sub: '13 Rules · 19 Definitions',
+      purpose: 'Learn the rules and definitions.',
+      note: 'Start here',
       noteColor: C.calm,
       color: C.interactive,
     },
@@ -1195,6 +1162,19 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
           The Art of Friendship
         </div>
       </div>
+
+      {/* Regulation state response */}
+      {regState === 'activated' && (
+        <div style={{
+          padding: '9px 14px', marginBottom: 14,
+          backgroundColor: C.activated + '10',
+          border: `1px solid ${C.activated}30`,
+          borderLeft: `3px solid ${C.activated}`,
+          borderRadius: 8, fontSize: 13, color: C.activated, fontWeight: 600, lineHeight: 1.5,
+        }}>
+          You reported activated. Starting with The Framework is recommended before moving to a reflective tool.
+        </div>
+      )}
 
       {/* Sequential steps */}
       <div style={{ marginBottom: 4 }}>
@@ -1260,11 +1240,6 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
       {/* Goal editor */}
       <GoalEditor goal={goal} onSave={saveGoal} />
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 7.1" />
-        <UDLBadge label="Rep 3.2" />
-        <UDLBadge label="Engagement 8.1" />
-      </div>
 
       {/* Legal footer */}
       <div style={{ marginTop: 16, paddingTop: 12, borderTop: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1306,10 +1281,6 @@ function NavigatorScreen({ navigate, setDest }) {
           {label}
         </button>
       ))}
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 7.1" />
-        <UDLBadge label="Expression 5.1" />
-      </div>
     </div>
   );
 }
@@ -1377,16 +1348,11 @@ function RegulationScreen({ navigate, onSetReg, regState }) {
         </button>
       ))}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 9.1" />
-        <UDLBadge label="Engagement 9.2" />
-        <UDLBadge label="Representation 1.3" />
-      </div>
     </div>
   );
 }
 
-function OverwhelmedStop({ navigate, onEmergency }) {
+function OverwhelmedStop({ navigate, onEmergency, onGrounding }) {
   return (
     <div style={{ paddingTop: 16, textAlign: 'center' }}>
       <div style={{ fontSize: 40, marginBottom: 16 }}>🛑</div>
@@ -1406,13 +1372,9 @@ function OverwhelmedStop({ navigate, onEmergency }) {
         <div style={{ fontSize: 13, fontWeight: 700, color: C.secondary, marginBottom: 10, letterSpacing: 0.4 }}>
           WHEN YOU ARE READY, YOU CAN:
         </div>
-        <Btn label="Use the Grounding Pause" onClick={() => navigate('grounding')} variant="secondary" style={{ marginBottom: 8 }} />
+        <Btn label="Use the Grounding Pause" onClick={onGrounding} variant="secondary" style={{ marginBottom: 8 }} />
         <Btn label="Go to Emergency Screen" onClick={onEmergency} variant="ghost" small />
       </Card>
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        <UDLBadge label="Engagement 9.1" />
-        <UDLBadge label="Engagement 9.2" />
-      </div>
     </div>
   );
 }
@@ -1455,7 +1417,7 @@ function EmergencyScreen({ navigate }) {
 
       <div style={{
         backgroundColor: 'rgba(255,255,255,0.12)',
-        borderRadius: 12, padding: 20, marginBottom: 24,
+        borderRadius: 12, padding: 20, marginBottom: 16,
       }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: 0.5, marginBottom: 8 }}>
           STEP 3 — WHEN READY
@@ -1469,7 +1431,20 @@ function EmergencyScreen({ navigate }) {
           fontSize: 24, fontWeight: 800, color: '#fff',
           textAlign: 'center', letterSpacing: 2,
         }}>
-          "SHUTDOWN"
+          "[your agreed signal word]"
+        </div>
+      </div>
+
+      <div style={{
+        backgroundColor: 'rgba(255,255,255,0.08)',
+        border: '1px solid rgba(255,255,255,0.18)',
+        borderRadius: 12, padding: 20, marginBottom: 24,
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.6)', letterSpacing: 0.5, marginBottom: 8 }}>
+          IF YOU CANNOT REACH OUT YET
+        </div>
+        <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6 }}>
+          Stay here. Press both feet into the floor. Breathe out slowly. You do not have to do anything else yet.
         </div>
       </div>
 
@@ -1484,11 +1459,6 @@ function EmergencyScreen({ navigate }) {
         Return when you are ready
       </button>
 
-      <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', fontWeight: 700, letterSpacing: 0.4 }}>
-          UDL: Engagement 9.1 · 9.2 · Expression 4.1
-        </span>
-      </div>
     </div>
   );
 }
@@ -1513,7 +1483,7 @@ function Module2Anchor({ navigate, settings, showTerm }) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.interactive, marginBottom: 2 }}>STEP 2 OF 4</div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.interactive, marginBottom: 2 }}>STEP 3 OF 4</div>
           <div style={{ fontSize: 13, color: C.primary }}>This checklist uses the rules. Know the rules before you start.</div>
         </div>
         <button onClick={() => navigate('module1')} style={{
@@ -1586,11 +1556,6 @@ function Module2Anchor({ navigate, settings, showTerm }) {
         variant="primary"
       />
 
-      <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Representation 2.4" />
-        <UDLBadge label="Expression 4.1" />
-        <UDLBadge label="Engagement 7.3" />
-      </div>
     </div>
   );
 }
@@ -1683,11 +1648,6 @@ function Module2Question({ qNum, navigate, answers, onAnswer, settings }) {
         </div>
       )}
 
-      <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 1.1" />
-        <UDLBadge label="Expr 5.1" />
-        <UDLBadge label="Engagement 7.3" />
-      </div>
     </div>
   );
 }
@@ -1757,10 +1717,6 @@ function Module2Result({ navigate, answers }) {
         <Btn label="Prepare for This (upcoming situation)" onClick={() => navigate('module2-prepare')} variant="secondary" small />
       </div>
 
-      <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        <UDLBadge label="Engagement 8.4" />
-        <UDLBadge label="Engagement 9.3" />
-      </div>
     </div>
   );
 }
@@ -1852,16 +1808,11 @@ function Module2Prepare({ navigate }) {
             </div>
           ))}
           <div style={{ marginTop: 12, fontSize: 12, color: C.secondary, fontStyle: 'italic' }}>
-            AI-powered preparation based on your framework rules. Powered by Anthropic API.
+            Scenario preparation based on your framework rules.
           </div>
         </Card>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Expression 6.2" />
-        <UDLBadge label="Rep 3.4" />
-        <UDLBadge label="Engagement 7.2" />
-      </div>
     </div>
   );
 }
@@ -1915,7 +1866,7 @@ function Module1Home({ navigate, setSelectedTerm, settings }) {
     <div style={{ paddingTop: 4 }}>
       {/* Tab selector */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 14, backgroundColor: C.border + '60', borderRadius: 12, padding: 4 }}>
-        {[['definitions', '📖 Definitions', 17], ['rules', '📋 Rules', 13]].map(([id, label, count]) => (
+        {[['definitions', '📖 Definitions', 19], ['rules', '📋 Rules', 13]].map(([id, label, count]) => (
           <button key={id} onClick={() => { setTab(id); setQuery(''); }} style={{
             flex: 1, padding: '10px 8px', borderRadius: 8, cursor: 'pointer', border: 'none',
             backgroundColor: tab === id ? C.white : 'transparent',
@@ -2031,12 +1982,6 @@ function Module1Home({ navigate, setSelectedTerm, settings }) {
         </>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 2.5" />
-        <UDLBadge label="Rep 2.1" />
-        <UDLBadge label="Expr 6.3" />
-        <UDLBadge label="Engagement 7.2" />
-      </div>
     </div>
   );
 }
@@ -2172,10 +2117,6 @@ function Module1TermDetail({ navigate, termId, settings }) {
               💡 Metaphors are a starting point — not the full definition. Use the 📖 Define tab for the complete working definition and boundary clause.
             </div>
           </Card>
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            <UDLBadge label="Rep 1.3" />
-            <UDLBadge label="Rep 2.5" />
-          </div>
         </div>
       )}
 
@@ -2228,10 +2169,6 @@ function Module1TermDetail({ navigate, termId, settings }) {
             </Card>
           )}
 
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            <UDLBadge label="Rep 1.2" />
-            <UDLBadge label="Expr 5.1" />
-          </div>
         </div>
       )}
 
@@ -2247,11 +2184,6 @@ function Module1TermDetail({ navigate, termId, settings }) {
         <span style={{ fontSize: 14, fontWeight: 700, color: DC[term.domainNum] }}>Rule {term.linkedRule} →</span>
       </button>
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 2.5" />
-        <UDLBadge label="Rep 3.2" />
-        <UDLBadge label="Engagement 7.2" />
-      </div>
     </div>
   );
 }
@@ -2305,11 +2237,6 @@ function Module1RuleCards({ navigate }) {
         </div>
       ))}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 1.1" />
-        <UDLBadge label="Expr 6.3" />
-        <UDLBadge label="Engagement 8.1" />
-      </div>
     </div>
   );
 }
@@ -2494,11 +2421,15 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
         )}
       </div>
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 2.5" />
-        <UDLBadge label="Rep 3.2" />
-        <UDLBadge label="Expr 6.3" />
-      </div>
+      {/* Practice link */}
+      <button onClick={() => navigate('module4')} style={{
+        display: 'block', width: '100%', padding: '11px 14px', marginTop: 8,
+        borderRadius: 10, cursor: 'pointer', textAlign: 'left',
+        border: `1px solid ${C.border}`,
+        backgroundColor: C.interactive + '07',
+        fontSize: 13, fontWeight: 600, color: C.interactive,
+      }}>🎯 Practice this rule in scenarios →</button>
+
     </div>
   );
 }
@@ -2569,10 +2500,6 @@ function Module1FrameworkMap({ navigate, setSelectedTerm }) {
         </div>
       </Card>
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 3.2" />
-        <UDLBadge label="Expr 6.3" />
-      </div>
     </div>
   );
 }
@@ -2623,11 +2550,6 @@ function Module3Home({ navigate, setDest, goal }) {
         </button>
       ))}
 
-      <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 9.1" />
-        <UDLBadge label="Expr 6.1" />
-        <UDLBadge label="Rep 3.3" />
-      </div>
     </div>
   );
 }
@@ -2658,10 +2580,6 @@ function Module3Gate({ navigate, dest, onSetReg, regState }) {
           <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.5, paddingLeft: 32 }}>{desc}</div>
         </button>
       ))}
-      <div style={{ marginTop: 4, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 9.1" />
-        <UDLBadge label="Engagement 9.2" />
-      </div>
     </div>
   );
 }
@@ -2716,7 +2634,7 @@ function Module3SelfAudit({ navigate, settings }) {
       {[
         { id: 'written', icon: '✍️', label: 'Written', desc: 'Sentence frames + fill-in. Best for full processing capacity.' },
         { id: 'visual',  icon: '🔘', label: 'Visual',  desc: 'Click or color-code responses. Good for activated days.' },
-        { id: 'audio',   icon: '🎙️', label: 'Voice Memo', desc: 'Speak your responses. Best when writing feels inaccessible.' },
+        { id: 'audio',   icon: '🔊', label: 'Hear & respond', desc: 'Hear each question read aloud. Best when reading feels inaccessible.' },
       ].map(f => (
         <button key={f.id} onClick={() => setFormat(f.id)} style={{
           display: 'block', width: '100%', padding: '12px 14px', marginBottom: 8,
@@ -2753,11 +2671,6 @@ function Module3SelfAudit({ navigate, settings }) {
         </div>
       </div>
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Expr 5.1" />
-        <UDLBadge label="Engagement 8.2" />
-        <UDLBadge label="Engagement 8.4" />
-      </div>
     </div>
   );
 
@@ -2877,23 +2790,21 @@ function Module3SelfAudit({ navigate, settings }) {
           </div>
         )}
 
-        {/* Audio format */}
+        {/* Audio format — hear the question, then respond */}
         {format === 'audio' && (
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 14, color: C.secondary, marginBottom: 16 }}>Speak your response. Tap record when ready.</div>
-            {audioState === 'idle' && <button onClick={() => { setAudioState('recording'); setTimeout(() => setAudioState('done'), 2500); }} style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: C.overwhelmed, border: 'none', cursor: 'pointer', fontSize: 36, margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🎙️</button>}
-            {audioState === 'recording' && <div style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: C.overwhelmed + '44', border: `3px solid ${C.overwhelmed}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 28 }}>⏺</div>}
-            {audioState === 'done' && <div style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: C.calm + '22', border: `3px solid ${C.calm}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 28 }}>✓</div>}
-            <div style={{ fontSize: 13, color: C.secondary, marginBottom: 20 }}>{audioState === 'idle' ? 'Tap to record' : audioState === 'recording' ? 'Recording...' : 'Recorded'}</div>
-            {audioState === 'done' && <Btn label="Save and continue →" onClick={() => { setAudioState('idle'); handleAnswer('audio'); }} variant="primary" />}
+          <div style={{ textAlign: 'center', paddingBottom: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>
+              HEAR THE QUESTION — THEN RESPOND
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+              <SpeakButton text={currentQ.full + '. ' + currentQ.sub} />
+            </div>
+            <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6, marginBottom: 4 }}>
+              Tap 🔊 to hear the question read aloud. Then select your response below.
+            </div>
           </div>
         )}
 
-        <div style={{ marginTop: 14, display: 'flex', flexWrap: 'wrap' }}>
-          <UDLBadge label="Rep 3.3" />
-          <UDLBadge label="Expr 5.1" />
-          <UDLBadge label="Expr 5.2" />
-        </div>
       </div>
     );
   }
@@ -2940,13 +2851,41 @@ function Module3SelfAudit({ navigate, settings }) {
           ].join('\n')} />
         </div>
 
+        {/* Pattern pathway — shows when 2 or more patterns detected */}
+        {activeQIds.filter(id => answers[id] === false).length >= 2 && (
+          <Card style={{ borderLeft: `4px solid ${C.activated}`, marginTop: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.activated, letterSpacing: 0.4, marginBottom: 8 }}>
+              YOU RECOGNIZED A PATTERN
+            </div>
+            <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6, marginBottom: 12 }}>
+              Two or more areas showed a pattern to examine. That level of recognition is significant. What would you like to do with it?
+            </div>
+            <Btn
+              label="I want to work on this — set a goal"
+              onClick={() => navigate('home')}
+              variant="calm"
+              style={{ marginBottom: 8 }}
+            />
+            <FacilitatorShareButton summary={[
+              'Self-Audit — Pattern Recognized',
+              '',
+              'The student identified 2 or more patterns to examine:',
+              ...activeQIds
+                .filter(id => answers[id] === false)
+                .map(id => {
+                  const q = AUDIT_Q.find(x => x.id === id);
+                  return `  • ${q.symbol} ${q.full}`;
+                }),
+              '',
+              `Pattern summary: ${mastery.text}`,
+              '',
+              'Student selected: I want to work on this.',
+            ].join('\n')} />
+          </Card>
+        )}
+
         <Btn label="Return to My Tracker" onClick={() => navigate('module3')} variant="primary" style={{ marginTop: 12 }} />
 
-        <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-          <UDLBadge label="Engagement 8.4" />
-          <UDLBadge label="Engagement 9.3" />
-          <UDLBadge label="Engagement 8.3" />
-        </div>
       </div>
     );
   }
@@ -3019,11 +2958,6 @@ function Module3SkillTracker({ navigate }) {
         </Card>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 9.3" />
-        <UDLBadge label="Engagement 8.4" />
-        <UDLBadge label="Rep 1.1" />
-      </div>
     </div>
   );
 }
@@ -3169,12 +3103,6 @@ function Module3Applied({ navigate }) {
         </div>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 3.4" />
-        <UDLBadge label="Expr 6.4" />
-        <UDLBadge label="Engagement 8.3" />
-        <UDLBadge label="Engagement 8.4" />
-      </div>
     </div>
   );
 }
@@ -3257,11 +3185,6 @@ function Module3InitiationTracker({ navigate }) {
         );
       })}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Expr 6.4" />
-        <UDLBadge label="Engagement 8.1" />
-        <UDLBadge label="ADHD: Time externalization" />
-      </div>
     </div>
   );
 }
@@ -3323,6 +3246,13 @@ function Module3Journal({ navigate }) {
             <div style={{ fontSize: 11, fontWeight: 700, color: DC[4], letterSpacing: 0.4 }}>WHAT I OBSERVED IN MYSELF</div>
             <span style={{ fontSize: 10, backgroundColor: DC[4] + '18', color: DC[4], padding: '2px 8px', borderRadius: 10, fontWeight: 700 }}>Phase 2</span>
           </div>
+          <div style={{
+            padding: '9px 12px', marginBottom: 12,
+            backgroundColor: C.primary + '07', border: `1px solid ${C.primary}18`,
+            borderRadius: 8, fontSize: 13, color: C.secondary, lineHeight: 1.7, fontStyle: 'italic',
+          }}>
+            The next question asks you to turn the same lens inward. This is different from observing someone else. Take your time with it.
+          </div>
           {compMode === 'frame' && (
             <><div style={{ fontSize: 13, color: C.secondary, marginBottom: 6, fontStyle: 'italic' }}>Today I noticed myself... which connects to Rule...</div>
             <textarea value={inward} onChange={e => setInward(e.target.value)} placeholder="Write one honest observation about your own behavior..." style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 10px', fontSize: 14, color: C.primary, lineHeight: 1.5, resize: 'none', fontFamily: 'system-ui', minHeight: 56, boxSizing: 'border-box' }} /></>
@@ -3347,11 +3277,6 @@ function Module3Journal({ navigate }) {
         </>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Expr 5.2" />
-        <UDLBadge label="Engagement 9.3" />
-        <UDLBadge label="Engagement 8.2" />
-      </div>
     </div>
   );
 }
@@ -3571,10 +3496,6 @@ function Module3Progress({ navigate }) {
 
       <FacilitatorShareButton summary={buildSummary()} />
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 6.4" />
-        <UDLBadge label="Engagement 9.3" />
-      </div>
     </div>
   );
 }
@@ -3654,10 +3575,6 @@ function Module3Quarterly({ navigate }) {
         </>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 9.3" />
-        <UDLBadge label="Engagement 6.4" />
-      </div>
     </div>
   );
 }
@@ -3668,8 +3585,8 @@ function Module4Home({ navigate }) {
   const tools = [
     { id: 'module4-scenarios',  icon: '🃏', title: 'Scenario Cards',       desc: '8 pre-built scenarios with bilateral analysis. Three support levels.', badge: 'Bilateral practice' },
     { id: 'module4-trivia',     icon: '🧠', title: 'Rule Trivia',           desc: '12 questions across Foundation, Application, and Challenge tiers.', badge: 'Knowledge check' },
-    { id: 'module4-flashcards', icon: '📚', title: 'Flashcard Deck',        desc: 'All 17 definitions. Flip, review, rate. Spaced repetition.', badge: 'Definition review' },
-    { id: 'module4-generator',  icon: '✨', title: 'AI Scenario Generator', desc: 'Describe a real situation. Get a personalized practice scenario.', badge: 'Powered by AI' },
+    { id: 'module4-flashcards', icon: '📚', title: 'Flashcard Deck',        desc: 'All 19 definitions. Flip, review, and self-rate.', badge: 'Definition review' },
+    { id: 'module4-generator',  icon: '✨', title: 'Scenario Generator',    desc: 'Describe a real situation. Get a practice scenario built from the framework rules.', badge: 'Template-based' },
   ];
 
   return (
@@ -3691,11 +3608,6 @@ function Module4Home({ navigate }) {
           <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{t.desc}</div>
         </button>
       ))}
-      <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 7.1" />
-        <UDLBadge label="Expr 5.3" />
-        <UDLBadge label="Rep 3.4" />
-      </div>
     </div>
   );
 }
@@ -3777,11 +3689,6 @@ function Module4Scenarios({ navigate }) {
       </div>
 
       <Btn label="← Back to scenario library" onClick={() => setSelected(null)} variant="ghost" small style={{ marginTop: 12 }} />
-      <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Expr 5.3" />
-        <UDLBadge label="Rep 3.4" />
-        <UDLBadge label="Engagement 7.3" />
-      </div>
     </div>
   );
 
@@ -3818,11 +3725,6 @@ function Module4Scenarios({ navigate }) {
           </div>
         </button>
       ))}
-      <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 7.2" />
-        <UDLBadge label="Engagement 8.2" />
-        <UDLBadge label="ADHD: Pause gate" />
-      </div>
     </div>
   );
 }
@@ -3914,11 +3816,6 @@ function Module4Trivia({ navigate }) {
           <Btn label={qIdx < questions.length - 1 ? 'Next question →' : 'Complete deck →'} onClick={next} variant="primary" />
         </div>
       )}
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 7.3" />
-        <UDLBadge label="Engagement 8.2" />
-        <UDLBadge label="Expr 5.3" />
-      </div>
     </div>
   );
 }
@@ -3951,7 +3848,7 @@ function Module4Flashcards({ navigate }) {
           return count > 0 ? <div key={v} style={{ fontSize: 13, color: c, fontWeight: 700, marginBottom: 4 }}>{l}: {count} terms</div> : null;
         })}
       </Card>
-      <MasteryCard message="You reviewed all 17 definitions. That is the vocabulary the rules are built on. The terms you marked Not yet are your next targets." />
+      <MasteryCard message="You reviewed all 19 definitions — including Gaslighting and Accountability, the two newest. The terms you marked Not yet are your next targets." />
       <Btn label="Restart deck" onClick={() => { setIdx(0); setFlipped(false); setRatings({}); setDone(false); }} variant="secondary" style={{ marginTop: 12 }} />
       <Btn label="← Back to Practice" onClick={() => navigate('module4')} variant="ghost" small style={{ marginTop: 8 }} />
     </div>
@@ -4008,11 +3905,6 @@ function Module4Flashcards({ navigate }) {
           </div>
         </div>
       )}
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Rep 2.5" />
-        <UDLBadge label="Expr 5.3" />
-        <UDLBadge label="Engagement 7.3" />
-      </div>
     </div>
   );
 }
@@ -4128,17 +4020,12 @@ Respond with ONLY valid JSON, no markdown, no explanation:
         <Btn label="Generate another" onClick={() => setResult(null)} variant="secondary" />
         <Btn label="← Practice" onClick={() => navigate('module4')} variant="ghost" small />
       </div>
-      <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 7.2" />
-        <UDLBadge label="Rep 3.4" />
-        <UDLBadge label="PTSD: 3rd-person framing" />
-      </div>
     </div>
   );
 
   return (
     <div style={{ paddingTop: 4 }}>
-      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 6 }}>AI Scenario Generator</div>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 6 }}>Scenario Generator</div>
       <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
         Describe a real situation. The generator will rewrite it as a third-person practice scenario — enough distance to examine it clearly.
       </div>
@@ -4176,11 +4063,6 @@ Respond with ONLY valid JSON, no markdown, no explanation:
         </div>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap' }}>
-        <UDLBadge label="Engagement 7.2" />
-        <UDLBadge label="Rep 3.4" />
-        <UDLBadge label="PTSD: 3rd-person framing" />
-      </div>
     </div>
   );
 }
@@ -4635,7 +4517,7 @@ function LegalScreen({ navigate }) {
     {
       label: 'AI-Generated Content',
       color: DC[4],
-      content: 'The AI Scenario Generator uses Anthropic\'s Claude API. Generated scenarios are educational examples only — not clinical assessments or professional advice. When used, your situation description is transmitted to Anthropic\'s servers. All other app data stays in your browser session only.',
+      content: 'The Scenario Generator builds practice scenarios from your framework rules. All app data stays in your browser session only. No data is transmitted externally.',
     },
     {
       label: 'Privacy',
@@ -4792,7 +4674,7 @@ export default function App() {
     'module4-scenarios': 'Scenario Cards',
     'module4-trivia': 'Rule Trivia',
     'module4-flashcards': 'Flashcard Deck',
-    'module4-generator': 'AI Generator',
+    'module4-generator': 'Scenario Generator',
     module3: 'My Tracker',
     'module3-gate': 'Check In First',
     'module3-audit': 'Self-Audit',
@@ -4825,7 +4707,7 @@ export default function App() {
     if (screen === 'home') return <HomeScreen navigate={navigate} regState={regState} goal={weeklyGoal} saveGoal={saveGoal} />;
     if (screen === 'navigator') return <NavigatorScreen navigate={navigate} setDest={setModule3Dest} />;
     if (screen === 'regulation') return <RegulationScreen navigate={navigate} onSetReg={setRegState} regState={regState} />;
-    if (screen === 'overwhelmed-stop') return <OverwhelmedStop navigate={navigate} onEmergency={handleEmergency} />;
+    if (screen === 'overwhelmed-stop') return <OverwhelmedStop navigate={navigate} onEmergency={handleEmergency} onGrounding={() => setShowGrounding(true)} />;
     if (screen === 'emergency') return <EmergencyScreen navigate={navigate} />;
     if (screen === 'module2-anchor') return <Module2Anchor navigate={navigate} settings={settings} showTerm={showTerm} />;
     if (screen === 'module2-q1') return <Module2Question qNum={1} navigate={navigate} answers={answers} onAnswer={handleAnswer} settings={settings} />;
