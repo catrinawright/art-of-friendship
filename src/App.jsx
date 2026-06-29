@@ -2948,7 +2948,9 @@ function Module3SelfAudit({ navigate, settings }) {
 }
 
 function Module3SkillTracker({ navigate }) {
-  const [ratings, setRatings] = useState({});
+  const [ratings, setRatings] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('aof-skill-ratings') || '{}'); } catch { return {}; }
+  });
   const [saved, setSaved] = useState(false);
 
   const internalized = Object.values(ratings).filter(v => v === 'internalized').length;
@@ -3002,7 +3004,7 @@ function Module3SkillTracker({ navigate }) {
       })}
 
       {!saved ? (
-        <Btn label="Save tracker" onClick={() => setSaved(true)} variant="primary" style={{ marginTop: 4 }} />
+        <Btn label="Save tracker" onClick={() => { try { localStorage.setItem('aof-skill-ratings', JSON.stringify(ratings)); } catch(e) {} setSaved(true); }} variant="primary" style={{ marginTop: 4 }} />
       ) : (
         <Card style={{ borderLeft: `4px solid ${C.calm}`, marginTop: 4 }}>
           <div style={{ fontSize: 14, color: C.primary, fontWeight: 700 }}>Saved ✓</div>
@@ -3163,7 +3165,9 @@ function Module3Applied({ navigate }) {
 
 function Module3InitiationTracker({ navigate }) {
   const [relName, setRelName] = useState('');
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('aof-initiation-log') || '[]'); } catch { return []; }
+  });
   const [showAdd, setShowAdd] = useState(false);
   const [lastLogged, setLastLogged] = useState(false);
 
@@ -3180,7 +3184,10 @@ function Module3InitiationTracker({ navigate }) {
 
   const addEntry = (who) => {
     if (!relName.trim()) return;
-    setEntries(p => [...p, { rel: relName.trim(), who, date: new Date().toLocaleDateString() }]);
+    const newEntry = { rel: relName.trim(), who, date: new Date().toLocaleDateString() };
+    const newEntries = [...entries, newEntry];
+    setEntries(newEntries);
+    try { localStorage.setItem('aof-initiation-log', JSON.stringify(newEntries)); } catch(e) {}
     setShowAdd(false);
     setRelName('');
     setLastLogged(true);
@@ -3841,7 +3848,10 @@ function Module3Signal({ navigate }) {
           </button>
           {openIdx === i && (
             <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${C.border}` }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10, marginBottom: 2 }}>
+                <SpeakButton text={cat.what + '. ' + cat.sounds + '. ' + cat.ask} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 4 }}>
                 {[['WHAT IT IS', cat.what, false], ['WHAT IT SOUNDS LIKE', cat.sounds, true], ['WHAT TO DO WITH IT', cat.ask, false]].map(([lbl, val, italic]) => (
                   <div key={lbl}>
                     <div style={{ fontSize: 10, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 4 }}>{lbl}</div>
@@ -3948,8 +3958,13 @@ function Module3Reality({ navigate }) {
         </div>
       )}
       <Card>
-        <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, lineHeight: 1.5, marginBottom: 8 }}>{q.text}</div>
-        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6 }}>{q.sub}</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+          <div style={{ flex: 1, marginRight: 10 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, lineHeight: 1.5, marginBottom: 6 }}>{q.text}</div>
+            <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6 }}>{q.sub}</div>
+          </div>
+          <SpeakButton text={q.text + '. ' + q.sub} />
+        </div>
       </Card>
       <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
         <button onClick={() => answer(true)} style={{ flex: 1, padding: 12, borderRadius: 8, cursor: 'pointer', fontSize: 15, fontWeight: 700, backgroundColor: C.calm + '14', border: `1.5px solid ${C.calm}`, color: C.calm }}>Yes</button>
@@ -4100,9 +4115,14 @@ function Module3Repair({ navigate }) {
         <span style={{ fontSize: 12, fontWeight: 700, color: C.secondary, whiteSpace: 'nowrap' }}>Step {step+1} of {p.steps.length}</span>
       </div>
       <Card style={{ borderLeft: `4px solid ${p.color}`, marginBottom: 16 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: p.color, letterSpacing: 0.5, marginBottom: 8 }}>STEP {step+1}</div>
-        <div style={{ fontSize: 17, fontWeight: 700, color: C.primary, marginBottom: 10, lineHeight: 1.3 }}>{s.title}</div>
-        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7 }}>{s.body}</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div style={{ flex: 1, marginRight: 8 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: p.color, letterSpacing: 0.5, marginBottom: 8 }}>STEP {step+1}</div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: C.primary, marginBottom: 10, lineHeight: 1.3 }}>{s.title}</div>
+            <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7 }}>{s.body}</div>
+          </div>
+          <SpeakButton text={s.title + '. ' + s.body} />
+        </div>
       </Card>
       <div style={{ display: 'flex', gap: 8 }}>
         {step > 0 && <button onClick={() => setStep(v => v-1)} style={{ flex: 1, padding: 12, borderRadius: 8, cursor: 'pointer', border: `1px solid ${C.border}`, backgroundColor: C.white, fontSize: 13, fontWeight: 600, color: C.secondary }}>← Previous</button>}
@@ -4183,9 +4203,12 @@ function Module3Disclosure({ navigate }) {
         <Card style={{ borderLeft: `4px solid ${l.color}` }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 8 }}>SUGGESTED SCRIPT</div>
           <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 12 }}>{l.script}</div>
-          <button onClick={() => copy(l.script)} style={{ padding: '7px 14px', borderRadius: 8, cursor: 'pointer', backgroundColor: copied ? C.calm + '14' : C.bg, border: `1px solid ${copied ? C.calm : C.border}`, fontSize: 12, fontWeight: 700, color: copied ? C.calm : C.secondary }}>
-            {copied ? '✓ Copied' : '📋 Copy script'}
-          </button>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <SpeakButton text={l.script} />
+            <button onClick={() => copy(l.script)} style={{ padding: '7px 14px', borderRadius: 8, cursor: 'pointer', backgroundColor: copied ? C.calm + '14' : C.bg, border: `1px solid ${copied ? C.calm : C.border}`, fontSize: 12, fontWeight: 700, color: copied ? C.calm : C.secondary }}>
+              {copied ? '✓ Copied' : '📋 Copy script'}
+            </button>
+          </div>
         </Card>
       ) : (
         <Card style={{ borderLeft: `4px solid ${l.color}`, backgroundColor: C.primary + '06' }}>
@@ -4236,7 +4259,10 @@ function Module3Conclude({ navigate }) {
         <span style={{ fontSize: 12, fontWeight: 700, color: C.secondary }}>Step 1 of 3</span>
       </div>
       <Card>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHAT DID THEY DO?</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4 }}>WHAT DID THEY DO?</div>
+          <SpeakButton text="Name only the behavior — one sentence. What they said or did. Not how it felt. Not what you think it means." />
+        </div>
         <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>Name only the behavior — one sentence. What they said or did. Not how it felt. Not what you think it means.</div>
         <textarea value={behavior} onChange={e => setBehavior(e.target.value)} placeholder="They..." rows={2}
           style={{ width: '100%', padding: '10px 12px', border: `1.5px solid ${behavior ? C.interactive : C.border}`, borderRadius: 10, fontSize: 14, color: C.primary, fontFamily: 'system-ui', resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5 }} />
@@ -4258,7 +4284,10 @@ function Module3Conclude({ navigate }) {
         <div style={{ fontSize: 13, color: C.secondary, fontStyle: 'italic' }}>{behavior}</div>
       </Card>
       <Card>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHAT DO YOU THINK IT MEANS?</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4 }}>WHAT DO YOU THINK IT MEANS?</div>
+          <SpeakButton text="Name your interpretation honestly. This is not about whether you are right — it is about making the interpretation visible so you can examine it." />
+        </div>
         <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>Name your interpretation honestly. This is not about whether you are right — it is about making the interpretation visible so you can examine it.</div>
         <textarea value={interpretation} onChange={e => setInterpretation(e.target.value)} placeholder="I think it means..." rows={2}
           style={{ width: '100%', padding: '10px 12px', border: `1.5px solid ${interpretation ? C.activated : C.border}`, borderRadius: 10, fontSize: 14, color: C.primary, fontFamily: 'system-ui', resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5 }} />
@@ -4285,7 +4314,10 @@ function Module3Conclude({ navigate }) {
         <div style={{ fontSize: 13, color: C.secondary, fontStyle: 'italic' }}>{interpretation}</div>
       </Card>
       <Card>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>THREE OTHER EXPLANATIONS</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4 }}>THREE OTHER EXPLANATIONS</div>
+          <SpeakButton text="Name three other explanations for the same behavior that do not involve intent to harm. They do not have to be probable. They only have to be possible." />
+        </div>
         <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 14 }}>
           Name three other explanations for the same behavior that do not involve intent to harm. They do not have to be probable. They only have to be possible.
         </div>
