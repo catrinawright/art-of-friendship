@@ -993,26 +993,56 @@ function Chip({ label, color }) {
 
 function GroundingOverlay({ onClose, onEmergency, regState }) {
   const [step, setStep] = useState(0);
-  const steps = [
+  const [phase, setPhase] = useState(null);
+
+  const PHASES = {
+    during: { label: 'Building', icon: '📡', color: C.activated, steps: [
+      { icon: '🛑', title: 'Stop receiving input.', body: 'Stop listening for a moment. You do not have to process what is being said right now.' },
+      { icon: '🫁', title: 'Press both feet down. One breath out slowly.', body: 'You are still here. The information has not harmed you yet.' },
+      { icon: '⏸', title: 'You do not have to respond yet.', body: 'Say one word if you need to buy time. "Okay." "One moment." Nothing more is required.' },
+    ]},
+    peak: { label: 'Peak', icon: '⚡', color: C.overwhelmed, steps: [
+      { icon: '🛑', title: 'Do nothing.', body: 'You are at the peak. Action will make it worse. This is not a decision point. Wait.' },
+      { icon: '🫁', title: 'Stay in your body.', body: 'Feel the floor. Feel the chair. You are a physical thing in a physical place. That is real.' },
+      { icon: '⏳', title: 'Wait for the wave to recede.', body: 'The architecture of this experience is that it builds and then recedes. You do not have to end it. Wait for it to end.' },
+    ]},
+    receding: { label: 'Receding', icon: '🌊', color: C.interactive, steps: [
+      { icon: '🌊', title: 'The wave is receding.', body: 'You can feel it. Something in the system is settling. This is the turning point.' },
+      { icon: '🧠', title: 'Name one true thing you know right now.', body: 'Say it, even silently. Something factual. "I am in this room." "The other person is still here." "I have handled this before."' },
+      { icon: '↩️', title: 'Decide your next step.', body: 'You can return to the conversation. You can ask for a pause. You can name what happened. All of those are available. Choose from a settled place.' },
+    ]},
+  };
+
+  const standardSteps = [
     { icon: '🫁', title: 'Feel your feet on the floor.', body: 'Press them down. Notice the pressure. You are here.' },
     { icon: '👁️', title: 'Name one thing you can see.', body: 'Look around. Pick one object. Say its name — out loud or in your head.' },
     { icon: '✋', title: 'Notice what your hands feel.', body: 'Are they warm or cool? Tight or loose? Just notice.' },
   ];
-  const speakStep = () => {
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(steps[step].title + ' ' + steps[step].body);
-    u.rate = 0.80; u.pitch = 1.0; u.volume = 1.0;
-    window.speechSynthesis.speak(u);
-  };
+
+  const steps = phase ? PHASES[phase].steps : standardSteps;
+  const accentColor = phase ? PHASES[phase].color : C.interactive;
+
   return (
-    <div style={{
-      position: 'absolute', inset: 0,
-      backgroundColor: 'rgba(27,58,92,0.85)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      zIndex: 100, padding: 20,
-    }}>
+    <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(27,58,92,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 20 }}>
       <div style={{ backgroundColor: C.white, borderRadius: 16, padding: 24, width: '100%', maxWidth: 340 }}>
+
+        {/* Phase selector */}
+        {step === 0 && (
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 8 }}>WHERE ARE YOU RIGHT NOW?</div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {Object.entries(PHASES).map(([id, p]) => (
+                <button key={id} onClick={() => setPhase(phase === id ? null : id)} style={{
+                  flex: 1, padding: '6px 4px', borderRadius: 8, cursor: 'pointer', textAlign: 'center', fontSize: 10, fontWeight: 700,
+                  border: `1.5px solid ${phase === id ? p.color : C.border}`,
+                  backgroundColor: phase === id ? p.color + '14' : 'transparent',
+                  color: phase === id ? p.color : C.secondary,
+                }}>{p.icon} {p.label}</button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5 }}>GROUNDING PAUSE</div>
           <SpeakButton text={steps[step].title + ' ' + steps[step].body} />
@@ -2532,6 +2562,10 @@ function Module3Home({ navigate, setDest, goal }) {
     { id: 'module3-journal',    icon: '📓', title: 'Bilateral Journal',        desc: 'What I observed in others. What I observed in myself.', badge: 'Weekly' },
     { id: 'module3-health',     icon: '💚', title: 'Relationship Health Check', desc: 'Score a relationship against five criteria. Calibrate investment.', badge: 'Monthly' },
     { id: 'module3-progress',   icon: '📈', title: 'Progress Summary',         desc: 'A snapshot of your logged applications, outcomes, and patterns across sessions.', badge: 'Ongoing' },
+    { id: 'module3-scripts',   icon: '💬', title: 'Advocacy scripts',          desc: 'Scripted language for communicating your experience without demanding a specific response.', badge: 'Communication' },
+    { id: 'module3-repair',    icon: '🔧', title: 'Bilateral repair sequence',   desc: 'A step-by-step protocol for after an interaction went wrong — for yours, theirs, or both.', badge: 'Repair' },
+    { id: 'module3-disclosure',icon: '🔐', title: 'Controlled disclosure',       desc: 'Match how much you share about your experience to how much access the person has earned.', badge: 'Disclosure' },
+    { id: 'module3-conclude',  icon: '↩',  title: 'Before I conclude',           desc: 'A three-step check before you act on an interpretation of someone else's behavior.', badge: 'Outgoing' },
     { id: 'module3-quarterly',  icon: '🔎', title: 'Quarterly Self-Assessment', desc: 'Three reflective questions. Do this every 3 months.', badge: 'Quarterly' },
     { id: 'module3-feedback',   icon: '🫁', title: 'Receiving Honest Feedback', desc: 'A before-during-after protocol for the moment someone tells you something true and difficult.', badge: 'High stakes' },
     { id: 'module3-signal',    icon: '📡', title: 'The signal and the source',  desc: 'Four categories of response to activation. Knowing which one fits changes what you ask for.', badge: 'Foundation' },
@@ -3647,6 +3681,10 @@ function Module3Feedback({ navigate }) {
       <div style={{ padding: '8px 12px', backgroundColor: C.activated + '0C', border: `1px solid ${C.activated}30`, borderRadius: 8, marginBottom: 16, fontSize: 12, color: C.secondary, lineHeight: 1.6 }}>
         This is different from the self-audit. Someone outside you is offering the information. That changes everything.
       </div>
+      <div style={{ padding: '8px 12px', backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}25`, borderRadius: 8, marginBottom: 16, fontSize: 12, color: C.secondary, lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span>↩</span>
+        <span>Interpreting someone else's behavior first? Use <button onClick={() => navigate('module3-conclude')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive, padding: 0 }}>Before I conclude</button> instead.</span>
+      </div>
 
       <Card style={{ borderLeft: `4px solid ${C.interactive}` }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: C.interactive, letterSpacing: 0.4, marginBottom: 8 }}>BEFORE — Check your readiness</div>
@@ -3919,6 +3957,370 @@ function Module3Reality({ navigate }) {
       </div>
     </div>
   );
+}
+
+// ─── MODULE 3: ADVOCACY SCRIPTS ──────────────────────────────────────────────
+
+function Module3Scripts({ navigate }) {
+  const [situation, setSituation] = useState(null);
+  const [copied, setCopied] = useState(null);
+
+  const SITUATIONS = [
+    { id: 'shift', icon: '📡', label: 'Something shifted and I need to name it', scripts: [
+      "I want to tell you that something shifted in me just now. I am not sure what caused it. I am not saying you did anything wrong. I just need you to know it happened.",
+      "Something is happening in my nervous system right now. I am okay. I just need a moment before we continue.",
+      "I can feel my system activating. I want to stay in this conversation. Can we slow down for a second?",
+    ]},
+    { id: 'witness', icon: '👁️', label: 'I need you to witness what is happening', scripts: [
+      "I am not asking you to apologize or explain anything. I just need you to acknowledge that something is happening for me right now.",
+      "Can you just say that you can see I am affected? That is all I need right now.",
+      "I need you to know this is real for me, even if you are not sure why.",
+    ]},
+    { id: 'landed', icon: '💬', label: 'What you said landed differently than you may have intended', scripts: [
+      "I want to tell you that something you said landed in a way I did not expect. I am not saying you meant it that way. I just want you to know.",
+      "Something you said hit me differently. I do not think it was your intention. Can I tell you what I experienced?",
+      "I am going to share how something landed for me. I am sharing information, not making an accusation.",
+    ]},
+    { id: 'pause', icon: '⏸', label: 'I need to pause this interaction', scripts: [
+      "I need to stop here. I am not ending this. I need to reset and come back to it.",
+      "Can we pause? I want to give this conversation what it deserves and I cannot do that right now.",
+      "I need to step back from this for now. This is not about you. I will come back to this.",
+    ]},
+    { id: 'return', icon: '↩️', label: 'I want to return to something that happened', scripts: [
+      "I want to come back to what happened earlier. I was not in a good state to respond at the time. Can we try again?",
+      "I have had time to think about what happened between us. I would like to address it when you are ready.",
+      "Something from our last interaction stayed with me. I want to talk about it when the time is right for both of us.",
+    ]},
+  ];
+
+  const copy = async (text, idx) => {
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else { const el = document.createElement('textarea'); el.value = text; el.style.cssText = 'position:fixed;opacity:0;'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
+      setCopied(idx); setTimeout(() => setCopied(null), 3000);
+    } catch(e) {}
+  };
+
+  if (!situation) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Advocacy scripts</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
+        Scripts for communicating your experience without demanding a specific response. Tap a situation to see language you can use.
+      </div>
+      {SITUATIONS.map(s => (
+        <button key={s.id} onClick={() => setSituation(s.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '14px 16px', marginBottom: 8, borderRadius: 12, backgroundColor: C.white, border: `1px solid ${C.border}`, cursor: 'pointer', textAlign: 'left' }}>
+          <span style={{ fontSize: 20, flexShrink: 0 }}>{s.icon}</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: C.primary, lineHeight: 1.4, flex: 1 }}>{s.label}</span>
+          <span style={{ fontSize: 14, color: C.secondary }}>›</span>
+        </button>
+      ))}
+    </div>
+  );
+
+  const sit = SITUATIONS.find(s => s.id === situation);
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <button onClick={() => { setSituation(null); setCopied(null); }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: C.interactive, marginBottom: 14 }}>← Back</button>
+      <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, marginBottom: 4 }}>{sit.icon} {sit.label}</div>
+      <div style={{ fontSize: 12, color: C.secondary, marginBottom: 16 }}>Tap any script to copy it. Edit before sending — these are starting points, not final words.</div>
+      {sit.scripts.map((script, i) => (
+        <div key={i} style={{ backgroundColor: C.white, border: `1px solid ${copied === i ? C.calm : C.border}`, borderRadius: 12, padding: 14, marginBottom: 10 }}>
+          <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 10 }}>{script}</div>
+          <button onClick={() => copy(script, i)} style={{ padding: '7px 14px', borderRadius: 8, cursor: 'pointer', backgroundColor: copied === i ? C.calm + '14' : C.bg, border: `1px solid ${copied === i ? C.calm : C.border}`, fontSize: 12, fontWeight: 700, color: copied === i ? C.calm : C.secondary }}>
+            {copied === i ? '✓ Copied' : '📋 Copy'}
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── MODULE 3: BILATERAL REPAIR SEQUENCE ─────────────────────────────────────
+
+function Module3Repair({ navigate }) {
+  const [path, setPath] = useState(null);
+  const [step, setStep] = useState(0);
+
+  const PATHS = {
+    mine: { label: 'I violated a rule', color: C.overwhelmed, steps: [
+      { title: 'Name the behavior', body: 'Write down what you did specifically — not how you felt, not your intention. One sentence: "I [specific action]." Behavior only.' },
+      { title: 'Name the rule', body: 'Which rule from the framework does this map to? Go to The Framework if you need to check. The behavior and the rule must both be nameable before proceeding.' },
+      { title: 'Wait 24 hours', body: 'Do not initiate the repair conversation while either of you is still activated. 24 hours is the minimum. This is Rule 6 applied to repair.' },
+      { title: 'Initiate with permission', body: '"I want to address something I did in our last interaction. Is now a good time?" Wait for the answer. Do not begin until they confirm readiness.' },
+      { title: 'Name it directly', body: '"I [specific behavior]. That violated [specific rule]. I want to own that." Stop there. Do not explain why. Do not reframe. Let it land.' },
+      { title: 'Accept the response', body: 'Take whatever comes — silence, acknowledgment, or continued hurt. Do not argue. Do not re-explain. One clear statement of accountability, then listen.' },
+      { title: 'Adjust and close', body: 'Ask if there is anything they need going forward. Close with a closing statement (Rule 9). Do not re-open unless they initiate.' },
+    ]},
+    theirs: { label: 'They violated a rule', color: C.interactive, steps: [
+      { title: 'Run the reality-testing tool first', body: 'Before any conversation, complete the reality-testing tool. If the result is not "accountability may be appropriate," stop here and follow that result instead.' },
+      { title: 'Wait until both are regulated', body: 'Check your own regulation state. Check theirs. A repair conversation from an activated state will not produce what you need.' },
+      { title: 'Initiate with permission', body: '"I want to address something that happened in our last interaction. Is now a good time?" Wait. Do not begin until they confirm.' },
+      { title: 'Name the behavior', body: '"When you [specific behavior], that was [specific rule]." One sentence. Behavior first, rule second. Not "you made me feel" — "you did X which is Y."' },
+      { title: 'Name what you need', body: '"What I need from you is [witnessing / empathic recognition / accountability for actual harm]." Be specific. Use the language from the signal-and-source tool.' },
+      { title: 'Accept the response', body: 'Take whatever comes. If they respond with defensiveness, state your need once more and close. Do not repeat the conversation more than twice.' },
+      { title: 'Bring to trusted adult if unresolved', body: 'If the behavior continues or repair does not happen, Rule 13 applies: bring this pattern to your trusted adult before attempting another direct conversation.' },
+    ]},
+    both: { label: 'We both contributed', color: DC[4], steps: [
+      { title: 'Run the reality-testing tool for your own conduct first', body: 'Complete the reality-testing sequence for what you did before addressing theirs. Your conduct is evaluated first — that is the bilateral principle applied to repair.' },
+      { title: 'Write both sides separately', body: 'On one side: what you did specifically. On the other: what they did specifically. Keep them separate on paper before you bring them into conversation.' },
+      { title: 'Acknowledge yours before addressing theirs', body: 'In the conversation, name your contribution first. This demonstrates the standard you are asking them to meet.' },
+      { title: 'Use the bilateral frame', body: '"I want to address something I did, and also something I experienced from your side." Name yours. Then name theirs. Keep them in separate sentences.' },
+      { title: 'Do not conflate them', body: 'Your violation does not cancel theirs. Theirs does not cancel yours. Each is accounted for separately. Do not allow the conversation to become a trade.' },
+      { title: 'Accept whatever comes on each side', body: 'They may accept accountability for their part. They may not. Your repair of your own conduct is not contingent on theirs.' },
+    ]},
+  };
+
+  if (!path) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Bilateral repair sequence</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 20 }}>
+        Use this after an interaction went wrong. Choose the path that matches what happened.
+      </div>
+      {Object.entries(PATHS).map(([id, p]) => (
+        <button key={id} onClick={() => { setPath(id); setStep(0); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '14px 16px', marginBottom: 10, borderRadius: 12, backgroundColor: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${p.color}`, cursor: 'pointer' }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: C.primary, marginBottom: 2 }}>{p.label}</div>
+          <div style={{ fontSize: 11, color: C.secondary }}>{p.steps.length} steps</div>
+        </button>
+      ))}
+    </div>
+  );
+
+  const p = PATHS[path];
+  const s = p.steps[step];
+  const isLast = step === p.steps.length - 1;
+
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <button onClick={() => setPath(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: C.interactive, marginBottom: 14 }}>← Back</button>
+      <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 12 }}>{p.label}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+        <div style={{ flex: 1, height: 4, backgroundColor: C.border, borderRadius: 2 }}>
+          <div style={{ width: `${((step+1)/p.steps.length)*100}%`, height: 4, backgroundColor: p.color, borderRadius: 2 }} />
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 700, color: C.secondary, whiteSpace: 'nowrap' }}>Step {step+1} of {p.steps.length}</span>
+      </div>
+      <Card style={{ borderLeft: `4px solid ${p.color}`, marginBottom: 16 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: p.color, letterSpacing: 0.5, marginBottom: 8 }}>STEP {step+1}</div>
+        <div style={{ fontSize: 17, fontWeight: 700, color: C.primary, marginBottom: 10, lineHeight: 1.3 }}>{s.title}</div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7 }}>{s.body}</div>
+      </Card>
+      <div style={{ display: 'flex', gap: 8 }}>
+        {step > 0 && <button onClick={() => setStep(v => v-1)} style={{ flex: 1, padding: 12, borderRadius: 8, cursor: 'pointer', border: `1px solid ${C.border}`, backgroundColor: C.white, fontSize: 13, fontWeight: 600, color: C.secondary }}>← Previous</button>}
+        {!isLast
+          ? <button onClick={() => setStep(v => v+1)} style={{ flex: 1, padding: 12, borderRadius: 8, cursor: 'pointer', border: 'none', backgroundColor: p.color, color: '#fff', fontSize: 13, fontWeight: 700 }}>Next step →</button>
+          : <div style={{ flex: 1, padding: 12, borderRadius: 8, backgroundColor: C.calm + '14', border: `1px solid ${C.calm}`, textAlign: 'center', fontSize: 13, fontWeight: 700, color: C.calm }}>Sequence complete ✓</div>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── MODULE 3: CONTROLLED DISCLOSURE ─────────────────────────────────────────
+
+function Module3Disclosure({ navigate }) {
+  const [ring, setRing] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const LEVELS = {
+    2: { label: 'Acquaintance (Ring 2)', level: 'Minimal disclosure', color: C.secondary,
+      desc: 'Enough to explain a pause or brief withdrawal without sharing personal detail.',
+      script: "I sometimes need a moment to process in conversations. It is not about you. I will be right back.",
+      note: 'This level names a need without naming a condition. It is appropriate for professional contacts and people you interact with regularly but have not established trust with.',
+    },
+    3: { label: 'Casual friend (Ring 3)', level: 'Functional disclosure', color: C.interactive,
+      desc: 'Enough to explain your experience in ways that support continued interaction.',
+      script: "I want to tell you something that might help you understand me better. I have a condition that makes some social information feel very intense. When I go quiet suddenly, I need a moment. It does not mean I am upset with you.",
+      note: 'This level names a functional impact without clinical detail. It invites understanding without requiring the listener to hold a complex account.',
+    },
+    4: { label: 'Friend (Ring 4)', level: 'Contextual disclosure', color: C.activated,
+      desc: 'Enough for the person to understand your experience and adjust naturally.',
+      script: "I want to share something about how I experience conversations, because I think it will help us. When something does not add up for me in an interaction — a tone that does not match words, something that feels off — my nervous system responds intensely. I am not choosing it. It builds during the conversation and usually recedes when the incongruence resolves. What helps most: acknowledge what you see happening in me, do not ask me to explain it in the moment, and give me a moment if I go quiet.",
+      note: 'This level describes the experience in functional terms and includes what helps. It is appropriate for people who have demonstrated they can hold information about you with care.',
+    },
+    5: { label: 'Trusted friend (Ring 5)', level: 'Full disclosure', color: C.calm,
+      script: null,
+      desc: 'Your own account of the experience, in your own words, shared with someone who has earned that level of access.',
+      note: 'At this level, the words are yours. The framework does not write them. Use the language you have developed with your facilitator — the words that are true to your experience, not a clinical description of it.',
+    },
+  };
+
+  const copy = async (text) => {
+    try {
+      if (navigator.clipboard) await navigator.clipboard.writeText(text);
+      else { const el = document.createElement('textarea'); el.value = text; el.style.cssText = 'position:fixed;opacity:0;'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); }
+      setCopied(true); setTimeout(() => setCopied(false), 3000);
+    } catch(e) {}
+  };
+
+  if (!ring) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Controlled disclosure</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 6 }}>
+        Who you share your experience with, and how much, is your decision. Not everyone in your life needs the same level of information.
+      </div>
+      <div style={{ padding: '8px 12px', backgroundColor: C.calm + '0C', border: `1px solid ${C.calm}30`, borderRadius: 8, marginBottom: 16, fontSize: 12, color: C.secondary, lineHeight: 1.6 }}>
+        The framework does not require disclosure to anyone. This is a tool for when you choose to share.
+      </div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 10 }}>WHO ARE YOU DISCLOSING TO?</div>
+      {Object.entries(LEVELS).map(([r, l]) => (
+        <button key={r} onClick={() => { setRing(parseInt(r)); setCopied(false); }} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '14px 16px', marginBottom: 8, borderRadius: 12, backgroundColor: C.white, border: `1px solid ${C.border}`, borderLeft: `4px solid ${l.color}`, cursor: 'pointer' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: l.color, marginBottom: 3 }}>RING {r}</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, marginBottom: 2 }}>{l.label}</div>
+          <div style={{ fontSize: 12, color: C.secondary }}>{l.level}</div>
+        </button>
+      ))}
+    </div>
+  );
+
+  const l = LEVELS[ring];
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <button onClick={() => setRing(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: C.interactive, marginBottom: 14 }}>← Back</button>
+      <div style={{ fontSize: 11, fontWeight: 700, color: l.color, letterSpacing: 0.5, marginBottom: 4 }}>RING {ring} — {l.level.toUpperCase()}</div>
+      <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, marginBottom: 6 }}>{l.label}</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>{l.desc}</div>
+      {l.script ? (
+        <Card style={{ borderLeft: `4px solid ${l.color}` }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 8 }}>SUGGESTED SCRIPT</div>
+          <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 12 }}>{l.script}</div>
+          <button onClick={() => copy(l.script)} style={{ padding: '7px 14px', borderRadius: 8, cursor: 'pointer', backgroundColor: copied ? C.calm + '14' : C.bg, border: `1px solid ${copied ? C.calm : C.border}`, fontSize: 12, fontWeight: 700, color: copied ? C.calm : C.secondary }}>
+            {copied ? '✓ Copied' : '📋 Copy script'}
+          </button>
+        </Card>
+      ) : (
+        <Card style={{ borderLeft: `4px solid ${l.color}`, backgroundColor: C.primary + '06' }}>
+          <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.7 }}>
+            At this level, the words are yours. The framework does not write them for you. Use the language you have developed with your facilitator — the words that are true to your experience, not a clinical description of it.
+          </div>
+        </Card>
+      )}
+      <div style={{ padding: '10px 14px', backgroundColor: C.bg, border: `1px solid ${C.border}`, borderRadius: 8, marginTop: 12, fontSize: 12, color: C.secondary, lineHeight: 1.6 }}>{l.note}</div>
+    </div>
+  );
+}
+
+// ─── MODULE 3: BEFORE I CONCLUDE ─────────────────────────────────────────────
+
+function Module3Conclude({ navigate }) {
+  const [behavior, setBehavior] = useState('');
+  const [interpretation, setInterpretation] = useState('');
+  const [alternatives, setAlternatives] = useState(['', '', '']);
+  const [step, setStep] = useState('intro');
+
+  const setAlt = (idx, val) => setAlternatives(p => p.map((v, i) => i === idx ? val : v));
+  const allAltsFilledIn = alternatives.every(a => a.trim().length > 0);
+  const altCount = alternatives.filter(a => a.trim().length > 0).length;
+
+  if (step === 'intro') return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Before I conclude</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 6 }}>
+        Use this before you act on an interpretation of someone's behavior.
+      </div>
+      <div style={{ padding: '8px 12px', backgroundColor: C.activated + '0C', border: `1px solid ${C.activated}30`, borderRadius: 8, marginBottom: 16, fontSize: 12, color: C.secondary, lineHeight: 1.6 }}>
+        Your system may have already concluded. This tool asks you to check that conclusion before you act on it.
+      </div>
+      <Card>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7 }}>You will name the behavior, name your interpretation, and then generate three alternative explanations for the same behavior. Three steps. No right or wrong answers.</div>
+      </Card>
+      <Btn label="Begin →" onClick={() => setStep('behavior')} variant="primary" style={{ marginTop: 8 }} />
+    </div>
+  );
+
+  if (step === 'behavior') return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+        <div style={{ flex: 1, height: 4, backgroundColor: C.border, borderRadius: 2 }}>
+          <div style={{ width: '33%', height: 4, backgroundColor: C.interactive, borderRadius: 2 }} />
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 700, color: C.secondary }}>Step 1 of 3</span>
+      </div>
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHAT DID THEY DO?</div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>Name only the behavior — one sentence. What they said or did. Not how it felt. Not what you think it means.</div>
+        <textarea value={behavior} onChange={e => setBehavior(e.target.value)} placeholder="They..." rows={2}
+          style={{ width: '100%', padding: '10px 12px', border: `1.5px solid ${behavior ? C.interactive : C.border}`, borderRadius: 10, fontSize: 14, color: C.primary, fontFamily: 'system-ui', resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5 }} />
+      </Card>
+      <Btn label="Next →" onClick={() => setStep('interpretation')} variant={behavior.trim() ? 'primary' : 'ghost'} />
+    </div>
+  );
+
+  if (step === 'interpretation') return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+        <div style={{ flex: 1, height: 4, backgroundColor: C.border, borderRadius: 2 }}>
+          <div style={{ width: '66%', height: 4, backgroundColor: C.interactive, borderRadius: 2 }} />
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 700, color: C.secondary }}>Step 2 of 3</span>
+      </div>
+      <Card style={{ marginBottom: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 6 }}>THE BEHAVIOR</div>
+        <div style={{ fontSize: 13, color: C.secondary, fontStyle: 'italic' }}>{behavior}</div>
+      </Card>
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHAT DO YOU THINK IT MEANS?</div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>Name your interpretation honestly. This is not about whether you are right — it is about making the interpretation visible so you can examine it.</div>
+        <textarea value={interpretation} onChange={e => setInterpretation(e.target.value)} placeholder="I think it means..." rows={2}
+          style={{ width: '100%', padding: '10px 12px', border: `1.5px solid ${interpretation ? C.activated : C.border}`, borderRadius: 10, fontSize: 14, color: C.primary, fontFamily: 'system-ui', resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5 }} />
+      </Card>
+      <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+        <Btn label="← Back" onClick={() => setStep('behavior')} variant="ghost" small />
+        <Btn label="Next →" onClick={() => setStep('alternatives')} variant={interpretation.trim() ? 'primary' : 'ghost'} />
+      </div>
+    </div>
+  );
+
+  if (step === 'alternatives') return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+        <div style={{ flex: 1, height: 4, backgroundColor: C.border, borderRadius: 2 }}>
+          <div style={{ width: '100%', height: 4, backgroundColor: C.interactive, borderRadius: 2 }} />
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 700, color: C.secondary }}>Step 3 of 3</span>
+      </div>
+      <Card style={{ marginBottom: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 4 }}>BEHAVIOR</div>
+        <div style={{ fontSize: 13, color: C.secondary, fontStyle: 'italic', marginBottom: 8 }}>{behavior}</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 4 }}>YOUR INTERPRETATION</div>
+        <div style={{ fontSize: 13, color: C.secondary, fontStyle: 'italic' }}>{interpretation}</div>
+      </Card>
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>THREE OTHER EXPLANATIONS</div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 14 }}>
+          Name three other explanations for the same behavior that do not involve intent to harm. They do not have to be probable. They only have to be possible.
+        </div>
+        {alternatives.map((alt, i) => (
+          <div key={i} style={{ marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 4 }}>EXPLANATION {i+1}</div>
+            <textarea value={alt} onChange={e => setAlt(i, e.target.value)} placeholder="They may have..." rows={2}
+              style={{ width: '100%', padding: '10px 12px', border: `1.5px solid ${alt ? C.calm : C.border}`, borderRadius: 10, fontSize: 14, color: C.primary, fontFamily: 'system-ui', resize: 'none', outline: 'none', boxSizing: 'border-box', lineHeight: 1.5 }} />
+          </div>
+        ))}
+      </Card>
+
+      {allAltsFilledIn && (
+        <div style={{ backgroundColor: C.calm + '0E', border: `1px solid ${C.calm}40`, borderRadius: 10, padding: '12px 14px', marginTop: 4, marginBottom: 8 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.calm, marginBottom: 6 }}>You named three alternatives.</div>
+          <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.7 }}>
+            Does your original interpretation still seem most likely? If yes — run the reality-testing tool before you act on it. If you are less certain — that uncertainty is information. Start with witnessing, not accountability.
+          </div>
+        </div>
+      )}
+
+      {altCount >= 1 && !allAltsFilledIn && (
+        <div style={{ fontSize: 12, color: C.secondary, marginTop: 4, padding: '6px 0' }}>
+          {3 - altCount} more to go.
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+        <Btn label="← Back" onClick={() => setStep('interpretation')} variant="ghost" small />
+        {allAltsFilledIn && <Btn label="Run reality test →" onClick={() => navigate('module3-reality')} variant="calm" />}
+      </div>
+    </div>
+  );
+
+  return null;
 }
 
 // ─── OLD MODULE 4 SCREENS LABEL (kept for reference) ──────────────────────────
@@ -5058,6 +5460,10 @@ export default function App() {
     'module3-feedback':  'Receiving Honest Feedback',
     'module3-signal':    'The signal and the source',
     'module3-reality':   'Reality testing',
+    'module3-scripts':   'Advocacy scripts',
+    'module3-repair':    'Bilateral repair sequence',
+    'module3-disclosure':'Controlled disclosure',
+    'module3-conclude':  'Before I conclude',
     'module2-anchor': 'Module 2',
     'module2-q1': 'Pre-Comm Checklist',
     'module2-q2': 'Pre-Comm Checklist',
@@ -5112,6 +5518,10 @@ export default function App() {
     if (screen === 'module3-feedback')  return <Module3Feedback navigate={navigate} />;
     if (screen === 'module3-signal')    return <Module3Signal navigate={navigate} />;
     if (screen === 'module3-reality')   return <Module3Reality navigate={navigate} />;
+    if (screen === 'module3-scripts')   return <Module3Scripts navigate={navigate} />;
+    if (screen === 'module3-repair')    return <Module3Repair navigate={navigate} />;
+    if (screen === 'module3-disclosure')return <Module3Disclosure navigate={navigate} />;
+    if (screen === 'module3-conclude')  return <Module3Conclude navigate={navigate} />;
     if (screen === 'module4') return <Module4Home navigate={navigate} />;
     if (screen === 'module4-scenarios') return <Module4Scenarios navigate={navigate} />;
     if (screen === 'module4-trivia') return <Module4Trivia navigate={navigate} />;
