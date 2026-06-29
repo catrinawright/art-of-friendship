@@ -1909,8 +1909,46 @@ function Module1Home({ navigate, setSelectedTerm, settings }) {
 
   const clusterLabel = { Before: 'Before the Interaction', During: 'During the Interaction', After: 'After the Interaction', Periodic: 'Periodic Evaluation' };
 
+  const FOUNDATIONAL = [1, 3, 6, 7];
+
   return (
     <div style={{ paddingTop: 4 }}>
+
+      {/* Foundational terms — always visible before tabs */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 4 }}>
+          BEFORE THE RULES
+        </div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>
+          These four terms appear in almost every rule. This is where the framework begins.
+        </div>
+        {FOUNDATIONAL.map(id => {
+          const term = TERMS.find(t => t.id === id);
+          if (!term) return null;
+          return (
+            <button
+              key={id}
+              onClick={() => { setSelectedTerm(id); navigate('module1-term'); }}
+              style={{
+                display: 'flex', alignItems: 'flex-start', gap: 12,
+                padding: '12px 14px', marginBottom: 8, width: '100%',
+                backgroundColor: DC[term.domainNum] + '0A',
+                border: `1px solid ${DC[term.domainNum]}30`,
+                borderLeft: `3px solid ${DC[term.domainNum]}`,
+                borderRadius: 10, cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              <span style={{ fontSize: 22, flexShrink: 0, lineHeight: 1.2 }}>{term.metaphor.symbol}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, marginBottom: 3 }}>{term.name}</div>
+                <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.55 }}>{term.plain}</div>
+              </div>
+              <span style={{ fontSize: 14, color: C.secondary, flexShrink: 0, marginTop: 2 }}>›</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Tab selector */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 14, backgroundColor: C.border + '60', borderRadius: 12, padding: 4 }}>
         {[['definitions', '📖 Definitions', 19], ['rules', '📋 Rules', 13]].map(([id, label, count]) => (
