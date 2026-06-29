@@ -119,8 +119,8 @@ const TERMS = [
   {
     id: 1, domainNum: 1, linkedRule: 2,
     name: 'Friendship',
-    plain: 'A mutual, voluntary relationship where both people consistently invest in each other over time.',
-    definition: 'A friendship is a voluntary, mutual relationship where two people consistently choose to spend time together, share personal information at a comfortable level for both, offer emotional support, and demonstrate care for each other\'s wellbeing over time. Friendship requires reciprocity — both people contribute, not just one.',
+    plain: 'A mutual (both-ways) relationship, chosen freely by both people, where both consistently put time and care into each other over time.',
+    definition: 'A friendship is a voluntary, mutual relationship where two people consistently choose to spend time together, share personal information at a comfortable level for both, offer emotional support, and demonstrate care for each other\'s wellbeing over time. Friendship requires reciprocity (both people giving back what they receive) — both people contribute, not just one.',
     boundary: 'Friendship is not defined by proximity alone. Seeing someone regularly does not make them a friend. Friendliness is not friendship. A person can be kind and enjoyable to talk to without being a friend.',
     ruleAnchor: 'A person qualifies as a friend only when both parties demonstrate mutual, consistent, and voluntary investment over time.',
     metaphor: { symbol: '🌱', concept: 'A seedling watered from both sides', explanation: 'Like a plant that grows only when both soil and sun consistently contribute, friendship requires investment from both people — not just one.' },
@@ -130,8 +130,8 @@ const TERMS = [
   {
     id: 2, domainNum: 1, linkedRule: 1,
     name: 'Acquaintance',
-    plain: 'Someone you recognize and greet but have not yet established trust, shared vulnerability, or consistent investment with.',
-    definition: 'An acquaintance is a person you recognize, greet, and may engage in brief surface-level conversation with, but with whom you have not yet established mutual trust, shared vulnerability, or consistent social investment. Acquaintances occupy the outer ring of the relational proximity continuum.',
+    plain: 'Someone you recognize and greet but have not yet established trust with, opened up to personally, or consistently put time into.',
+    definition: 'An acquaintance is a person you recognize, greet, and may engage in brief surface-level conversation with, but with whom you have not yet established mutual trust, shared vulnerability, or consistent social investment. Acquaintances occupy the outermost position in the relational rings.',
     boundary: 'An acquaintance is not an enemy, a stranger, or a friend. Treating an acquaintance with the same level of personal disclosure as a trusted friend is a relational boundary violation — even when the intent is positive.',
     ruleAnchor: 'The level of personal information shared must match the category of the relationship — not the level of personal comfort felt in the moment.',
     metaphor: { symbol: '👋', concept: 'A wave across a crowded room', explanation: 'You acknowledge each other with warmth, but neither of you has crossed the room yet. Warmth is not closeness.' },
@@ -152,8 +152,8 @@ const TERMS = [
   {
     id: 4, domainNum: 1, linkedRule: 3,
     name: 'Mutual Friendship',
-    plain: 'A friendship where both people independently initiate contact and consistently invest — not just one person.',
-    definition: 'Mutual friendship exists when both individuals independently and consistently initiate contact, express interest in each other\'s wellbeing, invest time, and reciprocate emotional support. Both people experience the relationship as meaningful and valuable.',
+    plain: 'A friendship where both people independently reach out first and consistently put effort in — not just one person.',
+    definition: 'Mutual friendship exists when both individuals independently and consistently reach out first, express interest in each other\'s wellbeing, put in time, and return emotional support. Both people experience the relationship as meaningful and valuable.',
     boundary: 'A friendship is not mutual simply because one person is friendly in return. Responding to contact is not the same as initiating it. Tolerance is not affection.',
     ruleAnchor: 'Evaluate the directionality of all social investment. If contact is consistently self-initiated and the other party rarely initiates, the relationship may not yet be mutual.',
     metaphor: { symbol: '⚖️', concept: 'A balance scale where both sides carry weight', explanation: 'If only one side adds weight, the scale tips. Mutual means both sides keep contributing — not just one.' },
@@ -185,8 +185,8 @@ const TERMS = [
   {
     id: 7, domainNum: 2, linkedRule: 5,
     name: 'Implicit Social Signal',
-    plain: 'An unspoken message communicated through behavior, tone, or body language — standard communication for most neurotypical people.',
-    definition: 'An implicit social signal is an unspoken, behavioral, or tonal communication that conveys a social message without stating it directly. Common implicit signals include: shortened responses, increased response latency, reduced eye contact, body turning away, monosyllabic replies, or subject-changing.',
+    plain: 'An unspoken message communicated through behavior, tone, or body language — the way most people without neurological differences communicate naturally.',
+    definition: 'An implicit social signal is an unspoken, behavioral, or tonal communication that conveys a social message without stating it directly. Common implicit signals include: shortened responses, increased response latency, reduced eye contact, body turning away, one-word replies, or subject-changing.',
     boundary: 'Implicit signals are not ambiguous by intent — they are the standard communication mode for many neurotypical individuals. Difficulty reading them is recognized and valid; however, building a strategy for reading them remains an important relational skill.',
     ruleAnchor: 'When two or more implicit signals appear in a single interaction, treat them as a collective message and adjust behavior — slow down, pause the topic, or check in directly.',
     metaphor: { symbol: '🌡️', concept: 'A thermometer reading the temperature of the room without anyone announcing it', explanation: 'The temperature is real even if no one has said a word. The reading is information that requires a response.' },
@@ -274,7 +274,7 @@ const TERMS = [
     id: 15, domainNum: 5, linkedRule: 13,
     name: 'Exploitative or Unsafe Pattern',
     plain: 'A relational pattern where one person consistently uses or disregards the other person\'s boundaries or wellbeing for personal benefit.',
-    definition: 'An exploitative or unsafe relational pattern exists when one person consistently uses, manipulates, or disregards the other person\'s boundaries, emotional needs, or wellbeing for personal gain or comfort. Indicators include: persistent boundary violations after correction, conditional affection, social isolation pressure, and emotional manipulation.',
+    definition: 'An exploitative or unsafe relational pattern exists when one person consistently uses, manipulates, or disregards the other person\'s boundaries, emotional needs, or wellbeing for personal gain or comfort. Indicators include: persistent boundary violations after correction, conditional affection (warmth that appears only when you comply), pressure to cut off from other people in your life, and emotional manipulation.',
     boundary: 'Unsafe patterns are not always intentional or malicious. Harm is evaluated by impact and pattern — not by the other person\'s intent. This applies to your own conduct as much as to others\'.',
     ruleAnchor: 'If two or more unsafe pattern indicators appear in a relationship — in your own conduct or in another person\'s — bring the concern to a trusted adult before continuing to invest.',
     metaphor: { symbol: '🕸️', concept: 'A web — some connections hold you in place without your consent', explanation: 'A web looks like connection from a distance. The difference between a healthy relationship and a web is whether you can leave freely.' },
@@ -285,7 +285,7 @@ const TERMS = [
     id: 16, domainNum: 5, linkedRule: 13,
     name: 'Manipulation vs Self-Advocacy',
     plain: 'Manipulation influences behavior without the other person\'s free consent. Self-advocacy states a need directly and allows a free response.',
-    definition: 'Manipulation is the deliberate or habitual use of indirect, deceptive, or emotionally leveraged strategies to influence another person\'s behavior without their full awareness or genuine consent. Self-advocacy is the direct, honest, transparent communication of your own needs — delivered in a way that gives the other person genuine freedom to respond, including the freedom to say no.',
+    definition: 'Manipulation is the deliberate or habitual use of indirect, deceptive, or emotionally pressuring strategies to influence another person\'s behavior without their full awareness or genuine consent. Self-advocacy is the direct, honest, transparent communication of your own needs — delivered in a way that gives the other person genuine freedom to respond, including the freedom to say no.',
     boundary: 'A need can be real and still be communicated manipulatively. The legitimacy of the need does not determine whether the communication method is ethical. Evaluate the method independently of the need.',
     ruleAnchor: 'Ask before every significant communication: "Does this give the other person genuine freedom to respond — including the freedom to say no — without guilt, fear, or emotional pressure from me?"',
     metaphor: { symbol: '⚖️', concept: 'A scale measuring who carries the weight of the decision', explanation: 'Self-advocacy places the decision on the scale and steps back. Manipulation tips the scale before the other person can weigh in.' },
@@ -296,8 +296,8 @@ const TERMS = [
     id: 17, domainNum: 5, linkedRule: 13,
     name: 'The Withdrawal-Chase Cycle',
     plain: 'When one person withdraws, the other person pursues — driven by four automatic psychological mechanisms, not a free choice.',
-    definition: 'The withdrawal-chase cycle occurs when one person withdraws from a relationship and the other person pursues — driven simultaneously by intermittent reinforcement (Skinner), attachment alarm activation (Bowlby), the scarcity response (Cialdini), and cognitive dissonance (Festinger). Withdrawal can be strategic, neurological (PTSD/autism shutdown), or mixed-origin.',
-    boundary: 'Neurologically-driven withdrawal — PTSD shutdown or autistic shutdown — is not manipulative because it is not a strategy. However, its impact on the other person is identical to strategic withdrawal. Responsibility lives in Zone 3: proactive disclosure before, minimal signal during, and return acknowledgment after.',
+    definition: 'The withdrawal-chase cycle occurs when one person withdraws from a relationship and the other person pursues — driven simultaneously by intermittent reinforcement — unpredictable rewards that make a behavior very hard to stop (Skinner), attachment alarm — the nervous system panic when connection feels threatened (Bowlby), the scarcity response — wanting something more intensely when it might be lost (Cialdini), and cognitive dissonance — the discomfort of holding two contradictory beliefs at once (Festinger). Withdrawal can be strategic, neurological (PTSD/autism shutdown), or mixed-origin.',
+    boundary: 'Neurologically-driven withdrawal — PTSD shutdown or autistic shutdown — is not manipulative because it is not a strategy. However, its impact on the other person is identical to strategic withdrawal. The responsibility is specific: tell the person in advance when possible, give a brief signal during if you can, and acknowledge the shutdown when you return.',
     ruleAnchor: 'The other person experiences all three types of withdrawal identically. Responsibility for managing that impact does not depend on the cause — it depends on your capacity to give the other person enough information to interpret the experience accurately.',
     metaphor: { symbol: '🌊', concept: 'A wave pulling back from shore — and the shore rushing toward it', explanation: 'The shore does not choose to rush. The retreat triggers the response automatically. Understanding this cycle is the first step to interrupting it.' },
     audioText: 'When someone withdraws, four things activate in the other person simultaneously: the attachment alarm, the scarcity response, the self-concept threat, and the pressure to justify prior investment. The chase is not a choice — it is a conditioned response. Neurological shutdown is not manipulative. But it produces the same impact. The responsibility zone is disclosure: before, during when possible, and after.',
@@ -308,7 +308,7 @@ const TERMS = [
     name: 'Gaslighting',
     plain: 'Gaslighting is when someone deliberately causes you to doubt your own perception, memory, or experience of what happened.',
     definition: 'A pattern of psychological manipulation in which one person systematically causes another to question the accuracy of their own perceptions, memories, or understanding of events — not through providing evidence, but through persistent denial, contradiction, or reframing of what the other person reported.',
-    boundary: 'This is a pattern, not a single incident. One disagreement about what happened is not gaslighting. One person misremembering is not gaslighting. Two people perceiving an interaction differently is not gaslighting. Gaslighting is systematic and deliberate — a pattern in which one person specifically targets the perceptual credibility of the other person.',
+    boundary: 'This is a pattern, not a single incident. One disagreement about what happened is not gaslighting. One person misremembering is not gaslighting. Two people perceiving an interaction differently is not gaslighting. Gaslighting is systematic and deliberate — a pattern in which one person specifically targets the ability of the other person to trust their own perceptions.',
     ruleAnchor: 'When this pattern is present in a relationship, Rule 13 applies: do not attempt to resolve the concern independently. Bring it to a trusted adult before making any further investment.',
     metaphor: { symbol: '🌫️', concept: 'Fog that is deliberately made', explanation: 'Natural fog is disorienting but no one caused it. Deliberate fog is disorienting because someone is creating it. The difference is the cause — not the experience of confusion.' },
     audioText: 'Gaslighting is a pattern in which someone deliberately causes you to doubt your own perception, memory, or experience. It is not disagreement. It is not misremembering. It is one person systematically telling another that what they saw, heard, or felt did not happen the way they experienced it.',
@@ -320,10 +320,65 @@ const TERMS = [
     plain: 'Accountability means acknowledging what your behavior did to another person — not what you meant to do, but what actually happened.',
     definition: 'Taking responsibility for the observable impact of your conduct on another person. Accountability addresses behavior and its effect — not intent, character, or identity. It does not require agreeing that you intended harm. It requires acknowledging that your behavior produced a particular effect on another person and adjusting your behavior accordingly.',
     boundary: 'Accountability is not performing an apology in a format someone else specifies. It is not agreeing with how another person interprets your character. It is not submitting to a consequence someone else determines. Accountability is bilateral — the same standard that applies to your conduct applies to the conduct of anyone you are in relationship with. You are not accountable to one standard while others are held to a different one.',
-    ruleAnchor: 'The correction pathways throughout this framework are accountability mechanisms. Rule 11 most directly operationalizes accountability: stop the behavior, acknowledge the impact without argument or negotiation, and adjust.',
+    ruleAnchor: 'The correction pathways throughout this framework are accountability mechanisms. Rule 11 most directly puts accountability into practice: stop the behavior, acknowledge the impact without argument or negotiation, and adjust.',
     metaphor: { symbol: '⚖️', concept: 'A scale with impact on one side — not intent', explanation: 'Accountability weighs what happened, not what was meant. Intent sits on a different scale entirely. Both matter. They are not the same measurement.' },
     audioText: 'Accountability means taking responsibility for the impact of your conduct on another person. It is about what happened — not what you intended. It is not performing an apology in a specific format. It is not agreeing that you are a bad person. It is naming what occurred and changing what you do. And it applies to everyone in the relationship — not only to you.',
     activationPrompt: 'Think of a time when someone asked you to be accountable for something. Were they asking you to acknowledge an impact — or were they asking you to accept a verdict about who you are? What is the difference between those two things?',
+  },
+  {
+    id: 20, domainNum: 1, linkedRule: 2,
+    name: 'Vulnerability',
+    plain: 'Opening up to another person by sharing something personal — something that matters to you and that you would not share with just anyone.',
+    definition: 'Vulnerability in relationships is the deliberate act of sharing personal information, feelings, or experiences with another person — information that exposes something real about you and that requires trust to share safely. It is one of the criteria that distinguishes a friendship from an acquaintance. Shared vulnerability means both people have opened up personally, not just one.',
+    boundary: 'Vulnerability is not weakness. Opening up to someone in the wrong ring — sharing deeply personal information before trust has been established — is not vulnerability. It is a ring mismatch. Vulnerability requires that the other person has first demonstrated they can hold personal information with care.',
+    ruleAnchor: 'Rule 2 uses shared vulnerability as one of the five qualifying criteria for friendship. Both people must have opened up personally — not just one person to the other.',
+    metaphor: { symbol: 'U+1F513', concept: 'Unlocking a door for someone who has earned the key', explanation: 'You do not unlock the door for everyone. You unlock it when the other person has demonstrated, over time, that they will not misuse what is inside.' },
+    audioText: 'Vulnerability in relationships means sharing something personal — something that matters to you and that not everyone gets to know. It is one of the things that separates a friendship from an acquaintance. Both people share, not just one. And the other person must have earned that access before you open the door.',
+    activationPrompt: 'Think of something personal you have shared with someone you trust. That was vulnerability. Now think of whether they shared something equally personal back. That would be shared vulnerability.',
+  },
+  {
+    id: 21, domainNum: 1, linkedRule: 1,
+    name: 'Observable Behavior',
+    plain: 'Something a person does that you can see, hear, or count — not something you guess, assume, or feel about them.',
+    definition: 'Observable behavior refers to actions that are directly perceptible — something the other person said, did, or demonstrably did not do. The framework evaluates relationships using observable behavior rather than interpretations, assumptions, or feelings because behavior is verifiable. How someone makes you feel is information. What they actually did is evidence. These are not the same thing.',
+    boundary: 'An observable behavior is not an interpretation of intent. A delayed reply is observable. A delayed reply meaning the other person does not care about you is an interpretation. The framework operates on behavior. Conclusions about intent require behavioral evidence — not feeling-based reasoning alone.',
+    ruleAnchor: 'Every rule in this framework is written to be followed based on observable behavior — what actually happened in the interaction — not on assumptions about what the other person meant or intended.',
+    metaphor: { symbol: '📷', concept: 'A photograph — it captures what happened, not what you felt about it', explanation: 'A photograph shows exactly what occurred. It does not show intent, meaning, or feeling. Observable behavior is the photograph. Your interpretation of it is the caption you write afterward.' },
+    audioText: 'Observable behavior is something a person actually did or said — something you could point to. Not what you think they meant. Not how they made you feel. What they did. The framework runs on observable behavior because it is verifiable. Feelings are real and valid — but they are not the same as evidence.',
+    activationPrompt: 'Think of something someone did recently that bothered you. Can you describe the actual behavior — what they said or did — without interpreting what it meant? That separation is what observable behavior requires.',
+  },
+  {
+    id: 22, domainNum: 3, linkedRule: 7,
+    name: 'Reciprocity',
+    plain: 'Giving back what is given to you. In relationships: returning the investment, openness, and care the other person offers — not perfectly, but consistently over time.',
+    definition: 'Reciprocity is the mutual exchange of comparable investment, care, and engagement between two people. It does not require identical responses at every moment — it requires that over time, both people contribute at roughly comparable levels. Reciprocity is the operational definition of a mutual relationship: both people putting in, both people receiving.',
+    boundary: 'Reciprocity is not keeping score on every individual exchange. It is a pattern across time. A person can go through a period of needing more support — and a healthy relationship allows for that — as long as the balance shifts when circumstances change. Permanent one-directional giving is not reciprocity.',
+    ruleAnchor: 'The rule of three in conversational balance is reciprocity applied to communication: for every three statements you make about yourself, ask one genuine question about the other person. This keeps the exchange moving in both directions.',
+    metaphor: { symbol: '🔄', concept: 'A current that flows both ways', explanation: 'A river that flows only in one direction eventually runs dry on one end. Reciprocity keeps the current moving in both directions — not identically, but comparably over time.' },
+    audioText: 'Reciprocity means giving back what is given to you — over time, not necessarily in every single moment. In relationships it means both people invest, both people open up, both people show care. Not perfectly. Not equally every day. But consistently in both directions across time.',
+    activationPrompt: 'Think of a relationship in your life. If you stopped reaching out tomorrow, would the other person notice and reach out to you? That response — or absence of it — tells you something about reciprocity.',
+  },
+  {
+    id: 23, domainNum: 5, linkedRule: 4,
+    name: 'Relational Rupture',
+    plain: 'A break or tear in the connection between two people — caused by a missed signal, a boundary violation, or unaddressed harm. Ruptures can be repaired. They do not repair on their own.',
+    definition: 'A relational rupture is a disruption to the trust, safety, or connection in a relationship — caused by a specific incident or an accumulated pattern of unaddressed harm. Ruptures range from minor (a missed signal that caused brief withdrawal) to significant (a boundary violation that damaged trust). All ruptures require deliberate repair to resolve. Unaddressed ruptures compound over time.',
+    boundary: 'A rupture is not automatically the end of a relationship. It is information that something in the relationship needs attention. The distinction between a rupture that ends a relationship and one that strengthens it is determined entirely by whether repair is attempted and received by both people.',
+    ruleAnchor: 'Rule 4 (respond to explicit signals immediately) and Rule 5 (read implicit signal clusters) are the preventive tools — following them reduces the frequency of rupture. The bilateral repair sequence addresses rupture directly when it has already occurred.',
+    metaphor: { symbol: '🪡', concept: 'A thread that has frayed — it still connects, but needs to be re-threaded deliberately', explanation: 'A frayed thread is not a broken thread. But it will break if left unattended. Repair is the act of re-threading carefully — not pretending the fraying did not happen.' },
+    audioText: 'A relational rupture is a break in the connection between two people. It happens when a signal is missed, a boundary is crossed, or harm goes unaddressed. Ruptures can be repaired — but they do not repair on their own. Ignoring a rupture does not close it. It makes it wider.',
+    activationPrompt: 'Think of a time when something happened between you and another person and things felt different afterward — even if nothing was said. That shift was likely a rupture. Was it ever directly addressed?',
+  },
+  {
+    id: 24, domainNum: 5, linkedRule: 11,
+    name: 'Bilateral',
+    plain: 'Applying equally to both sides. A bilateral standard means the same rule applies to your conduct and to the conduct of the other person — without exception for either side.',
+    definition: 'Bilateral means operating from both sides simultaneously. In this framework, bilateral evaluation means applying the same standard of conduct to yourself that you apply to the other person in the relationship. A framework that examines only the other person behavior — without examining your own — is not bilateral. Bilateral accountability, bilateral repair, and bilateral self-audit are among the most clinically significant concepts in this framework.',
+    boundary: 'Bilateral is not the same as identical. Both people do not have to do the exact same things. Bilateral means the standard is the same — the rules that apply to the conduct of the other person apply equally to your own conduct. You cannot hold someone accountable to a rule you are not willing to apply to yourself.',
+    ruleAnchor: 'Rule 11 (accept limits without argument), the bilateral journal, the inward turn in the self-audit, and the repair sequence all operate on the bilateral principle. This framework is designed to be used bilaterally — examining both sides of every interaction.',
+    metaphor: { symbol: '🪞', concept: 'A mirror held up to both sides of the interaction at the same time', explanation: 'A mirror does not judge. It reflects. A bilateral evaluation reflects your conduct and the conduct of the other person with the same clarity — without excusing either side.' },
+    audioText: 'Bilateral means both sides. A bilateral standard is one that applies to your conduct and to the conduct of the other person equally. You cannot evaluate someone else behavior by the framework while exempting your own. This framework is designed to be used bilaterally — by both people in the relationship, or at minimum by you reflecting on both sides.',
+    activationPrompt: 'Think of a recent interaction where you evaluated someone else conduct. Did you apply the same standard to your own behavior in that same interaction? That is the bilateral question.',
   },
 ];
 
@@ -738,7 +793,7 @@ const SCENARIOS = [
     text: 'Alex discloses a recent medical diagnosis to Sam, a coworker, during their third conversation. Their prior conversations have been brief and work-related. Sam acknowledges the information politely and then changes the subject.',
     scaffold: 'This scenario involves Rules 8 (topic appropriateness) and 1 (classify before engaging). Health topics belong at Ring 4 or 5 on the continuum. Sam is in Ring 2 or 3 based on available evidence.',
     clusterHint: 'Before the Interaction',
-    analysis: ['Where does Sam currently sit on the relational proximity continuum?', 'What ring requires health topics to be appropriate?', 'What does Sam\'s subject change communicate?', 'If this were your behavior — what was the pre-communication screen that should have run?'],
+    analysis: ['Where does Sam currently sit in the relational rings?', 'What ring requires health topics to be appropriate?', 'What does Sam\'s subject change communicate?', 'If this were your behavior — what was the pre-communication screen that should have run?'],
     generalization: 'Is there a relationship where you have disclosed at a level that exceeded the category?',
     bilateral: 'Have you ever shared something personal with someone and then sensed the disclosure was too early? What happened next?',
   },
@@ -755,8 +810,8 @@ const SCENARIOS = [
   {
     id: 5, title: 'The Conversation Monopoly', rules: [7, 9], difficulty: 'application',
     tags: ['Conversational Balance', 'Interaction Structure'],
-    text: 'During a twenty-minute conversation, Alex speaks for approximately sixteen minutes. When Casey speaks, Alex listens briefly and redirects to their own topic. Casey has not asked a question in the last twelve minutes and is giving monosyllabic replies.',
-    scaffold: 'Rules 7 (conversational balance) and 5 (implicit signals) apply. Casey\'s monosyllabic replies and twelve-minute silence in questioning are implicit signals. The rule of three has been violated repeatedly — Alex should have asked a genuine question after every three self-referential statements.',
+    text: 'During a twenty-minute conversation, Alex speaks for approximately sixteen minutes. When Casey speaks, Alex listens briefly and redirects to their own topic. Casey has not asked a question in the last twelve minutes and is giving one-word replies.',
+    scaffold: 'Rules 7 (conversational balance) and 5 (implicit signals) apply. Casey\'s one-word replies and twelve-minute silence in questioning are implicit signals. The rule of three has been violated repeatedly — Alex should have asked a genuine question after every three self-referential statements.',
     clusterHint: 'During the Interaction',
     analysis: ['How many implicit signals has Casey sent in this scenario?', 'At what point should Rule 7 have been applied?', 'What specific action should Alex take right now?', 'If you were Alex — when do you typically notice that a conversation has become one-directional?'],
     generalization: 'Think of a recent conversation. What percentage of the time did you speak? Did you ask at least one genuine question?',
@@ -1157,7 +1212,7 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
     {
       num: 1, icon: '📖', screen: 'module1',
       title: 'The Framework',
-      sub: '13 Rules · 19 Definitions',
+      sub: '13 Rules · 24 Definitions',
       purpose: 'Learn the rules and definitions.',
       note: 'Start here',
       noteColor: C.calm,
@@ -1951,7 +2006,7 @@ function Module1Home({ navigate, setSelectedTerm, settings }) {
 
       {/* Tab selector */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 14, backgroundColor: C.border + '60', borderRadius: 12, padding: 4 }}>
-        {[['definitions', '📖 Definitions', 19], ['rules', '📋 Rules', 13]].map(([id, label, count]) => (
+        {[['definitions', '📖 Definitions', 24], ['rules', '📋 Rules', 13]].map(([id, label, count]) => (
           <button key={id} onClick={() => { setTab(id); setQuery(''); }} style={{
             flex: 1, padding: '10px 8px', borderRadius: 8, cursor: 'pointer', border: 'none',
             backgroundColor: tab === id ? C.white : 'transparent',
@@ -4687,7 +4742,7 @@ function Module4Flashcards({ navigate }) {
           return count > 0 ? <div key={v} style={{ fontSize: 13, color: c, fontWeight: 700, marginBottom: 4 }}>{l}: {count} terms</div> : null;
         })}
       </Card>
-      <MasteryCard message="You reviewed all 19 definitions — including Gaslighting and Accountability, the two newest. The terms you marked Not yet are your next targets." />
+      <MasteryCard message="You reviewed all 24 definitions — the vocabulary the rules are built on. The terms you marked Not yet are your next targets. The terms you marked Not yet are your next targets." />
       <Btn label="Restart deck" onClick={() => { setIdx(0); setFlipped(false); setRatings({}); setDone(false); }} variant="secondary" style={{ marginTop: 12 }} />
       <Btn label="← Back to Practice" onClick={() => navigate('module4')} variant="ghost" small style={{ marginTop: 8 }} />
     </div>
