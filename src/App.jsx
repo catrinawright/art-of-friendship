@@ -2565,7 +2565,7 @@ function Module3Home({ navigate, setDest, goal }) {
     { id: 'module3-scripts',   icon: '💬', title: 'Advocacy scripts',          desc: 'Scripted language for communicating your experience without demanding a specific response.', badge: 'Communication' },
     { id: 'module3-repair',    icon: '🔧', title: 'Bilateral repair sequence',   desc: 'A step-by-step protocol for after an interaction went wrong — for yours, theirs, or both.', badge: 'Repair' },
     { id: 'module3-disclosure',icon: '🔐', title: 'Controlled disclosure',       desc: 'Match how much you share about your experience to how much access the person has earned.', badge: 'Disclosure' },
-    { id: 'module3-conclude',  icon: '↩',  title: 'Before I conclude',           desc: 'A three-step check before you act on an interpretation of someone else's behavior.', badge: 'Outgoing' },
+    { id: 'module3-conclude',  icon: '↩',  title: 'Before I conclude',           desc: 'A three-step check before you act on an interpretation of what the other person did.', badge: 'Outgoing' },
     { id: 'module3-quarterly',  icon: '🔎', title: 'Quarterly Self-Assessment', desc: 'Three reflective questions. Do this every 3 months.', badge: 'Quarterly' },
     { id: 'module3-feedback',   icon: '🫁', title: 'Receiving Honest Feedback', desc: 'A before-during-after protocol for the moment someone tells you something true and difficult.', badge: 'High stakes' },
     { id: 'module3-signal',    icon: '📡', title: 'The signal and the source',  desc: 'Four categories of response to activation. Knowing which one fits changes what you ask for.', badge: 'Foundation' },
