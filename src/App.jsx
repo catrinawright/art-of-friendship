@@ -5504,9 +5504,6 @@ export default function App() {
     'module2-q5': 'Pre-Comm Checklist',
     'module2-result': 'Your Result',
     'module2-prepare': 'Prepare for This',
-    'module1': 'The Framework',
-    'module3': 'My Tracker',
-    'module4': 'Practice',
   };
 
   const showBack = screen !== 'home' && screen !== 'emergency';
