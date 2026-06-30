@@ -141,13 +141,13 @@ const TERMS = [
   {
     id: 3, domainNum: 1, linkedRule: 1,
     name: 'Relational Rings',
-    plain: 'Five rings. Ring 1 is a stranger. Ring 2 is an acquaintance. Ring 3 is a casual friend. Ring 4 is a friend. Ring 5 is a trusted friend. Every person in your life belongs in one of them.',
+    plain: 'Right now, based on what they have actually done. Ring 1 is someone you do not know. Ring 2 is someone you know but have not built trust with yet. Ring 3 is someone you like being around. Ring 4 is a real friend. Ring 5 is someone you trust with the hard things. The ring can change. It is where someone is right now — not who they are forever.',
     definition: 'The relational rings are a five-level map of relationship closeness. Ring 1: Stranger — someone you have not met or do not know. Ring 2: Acquaintance — someone you recognize and greet; no personal trust established yet. Ring 3: Casual Friend — someone you see regularly and enjoy; limited personal disclosure is appropriate. Ring 4: Friend — someone who has demonstrated consistent, mutual investment; personal topics are appropriate. Ring 5: Trusted Friend — someone who has earned access to your deepest information through sustained, demonstrated care over time. Each ring is defined by observable behavior — what the person actually does — not by how you feel about them.',
     boundary: 'A person does not move to an inner ring because you want them there. Movement inward requires behavioral evidence from the other person — not your feelings about them, your history with them, or the category you wish they occupied. Sharing Ring 5 information with a Ring 2 person is a boundary violation even when the intent is positive.',
     ruleAnchor: 'Rule 1 requires identifying which ring a person occupies before engaging with them. Your behavior in the interaction — what you share, how personal you get, what you expect — must match their ring, not the ring you want them to be in.',
     metaphor: { symbol: '🎯', concept: 'Concentric circles — each inner ring requires a specific earned invitation', explanation: 'You cannot move someone inward by wanting them there. They move inward by demonstrating, through their consistent behavior over time, that they belong there.' },
     audioText: 'The relational rings are a map of how close a relationship is. Five rings. Ring 1 is a stranger. Ring 2 is an acquaintance. Ring 3 is a casual friend. Ring 4 is a friend. Ring 5 is a trusted friend. Every person belongs in one of these rings based on what they actually do — not how you feel about them.',
-    activationPrompt: 'Pick three people in your life. Without thinking too hard — which ring does each one belong in right now, based only on what they have actually done?',
+    activationPrompt: 'Think of three people in your life. For each one — what have they actually done for you? Not how they feel. What they actually did. That is how you know where they belong.',
   },
   {
     id: 4, domainNum: 1, linkedRule: 3,
@@ -553,7 +553,7 @@ const RULES_FULL = [
     ],
     violation: 'Sharing personal things with someone who has not earned that level yet.',
     correction: 'Stop. Change the topic. Put the person back in the right ring. Start again from there.',
-    activationPrompt: 'Think of one person you talked to recently. What ring are they actually in — and how do you know? What did they actually do that tells you?',
+    activationPrompt: 'Think of one person you talked to recently. How close are they really? Not how close they feel — what have they actually done that tells you where they belong?',
     linkedTerms: [1, 2, 3],
   },
   {
@@ -1207,38 +1207,51 @@ function SettingsPanel({ settings, onChange, onClose }) {
 
 // ─── SCREENS ──────────────────────────────────────────────────────────────────
 
+// ─── RING MISMATCH PLACEHOLDER (Pass 3 will replace this) ────────────────────
+
+function RingMismatchPlaceholder({ navigate }) {
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ padding: '16px', backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}30`, borderRadius: 12, marginBottom: 20 }}>
+        <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 8 }}>Understanding Rings</div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 12 }}>
+          This section is being built. It will help you understand the five rings, the different types of people inside each ring, and what it means when someone seems like one ring but acts like another.
+        </div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6 }}>Coming in the next update.</div>
+      </div>
+      <Btn label="Go to The Framework instead →" onClick={() => navigate('module1')} variant="primary" />
+    </div>
+  );
+}
+
+// ─── HOME SCREEN ──────────────────────────────────────────────────────────────
+
 function HomeScreen({ navigate, regState, goal, saveGoal }) {
-  const steps = [
+  const START_HERE = [
     {
-      num: 1, icon: '📖', screen: 'module1',
+      icon: '📖',
+      screen: 'module1',
       title: 'The Framework',
       sub: '13 Rules · 24 Definitions',
-      purpose: 'Learn the rules and definitions.',
-      note: 'Start here',
-      noteColor: C.calm,
-      color: C.interactive,
+      desc: 'Start here. Learn the rules and what they mean.',
+      accent: C.interactive,
+      primary: true,
     },
     {
-      num: 2, icon: '🎯', screen: 'module4',
-      title: 'Practice',
-      sub: 'Scenarios · Flashcards · Trivia',
-      purpose: 'See what you know before you use it for real.',
-      color: DC[3],
+      icon: '🔵',
+      screen: 'ring-mismatch',
+      title: 'Understanding Rings',
+      sub: 'The Five Rings · Ring Types · Ring Check',
+      desc: 'Learn who belongs in which ring — and what it means when something feels off.',
+      accent: C.interactive,
+      primary: false,
     },
-    {
-      num: 3, icon: '✉️', screen: 'module2-anchor',
-      title: 'Before I Communicate',
-      sub: '5-Question Checklist',
-      purpose: 'Use the rules before you text or say something to someone.',
-      color: DC[5],
-    },
-    {
-      num: 4, icon: '📊', screen: 'module3',
-      title: 'My Tracker',
-      sub: 'Self-Audit · Journals · Logs',
-      purpose: 'Look back at what you did. Track what you notice over time.',
-      color: DC[4],
-    },
+  ];
+
+  const USE_WHEN_NEEDED = [
+    { icon: '✉️', screen: 'module2-anchor', title: 'Before I Communicate', sub: 'Check before you text or talk to someone.' },
+    { icon: '📊', screen: 'module3',         title: 'My Tracker',           sub: 'Look back. Track what you notice over time.' },
+    { icon: '🎮', screen: 'module4',         title: 'Practice',             sub: 'Try out the rules. See what you know.' },
   ];
 
   return (
@@ -1248,83 +1261,71 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
         background: 'linear-gradient(135deg, #1A2744 0%, #3D5FC8 100%)',
         borderRadius: 16, padding: '18px 18px 16px', marginBottom: 20,
       }}>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>
-          The Art of Friendship
-        </div>
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>The Art of Friendship</div>
       </div>
 
       {/* Regulation state response */}
       {regState === 'activated' && (
-        <div style={{
-          padding: '9px 14px', marginBottom: 14,
-          backgroundColor: C.activated + '10', border: `1px solid ${C.activated}30`,
-          borderLeft: `3px solid ${C.activated}`, borderRadius: 8,
-          fontSize: 13, color: C.activated, fontWeight: 600, lineHeight: 1.5,
-        }}>
-          You reported activated. Starting with The Framework is recommended before moving to a reflective tool.
+        <div style={{ padding: '9px 14px', marginBottom: 14, backgroundColor: C.activated + '10', border: `1px solid ${C.activated}30`, borderLeft: `3px solid ${C.activated}`, borderRadius: 8, fontSize: 13, color: C.activated, fontWeight: 600, lineHeight: 1.5 }}>
+          You reported activated. Starting with The Framework is a good place to begin.
         </div>
       )}
       {regState === 'overwhelmed' && (
-        <div style={{
-          padding: '9px 14px', marginBottom: 14,
-          backgroundColor: C.overwhelmed + '08', border: `1px solid ${C.overwhelmed}20`,
-          borderLeft: `3px solid ${C.overwhelmed}`, borderRadius: 8,
-          fontSize: 13, color: C.overwhelmed, fontWeight: 600, lineHeight: 1.5,
-        }}>
+        <div style={{ padding: '9px 14px', marginBottom: 14, backgroundColor: C.overwhelmed + '08', border: `1px solid ${C.overwhelmed}20`, borderLeft: `3px solid ${C.overwhelmed}`, borderRadius: 8, fontSize: 13, color: C.overwhelmed, fontWeight: 600, lineHeight: 1.5 }}>
           Welcome back. There is no rush. Open what feels right.
         </div>
       )}
 
-      {/* Sequential steps */}
-      <div style={{ marginBottom: 4 }}>
-        {steps.map((step, i) => (
-          <div key={step.num} style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
-            {/* Step indicator + connector line */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 36, flexShrink: 0 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 18, flexShrink: 0,
-                backgroundColor: step.color, display: 'flex', alignItems: 'center',
-                justifyContent: 'center', fontSize: 15, fontWeight: 800, color: '#fff',
-                boxShadow: `0 3px 10px ${step.color}40`,
-              }}>{step.num}</div>
-              {i < steps.length - 1 && (
-                <div style={{ width: 2, flex: 1, backgroundColor: C.border, marginTop: 4, minHeight: 16 }} />
-              )}
-            </div>
+      {/* START HERE section */}
+      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: C.secondary, marginBottom: 10 }}>Start here</div>
 
-            {/* Step card */}
-            <button
-              onClick={() => navigate(step.screen)}
-              style={{
-                flex: 1, textAlign: 'left', backgroundColor: C.white,
-                border: `1px solid ${C.border}`, borderLeft: `3px solid ${step.color}`,
-                borderRadius: 10, padding: '12px 14px', cursor: 'pointer',
-                marginBottom: i < steps.length - 1 ? 0 : 0,
-                boxShadow: '0 1px 4px rgba(26,39,68,0.06)',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
-                <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{step.icon} {step.title}</span>
-                <span style={{ fontSize: 16, color: C.border, marginLeft: 6 }}>›</span>
-              </div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: step.color, marginBottom: step.note ? 4 : 0 }}>{step.sub}</div>
-              {step.note && (
-                <div style={{ marginTop: 6, display: 'inline-block', backgroundColor: step.noteColor + '18', border: `1px solid ${step.noteColor}40`, borderRadius: 20, padding: '2px 10px', fontSize: 11, fontWeight: 700, color: step.noteColor }}>
-                  {step.note}
-                </div>
-              )}
-            </button>
+      {START_HERE.map((item) => (
+        <button key={item.screen} onClick={() => navigate(item.screen)} style={{
+          display: 'block', width: '100%', textAlign: 'left',
+          backgroundColor: item.primary ? C.interactive + '08' : C.white,
+          border: `1px solid ${item.primary ? C.interactive + '40' : C.border}`,
+          borderLeft: `4px solid ${item.accent}`,
+          borderRadius: 12, padding: '14px 16px', cursor: 'pointer', marginBottom: 10,
+          boxShadow: item.primary ? `0 2px 8px ${C.interactive}14` : '0 1px 4px rgba(26,39,68,0.06)',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: 16, fontWeight: 800, color: C.primary }}>
+              {item.icon} {item.title}
+            </span>
+            <span style={{ fontSize: 16, color: C.border, marginLeft: 6 }}>›</span>
           </div>
-        ))}
-      </div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: item.accent, marginBottom: 4, marginTop: 2 }}>{item.sub}</div>
+          <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{item.desc}</div>
+        </button>
+      ))}
 
-      {/* ── Situational buttons ── */}
-      <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+      {/* USE WHEN NEEDED section */}
+      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: C.secondary, marginBottom: 10, marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>Use when you need it</div>
+
+      {USE_WHEN_NEEDED.map((item) => (
+        <button key={item.screen} onClick={() => navigate(item.screen)} style={{
+          display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left',
+          backgroundColor: C.white, border: `1px solid ${C.border}`,
+          borderRadius: 10, padding: '12px 14px', cursor: 'pointer', marginBottom: 8,
+          boxShadow: '0 1px 4px rgba(26,39,68,0.04)',
+        }}>
+          <span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, marginBottom: 2 }}>{item.title}</div>
+            <div style={{ fontSize: 12, color: C.secondary }}>{item.sub}</div>
+          </div>
+          <span style={{ fontSize: 16, color: C.border }}>›</span>
+        </button>
+      ))}
+
+      {/* Situational buttons */}
+      <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: C.secondary, marginBottom: 10 }}>What is happening right now?</div>
         {[
           { label: '💬 I want to text or say something to someone', screen: 'module2-anchor', color: C.interactive },
-          { label: '🗣 I am talking to someone right now',   screen: 'module2-anchor', color: C.calm },
-          { label: '🔁 I just finished talking to someone',     screen: 'navigator',       color: DC[4] },
-          { label: '❓ I am not sure',                    screen: 'regulation',      color: C.secondary },
+          { label: '🗣 I am talking to someone right now',           screen: 'module2-anchor', color: C.calm },
+          { label: '🔁 I just finished talking to someone',          screen: 'navigator',       color: DC[4] },
+          { label: '❓ I am not sure',                               screen: 'regulation',      color: C.secondary },
         ].map(({ label, screen, color }, i) => (
           <button key={i} onClick={() => navigate(screen)} style={{
             display: 'block', width: '100%', minHeight: 48,
@@ -1336,11 +1337,8 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
         ))}
       </div>
 
-      {/* Goal editor */}
       <GoalEditor goal={goal} onSave={saveGoal} />
 
-
-      {/* Legal footer */}
       <div style={{ marginTop: 16, paddingTop: 12, borderTop: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ fontSize: 11, color: C.secondary }}>CC BY-NC 4.0 · Catrina Wright · 2026</div>
         <button onClick={() => navigate('legal')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive, textDecoration: 'underline' }}>About &amp; Legal</button>
@@ -1971,10 +1969,10 @@ function Module1Home({ navigate, setSelectedTerm, settings }) {
 
       {/* Foundational terms — always visible before tabs */}
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 4 }}>
-          BEFORE THE RULES
+        <div style={{ fontSize: 13, fontWeight: 800, color: C.primary, letterSpacing: 0, marginBottom: 8 }}>
+          Before the rules
         </div>
-        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>
+        <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6, marginBottom: 12 }}>
           These four terms appear in almost every rule. This is where the framework begins.
         </div>
         {FOUNDATIONAL.map(id => {
@@ -5366,24 +5364,36 @@ function WelcomeScreen({ onStart }) {
         ))}
       </div>
 
-      {/* Audio — unobtrusive, does not trigger navigation */}
+      {/* Start button — primary CTA */}
+      <button
+        onClick={e => { e.stopPropagation(); handleContinue(); }}
+        style={{
+          marginTop: 44,
+          padding: '16px 52px',
+          borderRadius: 14,
+          border: 'none',
+          backgroundColor: '#2A9D8F',
+          color: '#fff',
+          fontSize: 18,
+          fontWeight: 800,
+          cursor: 'pointer',
+          letterSpacing: 0.3,
+          boxShadow: '0 4px 22px rgba(42,157,143,0.55)',
+        }}
+      >Start</button>
+
+      {/* Audio — secondary */}
       <button
         onClick={handleAudio}
         style={{
-          marginTop: 40, padding: '8px 18px', borderRadius: 20,
-          border: '1px solid rgba(255,255,255,0.25)',
-          background: audioState === 'playing' ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)',
-          color: 'rgba(255,255,255,0.55)', fontSize: 12, fontWeight: 600,
+          marginTop: 14,
+          padding: '6px 16px', borderRadius: 20,
+          border: '1px solid rgba(255,255,255,0.18)',
+          background: audioState === 'playing' ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
+          color: 'rgba(255,255,255,0.45)', fontSize: 11, fontWeight: 500,
           cursor: 'pointer', letterSpacing: 0.3,
         }}
       >{audioState === 'idle' ? '🔊 Hear this' : audioState === 'playing' ? '⏹ Stop' : '↺ Again'}</button>
-
-      {/* Tap cue */}
-      <div style={{
-        position: 'absolute', bottom: 32,
-        fontSize: 10, color: 'rgba(255,255,255,0.25)',
-        letterSpacing: 1.5, textTransform: 'uppercase',
-      }}>tap anywhere to continue</div>
     </div>
   );
 }
@@ -5500,7 +5510,7 @@ function LegalScreen({ navigate }) {
 
 export default function App() {
   const [screen, setScreen] = useState('home');
-  const [prevScreen, setPrevScreen] = useState(null);
+  const [navHistory, setNavHistory] = useState([]);
   const [regState, setRegState] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showGrounding, setShowGrounding] = useState(false);
@@ -5530,14 +5540,15 @@ export default function App() {
   const showTerm = (id) => setTermPopupId(id);
 
   const navigate = (to) => {
-    setPrevScreen(screen);
+    setNavHistory(h => [...h, screen]);
     setScreen(to);
   };
 
   const goBack = () => {
-    if (prevScreen) {
-      setScreen(prevScreen);
-      setPrevScreen(null);
+    if (navHistory.length > 0) {
+      const prev = navHistory[navHistory.length - 1];
+      setNavHistory(h => h.slice(0, -1));
+      setScreen(prev);
     } else {
       setScreen('home');
     }
@@ -5563,6 +5574,7 @@ export default function App() {
     'overwhelmed-stop': 'Stop Here',
     emergency: null,
     module1: 'The Framework',
+    'ring-mismatch': 'Understanding Rings',
     'module1-term': 'Term Detail',
     'module1-rules': 'Rule Cards',
     'module1-map': 'Framework Map',
@@ -5621,6 +5633,7 @@ export default function App() {
     if (screen === 'module1') return <Module1Home navigate={navigate} setSelectedTerm={setSelectedTermId} settings={settings} />;
     if (screen === 'module1-term') return <Module1TermDetail navigate={navigate} termId={selectedTermId} settings={settings} />;
     if (screen === 'module1-rules') return <Module1RuleCards navigate={navigate} />;
+    if (screen === 'ring-mismatch') return <RingMismatchPlaceholder navigate={navigate} />;
     if (screen === 'module1-map') return <Module1FrameworkMap navigate={navigate} setSelectedTerm={setSelectedTermId} />;
     // Rule detail — handles module1-rule-1 through module1-rule-13
     if (screen.startsWith('module1-rule-')) {
