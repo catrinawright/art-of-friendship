@@ -962,8 +962,8 @@ function Footer({ onGrounding, state }) {
           color: C.secondary, fontWeight: 600,
           letterSpacing: 0.3,
         }}
-        aria-label="Grounding pause"
-      >⏸ Pause &amp; Ground</button>
+        aria-label="Take a pause"
+      >⏸ Pause</button>
     </div>
   );
 }
@@ -1356,7 +1356,7 @@ function RingMismatchHome({ navigate }) {
 
 // ─── RING MISMATCH RINGS ─────────────────────────────────────────────────────
 function RingMismatchRings({ navigate, showTerm }) {
-  const [openRing, setOpenRing] = React.useState(null);
+  const [openRing, setOpenRing] = useState(null);
   const toggle = (num) => setOpenRing(openRing === num ? null : num);
   return (
     <div style={{ paddingTop: 8 }}>
@@ -1409,7 +1409,7 @@ function RingMismatchRings({ navigate, showTerm }) {
 
 // ─── RING MISMATCH SIGNS ─────────────────────────────────────────────────────
 function RingMismatchSigns({ navigate, showTerm }) {
-  const [openSign, setOpenSign] = React.useState(null);
+  const [openSign, setOpenSign] = useState(null);
   const toggle = (i) => setOpenSign(openSign === i ? null : i);
   return (
     <div style={{ paddingTop: 8 }}>
@@ -1472,12 +1472,12 @@ function RingMismatchSigns({ navigate, showTerm }) {
 
 // ─── RING CHECK TOOL ─────────────────────────────────────────────────────────
 function RingMismatchCheck({ navigate }) {
-  const [step, setStep] = React.useState(0);
-  const [s1, setS1] = React.useState([]);
-  const [s2, setS2] = React.useState([]);
-  const [s3, setS3] = React.useState(null);
-  const [s4, setS4] = React.useState([]);
-  const [openSign, setOpenSign] = React.useState(null);
+  const [step, setStep] = useState(0);
+  const [s1, setS1] = useState([]);
+  const [s2, setS2] = useState([]);
+  const [s3, setS3] = useState(null);
+  const [s4, setS4] = useState([]);
+  const [openSign, setOpenSign] = useState(null);
 
   const toggleMulti = (key, getter, setter) => {
     setter(getter.includes(key) ? getter.filter(k => k !== key) : [...getter, key]);
