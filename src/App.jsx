@@ -771,9 +771,9 @@ const SCENARIOS = [
     id: 1, title: 'The Repeated Text', rules: [6, 3], difficulty: 'foundation',
     tags: ['Response Latency', 'Initiation Directionality'],
     text: 'Alex texts Jordan four times in two hours without a reply. Jordan has not initiated contact in two weeks. Each message asks a variation of the same question. Alex describes the situation as urgent.',
-    scaffold: 'This scenario involves Rules 6 (response latency) and 3 (initiation directionality). Jordan\'s silence across multiple contacts is a temporal implicit signal. Three consecutive self-initiated contacts with no return initiation is the pause threshold.',
+    scaffold: 'This scenario is about Rules 6 and 3. Jordan has not replied and has not reached out first in two weeks. Three reach-outs in a row without a return means stop and wait.',
     clusterHint: 'After the Interaction',
-    analysis: ['What specific behavior raises a concern?', 'Which rule applies most directly?', 'What should Alex do right now, and for how long?', 'If this were your behavior — what would the correction pathway be?'],
+    analysis: ['What specific behavior raises a concern?', 'Which rule applies most directly?', 'What should Alex do right now, and for how long?', 'If this were your behavior — what would you do right now to correct it?'],
     generalization: 'Is there a relationship in your life where you have initiated contact three or more times without a return initiation?',
     bilateral: 'Have you ever continued messaging someone who went quiet? What was driving that? Urgency, anxiety, or something else?',
   },
@@ -781,7 +781,7 @@ const SCENARIOS = [
     id: 2, title: 'The Changed Subject', rules: [5, 7], difficulty: 'foundation',
     tags: ['Implicit Signals', 'Conversational Balance'],
     text: 'During a conversation, Alex notices that Morgan consistently redirects away from Alex\'s concerns. Morgan\'s replies have become shorter. Morgan has glanced at their phone three times. Alex keeps returning to the same topic.',
-    scaffold: 'This scenario involves Rules 5 (implicit signal clusters) and 7 (conversational balance). Multiple implicit signals — shorter replies, subject changes, phone checks — form a collective message requiring adjustment.',
+    scaffold: 'This scenario is about Rules 5 and 7. Morgan has given multiple quiet signs — shorter replies, changing the subject, checking their phone. Two or more quiet signs together mean stop and check in.',
     clusterHint: 'During the Interaction',
     analysis: ['How many implicit signals appear in this scenario?', 'What type of signals are they?', 'What should Alex do when the second signal appears?', 'If you were Alex — would you have noticed these signals? At which point?'],
     generalization: 'Think of a recent conversation where someone\'s engagement dropped. What signals appeared?',
@@ -791,9 +791,9 @@ const SCENARIOS = [
     id: 3, title: 'The Overshare', rules: [8, 1], difficulty: 'foundation',
     tags: ['Topic Appropriateness', 'Relationship Classification'],
     text: 'Alex discloses a recent medical diagnosis to Sam, a coworker, during their third conversation. Their prior conversations have been brief and work-related. Sam acknowledges the information politely and then changes the subject.',
-    scaffold: 'This scenario involves Rules 8 (topic appropriateness) and 1 (classify before engaging). Health topics belong at Ring 4 or 5 on the continuum. Sam is in Ring 2 or 3 based on available evidence.',
+    scaffold: 'This scenario is about Rules 8 and 1. Health topics belong with Ring 4 and Ring 5 people. Sam is in Ring 2 or Ring 3 based on what has happened so far.',
     clusterHint: 'Before the Interaction',
-    analysis: ['Where does Sam currently sit in the relational rings?', 'What ring requires health topics to be appropriate?', 'What does Sam\'s subject change communicate?', 'If this were your behavior — what was the pre-communication screen that should have run?'],
+    analysis: ['Where does Sam currently sit in the relational rings?', 'What ring requires health topics to be appropriate?', 'What does Sam\'s subject change communicate?', 'If this were your behavior — what question should you have asked yourself before sharing?'],
     generalization: 'Is there a relationship where you have disclosed at a level that exceeded the category?',
     bilateral: 'Have you ever shared something personal with someone and then sensed the disclosure was too early? What happened next?',
   },
@@ -801,7 +801,7 @@ const SCENARIOS = [
     id: 4, title: 'The Guilt Message', rules: [13, 16], difficulty: 'application',
     tags: ['Manipulation', 'Self-Advocacy vs Manipulation'],
     text: 'After being declined for plans twice, Alex sends a message to Riley: "I guess I\'m just not someone people want to spend time with." Riley immediately replies asking if Alex is okay and offering to reschedule.',
-    scaffold: 'This scenario involves Term 16 (manipulation vs self-advocacy) and Rule 13 (unsafe patterns). The message uses guilt induction — framing a personal disappointment as a statement about worth to generate a specific response.',
+    scaffold: 'This scenario is about Term 16 and Rule 13. The message uses guilt — it turns a personal disappointment into a statement about worth to make Riley feel responsible and respond.',
     clusterHint: 'Evaluation',
     analysis: ['Which manipulation form does this message use?', 'What was the communication\'s actual effect on Riley?', 'What would direct self-advocacy have looked like instead?', 'If this were your behavior — what was the underlying need, and how could it have been communicated directly?'],
     generalization: 'Think of a time you communicated disappointment in a way that was designed to produce a specific response.',
@@ -811,9 +811,9 @@ const SCENARIOS = [
     id: 5, title: 'The Conversation Monopoly', rules: [7, 9], difficulty: 'application',
     tags: ['Conversational Balance', 'Interaction Structure'],
     text: 'During a twenty-minute conversation, Alex speaks for approximately sixteen minutes. When Casey speaks, Alex listens briefly and redirects to their own topic. Casey has not asked a question in the last twelve minutes and is giving one-word replies.',
-    scaffold: 'Rules 7 (conversational balance) and 5 (implicit signals) apply. Casey\'s one-word replies and twelve-minute silence in questioning are implicit signals. The rule of three has been violated repeatedly — Alex should have asked a genuine question after every three self-referential statements.',
+    scaffold: 'This scenario is about Rules 7 and 5. Casey is giving one-word replies and has not asked a question in twelve minutes. Those are quiet signs. The rule of three: after every three things you say about yourself, ask one real question.',
     clusterHint: 'During the Interaction',
-    analysis: ['How many implicit signals has Casey sent in this scenario?', 'At what point should Rule 7 have been applied?', 'What specific action should Alex take right now?', 'If you were Alex — when do you typically notice that a conversation has become one-directional?'],
+    analysis: ['How many implicit signals has Casey sent in this scenario?', 'At what point should Rule 7 have been applied?', 'What specific action should Alex take right now?', 'If you were Alex — when do you usually notice that a conversation has shifted to mostly you talking?'],
     generalization: 'Think of a recent conversation. What percentage of the time did you speak? Did you ask at least one genuine question?',
     bilateral: 'What topics or emotional states make it hardest for you to monitor conversational balance?',
   },
@@ -821,7 +821,7 @@ const SCENARIOS = [
     id: 6, title: 'The Abrupt Exit', rules: [9, 5], difficulty: 'foundation',
     tags: ['Interaction Structure', 'Implicit Signals'],
     text: 'Alex is mid-conversation with Taylor when Alex notices it is time to leave. Alex says "I have to go" while Taylor is still speaking and walks away. Taylor stands watching with a confused expression.',
-    scaffold: 'Rule 9 (interaction structure) applies directly. Every interaction requires a deliberate verbal close: acknowledgment of the exchange and a forward-looking statement. Exiting mid-sentence violates the closing requirement regardless of time pressure.',
+    scaffold: 'This scenario is about Rule 9. Every conversation needs a real close. Walking away while someone is still talking skips the close, even if you are out of time.',
     clusterHint: 'During the Interaction',
     analysis: ['Which stage of the interaction structure was skipped?', 'What did Taylor\'s expression communicate?', 'What would a complete closing have looked like in fifteen seconds or fewer?', 'If this were your behavior — what typically causes you to exit an interaction without a close?'],
     generalization: 'Think of your last few conversation endings. Did you deliver a deliberate verbal close each time?',
@@ -831,9 +831,9 @@ const SCENARIOS = [
     id: 7, title: 'The Pushed Boundary', rules: [4, 11], difficulty: 'application',
     tags: ['Explicit Signals', 'Accepting Boundaries'],
     text: 'Jordan tells Alex directly: "I do not want to talk about my family right now." Alex says "Okay" and waits two minutes. Then asks: "So how are things going with your sister?"',
-    scaffold: 'Rules 4 (respond to explicit signals immediately) and 11 (accept boundaries without argument) apply. Jordan delivered an explicit signal. Alex acknowledged it verbally but resumed the restricted topic in a modified form within the same interaction.',
+    scaffold: 'This scenario is about Rules 4 and 11. Jordan said directly that the topic was off limits. Alex said okay — then brought it back in a different form two minutes later. That is still a boundary violation.',
     clusterHint: 'During the Interaction',
-    analysis: ['What type of signal did Jordan send?', 'Did Alex violate Rule 4, Rule 11, or both?', 'What makes "asking about the sister" a boundary violation even though the exact word "family" was not used?', 'If this were your behavior — what is the honest answer to why the topic was resumed?'],
+    analysis: ['What type of signal did Jordan send?', 'Did Alex violate Rule 4, Rule 11, or both?', 'Why is asking about the sister still a boundary violation, even though Alex did not use the word family?', 'If this were your behavior — what is the honest answer to why the topic was resumed?'],
     generalization: 'Has someone set a limit in a conversation that you later returned to in a modified form?',
     bilateral: 'What is the difference between forgetting a boundary and testing one?',
   },
@@ -841,9 +841,9 @@ const SCENARIOS = [
     id: 8, title: 'The Three-Ring Problem', rules: [1, 2], difficulty: 'challenge',
     tags: ['Relationship Classification', 'Qualify Before Naming'],
     text: 'Alex has spoken with a new coworker five times over three weeks. All conversations were brief and work-related. The coworker has never initiated contact outside of work. Alex describes this person to a friend as "one of my closest friends at the moment."',
-    scaffold: 'Rules 1 (classify before engaging) and 2 (qualify before naming) apply. Five brief work conversations place this person at Ring 2 or 3 at most. None of the five friendship-qualifying criteria have been met bilaterally. Labeling them a close friend sets expectations that do not match the relational evidence.',
+    scaffold: 'This scenario is about Rules 1 and 2. Five short work conversations put this person in Ring 2 or Ring 3. None of the five things that qualify a friendship have happened from both sides. Calling them a close friend sets up expectations that the relationship has not earned yet.',
     clusterHint: 'Before the Interaction',
-    analysis: ['Using the five qualification criteria from Rule 2, how many are met bilaterally?', 'Where does this person currently sit on the continuum?', 'What harm can result from labeling a relationship at a higher ring than the evidence supports?', 'If this were your behavior — which part of this person\'s behavior might you be over-interpreting as closeness?'],
+    analysis: ['Using the five signs from Rule 2, how many of them have happened from both sides?', 'Where does this person currently sit on the continuum?', 'What can go wrong when you label someone as closer than the evidence actually shows?', 'If this were your behavior — which part of what they did might you be reading as more than it is?'],
     generalization: 'Is there a relationship you have labeled more closely than the observable behavioral evidence supports?',
     bilateral: 'What need does labeling someone as a close friend serve before the evidence is there?',
   },
@@ -854,7 +854,7 @@ const TRIVIA_Q = [
   { id: 1, tier: 'foundation', rule: 3,  q: 'What is the minimum number of consecutive self-initiated contacts — with no return initiation — before Rule 3 requires a pause?', a: '3', explanation: 'After three consecutive self-initiated contacts without a return initiation, Rule 3 requires stopping all outreach and reassessing the relational dynamic for a minimum of one week.' },
   { id: 2, tier: 'foundation', rule: 9,  q: 'Name the three stages of a social interaction as defined in Term 11.', a: 'Opening, Maintenance (reciprocal middle), Closing', explanation: 'Every interaction needs a deliberate opening, a reciprocal middle, and a verbal close. An interaction that ends without a close communicates dismissal regardless of intent.' },
   { id: 3, tier: 'foundation', rule: 7,  q: 'Rule 7 uses a ratio to govern conversational balance. What is it?', a: 'Every 3 self-referential statements → 1 genuine question about the other person', explanation: 'The rule of three: for every three statements you make about yourself or your interests, ask at least one genuine, open-ended question about the other person.' },
-  { id: 4, tier: 'foundation', rule: 0,  q: 'How many manipulation forms are identified in Term 16?', a: '7', explanation: 'The seven forms are: guilt induction, selective disclosure, emotional escalation, reciprocity exploitation, dependency cultivation, boundary testing, and reframing accountability.' },
+  { id: 4, tier: 'foundation', rule: 16, q: 'What is the difference between self-advocacy and manipulation?', a: 'Self-advocacy lets the other person say no freely. Manipulation takes away their freedom to say no.', explanation: 'The key difference is whether the other person has a real choice. Self-advocacy asks clearly and steps back. Manipulation puts pressure on the decision before the other person can weigh in.' },
   // Application
   { id: 5, tier: 'application', rule: 8, q: 'Someone wants to discuss a health concern with a coworker they have spoken to three times. What does Rule 8\'s relationship category check require before proceeding?', a: 'Health topics require Ring 4 (Friend) or above. Three conversations = Ring 2-3 at most. The check fails. Default to a neutral topic.', explanation: 'The topic screening has two parts: relationship category check and setting check. Both must pass. If either fails, the topic is not appropriate for that context.' },
   { id: 6, tier: 'application', rule: 5, q: 'A person\'s replies get shorter, they glance at their phone twice, and they start changing the subject. What does Rule 5 require at this point?', a: 'Two or more implicit signals in one category — or across categories — form a collective message. Pause the topic and check in.', explanation: 'Rule 5 does not wait for an explicit signal. When two or more implicit signals appear, treat them as a message and adjust — slow down, pause the topic, or check in directly.' },
@@ -4890,16 +4890,16 @@ function Module3Conclude({ navigate }) {
 
 function Module4Home({ navigate }) {
   const tools = [
-    { id: 'module4-scenarios',  icon: '🃏', title: 'Scenario Cards',       desc: '8 pre-built scenarios with bilateral analysis. Three support levels.', badge: 'Bilateral practice' },
-    { id: 'module4-trivia',     icon: '🧠', title: 'Rule Trivia',           desc: '12 questions across Foundation, Application, and Challenge tiers.', badge: 'Knowledge check' },
-    { id: 'module4-flashcards', icon: '📚', title: 'Flashcard Deck',        desc: 'All 19 definitions. Flip, review, and self-rate.', badge: 'Definition review' },
-    { id: 'module4-generator',  icon: '✨', title: 'Scenario Generator',    desc: 'Describe a real situation. Get a practice scenario built from the framework rules.', badge: 'Template-based' },
+    { id: 'module4-scenarios',  icon: '🃏', title: 'Scenario Cards',       desc: '8 practice scenarios with three levels of support.', badge: 'Bilateral practice' },
+    { id: 'module4-trivia',     icon: '🧠', title: 'Rule Trivia',           desc: '12 questions across three levels of difficulty.', badge: 'Knowledge check' },
+    { id: 'module4-flashcards', icon: '📚', title: 'Flashcard Deck',        desc: 'All 24 definitions. Flip through each one and rate yourself.', badge: 'Definition review' },
+    { id: 'module4-generator',  icon: '✨', title: 'Scenario Generator',    desc: 'Describe a real situation. Get a practice scenario built around it.', badge: 'Template-based' },
   ];
 
   return (
     <div style={{ paddingTop: 4 }}>
       <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
-        Apply the framework through practice. Choose a tool based on what you need today.
+        Try out the rules through practice. Choose a tool for what you need today.
       </div>
       {tools.map(t => (
         <button key={t.id} onClick={() => navigate(t.id)} style={{
@@ -4936,7 +4936,7 @@ function Module4Scenarios({ navigate }) {
     <div style={{ paddingTop: 4 }}>
       {/* Support level */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 14 }}>
-        {[['scaffolded', 'Scaffolded'], ['supported', 'Supported'], ['independent', 'Independent']].map(([v, l]) => (
+        {[['scaffolded', 'More help'], ['supported', 'Some help'], ['independent', 'No help']].map(([v, l]) => (
           <button key={v} onClick={() => setLevel(v)} style={{ flex: 1, padding: '7px 4px', borderRadius: 8, cursor: 'pointer', border: `1.5px solid ${level === v ? C.interactive : C.border}`, backgroundColor: level === v ? C.interactive + '10' : 'transparent', color: level === v ? C.interactive : C.secondary, fontSize: 11, fontWeight: level === v ? 700 : 400, textAlign: 'center' }}>{l}</button>
         ))}
       </div>
@@ -4956,19 +4956,19 @@ function Module4Scenarios({ navigate }) {
       {/* Scaffolded hint */}
       {level === 'scaffolded' && (
         <Card style={{ backgroundColor: DC[1] + '08', borderColor: DC[1] + '40' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: DC[1], letterSpacing: 0.4, marginBottom: 6 }}>SCAFFOLD — Rules {selected.rules.join(' + ')}</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: DC[1], letterSpacing: 0.4, marginBottom: 6 }}>HINT — Rules {selected.rules.join(' + ')}</div>
           <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>{selected.scaffold}</div>
         </Card>
       )}
       {level === 'supported' && (
         <Card style={{ backgroundColor: DC[3] + '08', borderColor: DC[3] + '40' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: DC[3], letterSpacing: 0.4, marginBottom: 6 }}>CLUSTER HINT</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: DC[3], letterSpacing: 0.4, marginBottom: 6 }}>HINT</div>
           <div style={{ fontSize: 13, color: C.primary }}>This scenario involves a rule from the <strong>{selected.clusterHint}</strong> cluster. Identify the specific rule(s).</div>
         </Card>
       )}
 
       {/* Outward analysis questions */}
-      <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>ANALYSIS</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>QUESTIONS</div>
       {selected.analysis.slice(0, 3).map((q, i) => (
         <div key={i} style={{ padding: '10px 12px', borderLeft: `3px solid ${C.border}`, borderRadius: '0 8px 8px 0', marginBottom: 8, backgroundColor: C.white }}>
           <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.5 }}>{i + 1}. {q}</div>
@@ -4978,9 +4978,9 @@ function Module4Scenarios({ navigate }) {
       {/* Bilateral turn — explicit, weighted equally to journal/audit */}
       {selected.analysis.length > 3 && (
         <div style={{ marginTop: 12, marginBottom: 12 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: DC[4], letterSpacing: 0.4, marginBottom: 6 }}>BILATERAL TURN</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: DC[4], letterSpacing: 0.4, marginBottom: 6 }}>YOUR TURN</div>
           <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6, marginBottom: 8, fontStyle: 'italic' }}>
-            Now turn the same lens inward. The framework applies to your conduct as much as to anyone else's in this scenario.
+            Now look at your own behavior. The same rules apply to what you do.
           </div>
           <div style={{ padding: '10px 12px', borderLeft: `3px solid ${DC[4]}`, backgroundColor: DC[4] + '08', borderRadius: '0 8px 8px 0' }}>
             <div style={{ fontSize: 13, color: DC[4], fontWeight: 700, lineHeight: 1.5 }}>{selected.analysis[3]}</div>
@@ -4999,7 +4999,7 @@ function Module4Scenarios({ navigate }) {
           <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4, marginBottom: 6 }}>FRAMEWORK ANSWER</div>
           <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7 }}>{selected.scaffold}</div>
           <div style={{ marginTop: 10, padding: '8px 10px', backgroundColor: DC[4] + '10', borderRadius: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: DC[4], letterSpacing: 0.4, marginBottom: 4 }}>BILATERAL REFLECTION</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: DC[4], letterSpacing: 0.4, marginBottom: 4 }}>YOUR REFLECTION</div>
             <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.5 }}>{selected.bilateral}</div>
           </div>
         </Card>
@@ -5007,7 +5007,7 @@ function Module4Scenarios({ navigate }) {
 
       {/* Generalization bridge */}
       <div style={{ padding: 12, backgroundColor: C.bg, borderRadius: 10, border: `1px solid ${C.border}`, marginTop: 4 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 6 }}>GENERALIZATION BRIDGE</div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 6 }}>THINK ABOUT THIS</div>
         <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.6, fontStyle: 'italic' }}>{selected.generalization}</div>
         <div style={{ fontSize: 12, color: C.secondary, marginTop: 6 }}>You do not have to write an answer. Just notice.</div>
       </div>
@@ -5019,18 +5019,18 @@ function Module4Scenarios({ navigate }) {
   return (
     <div style={{ paddingTop: 4 }}>
       <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>
-        Select a scenario. Choose your support level before you read it.
+        Pick a scenario. Choose your level of support before you open it.
       </div>
       <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
-        {[['scaffolded', 'Scaffolded'], ['supported', 'Supported'], ['independent', 'Independent']].map(([v, l]) => (
+        {[['scaffolded', 'More help'], ['supported', 'Some help'], ['independent', 'No help']].map(([v, l]) => (
           <button key={v} onClick={() => setLevel(v)} style={{ flex: 1, padding: '8px 4px', borderRadius: 8, cursor: 'pointer', border: `1.5px solid ${level === v ? C.interactive : C.border}`, backgroundColor: level === v ? C.interactive + '10' : 'transparent', color: level === v ? C.interactive : C.secondary, fontSize: 12, fontWeight: level === v ? 700 : 400, textAlign: 'center' }}>{l}</button>
         ))}
       </div>
 
       {pausing && (
         <div style={{ textAlign: 'center', padding: 24 }}>
-          <div style={{ fontSize: 14, color: C.secondary, marginBottom: 8 }}>Pause before you begin.</div>
-          <div style={{ fontSize: 13, color: C.secondary }}>Take one breath. Load the scenario in a moment.</div>
+          <div style={{ fontSize: 14, color: C.secondary, marginBottom: 8 }}>Take one breath before you begin.</div>
+          <div style={{ fontSize: 13, color: C.secondary }}>The scenario will load in a moment.</div>
         </div>
       )}
 
