@@ -1207,21 +1207,462 @@ function SettingsPanel({ settings, onChange, onClose }) {
 
 // ─── SCREENS ──────────────────────────────────────────────────────────────────
 
-// ─── RING MISMATCH PLACEHOLDER (Pass 3 will replace this) ────────────────────
+// ─── RING MISMATCH MODULE ────────────────────────────────────────────────────
 
-function RingMismatchPlaceholder({ navigate }) {
+const RINGS_DATA = [
+  {
+    num: 1, name: 'Stranger', color: '#6B7FA8',
+    plain: 'Someone you do not know. You have not spoken to them. You do not know their name.',
+    subtypes: [
+      { name: 'Unknown stranger', desc: 'Someone you have never seen or met before.' },
+      { name: 'Regular stranger', desc: 'Someone you see often — at the bus stop, in the hallway, at the store — but have never spoken to. Seeing them often does not make them an acquaintance.' },
+    ],
+    question: 'Have you ever had a real conversation with this person?',
+  },
+  {
+    num: 2, name: 'Acquaintance', color: '#4E8A6B',
+    plain: 'Someone you know but have not built trust with yet.',
+    subtypes: [
+      { name: 'Social acquaintance', desc: 'Someone you know by name and say hi to. The relationship does not go deeper than that yet.' },
+      { name: 'Professional acquaintance', desc: 'Someone whose job gives them access to information about you — a teacher, a counselor, a social worker, a doctor. They may care about you. That can be real. But the access they have comes from their role, not from something you chose to give them. That makes them Ring 2.' },
+      { name: 'Authority acquaintance', desc: 'Someone who has power over your situation and is also friendly — a principal, a case manager, a coach. Friendly and Ring 4 are not the same thing.' },
+    ],
+    question: 'Where does their information about you come from — your choice to share it, or their role?',
+  },
+  {
+    num: 3, name: 'Casual Friend', color: '#C4781A',
+    plain: 'Someone you like being around. The connection exists in one place or around one shared thing.',
+    subtypes: [
+      { name: 'Context friend', desc: 'Someone you connect with in one setting — a class, a team, a job — and the connection does not travel outside of it. That is not a flaw. That is what Ring 3 is.' },
+      { name: 'Activity friend', desc: 'The friendship is built around what you do together, not around who you are to each other outside of that activity.' },
+    ],
+    question: 'Would the connection still exist if the shared place or activity ended?',
+  },
+  {
+    num: 4, name: 'Friend', color: '#2E6DA4',
+    plain: 'Someone who shows up for you. The friendship exists in more than one situation.',
+    subtypes: [
+      { name: 'Consistent friend', desc: 'Both of you show up. Both reach out. Both share. Not perfectly. But consistently, across more than one situation.' },
+      { name: 'Conditional friend', desc: 'The friendship is real but something changes it when things get hard or when you disagree. Still Ring 4 — but needs watching.' },
+      { name: 'Recovering friend', desc: 'Someone who was Ring 5 and something happened. They may still be Ring 4. They cannot access Ring 5 information right now. Their ring is based on what they do now — not on what they did before.' },
+    ],
+    question: 'Does this friendship exist outside of one specific situation?',
+  },
+  {
+    num: 5, name: 'Trusted Friend', color: '#8B5E8A',
+    plain: 'Someone you trust with the hard things. They earned that access through what they actually did.',
+    subtypes: [
+      { name: 'Long-term trusted', desc: 'Sustained care across years and multiple hard moments.' },
+      { name: 'New trusted', desc: 'Someone who earned Ring 5 access through specific demonstrated behavior, even if the relationship is newer. Time alone does not make Ring 5. Behavior does.' },
+    ],
+    question: 'Has this person shown up for you in a hard moment and held your information with care?',
+  },
+];
+
+const MISMATCH_SIGNS = [
+  {
+    short: 'Information goes one way.',
+    detail: 'They know a lot about you. You know almost nothing personal about them. In a real friendship, both people share. If someone knows a lot about your life but you know very little about theirs, information is only flowing one direction.',
+    example: 'A counselor knows about your home situation from a report. A teacher knows your diagnosis from your records. This does not mean they are bad people. It means the information came from their access, not from your trust.',
+  },
+  {
+    short: 'The warmth changes.',
+    detail: 'They are warmer when they want something from you. When they do not need anything, things get quieter. In a real friendship, care is consistent. Conditional warmth is a sign of Ring 2 behavior, not Ring 4.',
+    example: 'Someone is very attentive during a meeting where they need your agreement. Afterward, you barely hear from them.',
+  },
+  {
+    short: 'The connection is tied to a role.',
+    detail: 'When the role ends — school ends, the program ends, the job ends — the relationship ends with it. Real friendships exist outside of the context that created them.',
+    example: 'A teacher who was very supportive while you were their student. Once you graduated or changed schools, the contact stopped completely.',
+  },
+  {
+    short: 'You did not fully choose what they know.',
+    detail: 'The personal information they have about you got to them through their position, through other people, or through a system — not through a conversation where you decided to share it. That is not intimacy. That is access.',
+    example: 'A social worker who knows about your family from a case file. A new teacher who read your full records before they ever spoke to you.',
+  },
+];
+
+function computeRingResult(s1, s2, s3, s4) {
+  let score = 0;
+  if (s1.includes('proactive')) score += 2;
+  if (s1.includes('reciprocal')) score += 2;
+  if (s1.includes('hardmoment')) score += 3;
+  if (s1.includes('context')) score -= 1;
+  if (s1.includes('initiation')) score -= 1;
+  if (s2.includes('chose')) score += 2;
+  if (s2.includes('role')) score -= 2;
+  if (s2.includes('others')) score -= 1;
+  const s3map = { yes: 3, probably: 1, dontknow: 0, probablynot: -2, no: -3 };
+  score += s3map[s3] || 0;
+  let ring = score >= 7 ? 5 : score >= 3 ? 4 : score >= 0 ? 3 : 2;
+  let mismatch = (s2.includes('role') && ring >= 3) ||
+    (ring <= 3 && (s1.includes('proactive') || s1.includes('hardmoment')));
+  let triggered = [];
+  if (s2.includes('role') || s2.includes('others')) triggered.push(0);
+  if (s1.includes('initiation') && !s1.includes('reciprocal')) triggered.push(1);
+  if (s3 === 'probablynot' || s3 === 'no') triggered.push(2);
+  if (s2.includes('role') || s2.includes('others')) triggered.push(3);
+  triggered = [...new Set(triggered)];
+  let mitigating = null;
+  const hasProfile = s4.length > 0 && !s4.includes('none');
+  if (hasProfile) {
+    let parts = ['Some of the patterns we looked for work differently when both people share a neurological profile.'];
+    if (s4.includes('autistic')) parts.push('If they are also autistic, initiation patterns and response frequency may not tell the full story.');
+    if (s4.includes('adhd')) parts.push('If they also have ADHD, irregular contact may not mean low investment.');
+    if (s4.includes('different')) parts.push('If they also process things differently, some signals may take longer to show up.');
+    parts.push('Has this person shown up for you in a hard moment? That is the most reliable indicator.');
+    mitigating = parts.join(' ');
+  }
+  return { ring, mismatch, triggered, mitigating, score };
+}
+
+// ─── RING MISMATCH HOME ───────────────────────────────────────────────────────
+function RingMismatchHome({ navigate }) {
+  const sections = [
+    { icon: '⭕', title: 'The Five Rings', sub: 'Ring types and sub-categories', desc: 'Learn what each ring means and the different types of people inside each one.', screen: 'ring-mismatch-rings', primary: true },
+    { icon: '🔍', title: 'What is a Ring Mismatch?', sub: 'Definition and four signs', desc: 'Learn what it means when someone seems like one ring but acts like another.', screen: 'ring-mismatch-signs', primary: false },
+    { icon: '✅', title: 'Ring Check', sub: 'Four-question tool', desc: 'Answer four questions to get a ring placement suggestion for someone in your life.', screen: 'ring-mismatch-check', primary: false },
+  ];
   return (
     <div style={{ paddingTop: 8 }}>
-      <div style={{ padding: '16px', backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}30`, borderRadius: 12, marginBottom: 20 }}>
-        <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 8 }}>Understanding Rings</div>
-        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 12 }}>
-          This section is being built. It will help you understand the five rings, the different types of people inside each ring, and what it means when someone seems like one ring but acts like another.
-        </div>
-        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6 }}>Coming in the next update.</div>
+      <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 20 }}>
+        Use this section to figure out where someone belongs in your rings — and what to do when something feels off.
       </div>
-      <Btn label="Go to The Framework instead →" onClick={() => navigate('module1')} variant="primary" />
+      {sections.map(s => (
+        <button key={s.screen} onClick={() => navigate(s.screen)} style={{
+          display: 'block', width: '100%', textAlign: 'left',
+          backgroundColor: s.primary ? C.interactive + '08' : C.white,
+          border: `1px solid ${s.primary ? C.interactive + '40' : C.border}`,
+          borderLeft: `4px solid ${C.interactive}`,
+          borderRadius: 12, padding: '14px 16px', cursor: 'pointer', marginBottom: 10,
+          boxShadow: s.primary ? `0 2px 8px ${C.interactive}14` : '0 1px 4px rgba(26,39,68,0.04)',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: 16, fontWeight: 800, color: C.primary }}>{s.icon} {s.title}</span>
+            <span style={{ fontSize: 16, color: C.border, marginLeft: 6 }}>›</span>
+          </div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: C.interactive, marginBottom: 4, marginTop: 2 }}>{s.sub}</div>
+          <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{s.desc}</div>
+        </button>
+      ))}
+      <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+        <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6 }}>
+          You can use these in any order. Start wherever you need to.
+        </div>
+      </div>
     </div>
   );
+}
+
+// ─── RING MISMATCH RINGS ─────────────────────────────────────────────────────
+function RingMismatchRings({ navigate, showTerm }) {
+  const [openRing, setOpenRing] = React.useState(null);
+  const toggle = (num) => setOpenRing(openRing === num ? null : num);
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.7, marginBottom: 6 }}>
+        Each ring has different types of people inside it. Tap a ring to see them.
+      </div>
+      <button onClick={() => showTerm(3)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive, textDecoration: 'underline', padding: 0, marginBottom: 18, display: 'block' }}>
+        See the Relational Rings term definition →
+      </button>
+      {RINGS_DATA.map(ring => (
+        <div key={ring.num} style={{ marginBottom: 10 }}>
+          <button onClick={() => toggle(ring.num)} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            width: '100%', textAlign: 'left', backgroundColor: C.white,
+            border: `1px solid ${openRing === ring.num ? ring.color : C.border}`,
+            borderLeft: `4px solid ${ring.color}`,
+            borderRadius: openRing === ring.num ? '10px 10px 0 0' : 10,
+            padding: '12px 14px', cursor: 'pointer',
+          }}>
+            <div>
+              <span style={{ fontSize: 15, fontWeight: 800, color: C.primary }}>Ring {ring.num} — {ring.name}</span>
+              <div style={{ fontSize: 12, color: C.secondary, marginTop: 2 }}>{ring.plain}</div>
+            </div>
+            <span style={{ fontSize: 14, color: ring.color, marginLeft: 8, flexShrink: 0 }}>{openRing === ring.num ? '▲' : '▼'}</span>
+          </button>
+          {openRing === ring.num && (
+            <div style={{ border: `1px solid ${ring.color}`, borderTop: 'none', borderRadius: '0 0 10px 10px', padding: '14px 16px', backgroundColor: ring.color + '06' }}>
+              {ring.subtypes.map((sub, i) => (
+                <div key={i} style={{ marginBottom: i < ring.subtypes.length - 1 ? 14 : 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: C.primary, marginBottom: 4 }}>{sub.name}</div>
+                  <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6 }}>{sub.desc}</div>
+                </div>
+              ))}
+              <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${ring.color}40` }}>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, color: ring.color, marginBottom: 6 }}>Key question</div>
+                <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6, fontStyle: 'italic' }}>{ring.question}</div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+      <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+        <button onClick={() => navigate('ring-mismatch-check')} style={{ display: 'block', width: '100%', textAlign: 'left', backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}30`, borderRadius: 10, padding: '11px 14px', cursor: 'pointer' }}>
+          <span style={{ fontSize: 14, fontWeight: 700, color: C.interactive }}>Not sure which ring? Use the Ring Check tool →</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── RING MISMATCH SIGNS ─────────────────────────────────────────────────────
+function RingMismatchSigns({ navigate, showTerm }) {
+  const [openSign, setOpenSign] = React.useState(null);
+  const toggle = (i) => setOpenSign(openSign === i ? null : i);
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}30`, borderLeft: `4px solid ${C.interactive}`, borderRadius: 10, padding: '14px 16px', marginBottom: 20 }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: C.primary, marginBottom: 8 }}>What is a Ring Mismatch?</div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7 }}>
+          A Ring Mismatch is when someone seems like they are in a closer ring than they actually are.
+        </div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginTop: 8 }}>
+          They feel like a Ring 4 friend. But when you look at what they actually do — they are a Ring 2.
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginTop: 8, fontWeight: 600 }}>
+          The gap between how they seem and what they do is the mismatch.
+        </div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginTop: 10 }}>
+          A Ring Mismatch is not a reason to distrust everyone. It is information. It tells you which ring someone actually belongs in right now — so you know what is safe to share with them.
+        </div>
+      </div>
+      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: C.secondary, marginBottom: 12 }}>Four signs of a Ring Mismatch</div>
+      <div style={{ fontSize: 13, color: C.secondary, marginBottom: 14 }}>Tap each sign to see more.</div>
+      {MISMATCH_SIGNS.map((sign, i) => (
+        <div key={i} style={{ marginBottom: 10 }}>
+          <button onClick={() => toggle(i)} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            width: '100%', textAlign: 'left', backgroundColor: C.white,
+            border: `1px solid ${openSign === i ? C.interactive : C.border}`,
+            borderLeft: `4px solid ${C.interactive}`,
+            borderRadius: openSign === i ? '10px 10px 0 0' : 10,
+            padding: '12px 14px', cursor: 'pointer',
+          }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: C.interactive, flexShrink: 0 }}>Sign {i + 1}</span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: C.primary }}>{sign.short}</span>
+            </div>
+            <span style={{ fontSize: 14, color: C.interactive, marginLeft: 8, flexShrink: 0 }}>{openSign === i ? '▲' : '▼'}</span>
+          </button>
+          {openSign === i && (
+            <div style={{ border: `1px solid ${C.interactive}`, borderTop: 'none', borderRadius: '0 0 10px 10px', padding: '14px 16px', backgroundColor: C.interactive + '04' }}>
+              <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 12 }}>{sign.detail}</div>
+              <div style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px' }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase', color: C.secondary, marginBottom: 6 }}>Example</div>
+                <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6 }}>{sign.example}</div>
+              </div>
+              <button onClick={() => toggle(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive, marginTop: 10, padding: 0 }}>Close ✕</button>
+            </div>
+          )}
+        </div>
+      ))}
+      <div style={{ marginTop: 18, paddingTop: 14, borderTop: `1px solid ${C.border}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, color: C.secondary, marginBottom: 4 }}>Related terms</div>
+        <button onClick={() => showTerm(15)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: C.interactive, textDecoration: 'underline', padding: 0, textAlign: 'left' }}>Term 15 — Exploitative or Unsafe Pattern →</button>
+        <button onClick={() => showTerm(18)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: C.interactive, textDecoration: 'underline', padding: 0, textAlign: 'left' }}>Term 18 — Gaslighting →</button>
+        <button onClick={() => navigate('ring-mismatch-check')} style={{ display: 'block', width: '100%', textAlign: 'left', backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}30`, borderRadius: 10, padding: '11px 14px', cursor: 'pointer', marginTop: 4 }}>
+          <span style={{ fontSize: 14, fontWeight: 700, color: C.interactive }}>Check a specific person with the Ring Check tool →</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── RING CHECK TOOL ─────────────────────────────────────────────────────────
+function RingMismatchCheck({ navigate }) {
+  const [step, setStep] = React.useState(0);
+  const [s1, setS1] = React.useState([]);
+  const [s2, setS2] = React.useState([]);
+  const [s3, setS3] = React.useState(null);
+  const [s4, setS4] = React.useState([]);
+  const [openSign, setOpenSign] = React.useState(null);
+
+  const toggleMulti = (key, getter, setter) => {
+    setter(getter.includes(key) ? getter.filter(k => k !== key) : [...getter, key]);
+  };
+
+  const reset = () => { setStep(0); setS1([]); setS2([]); setS3(null); setS4([]); setOpenSign(null); };
+
+  const S1_OPTS = [
+    { key: 'proactive', label: 'They check in on me without me going to them first.' },
+    { key: 'reciprocal', label: 'They share personal things with me too — it is not just me sharing with them.' },
+    { key: 'hardmoment', label: 'They have shown up when things were hard, not only when things were easy.' },
+    { key: 'context', label: 'We only connect when we are in the same place — school, a class, work.' },
+    { key: 'initiation', label: 'Most of our contact happens because I start it.' },
+    { key: 'noinfo', label: 'I do not have enough information yet.' },
+  ];
+  const S2_OPTS = [
+    { key: 'chose', label: 'I chose to tell them directly.' },
+    { key: 'role', label: 'They found out through their job or their role.' },
+    { key: 'others', label: 'It got to them through other people.' },
+    { key: 'noknow', label: 'They do not know much personal about me yet.' },
+  ];
+  const S3_OPTS = [
+    { key: 'yes', label: 'Yes. I am confident they would.' },
+    { key: 'probably', label: 'Probably. But I am not completely sure.' },
+    { key: 'dontknow', label: 'I do not know.' },
+    { key: 'probablynot', label: 'Probably not.' },
+    { key: 'no', label: 'No.' },
+  ];
+  const S4_OPTS = [
+    { key: 'autistic', label: 'They are also autistic.' },
+    { key: 'adhd', label: 'They also have ADHD.' },
+    { key: 'different', label: 'They also process things differently than most people.' },
+    { key: 'notsure', label: 'I am not sure.' },
+    { key: 'none', label: 'None of these apply.' },
+  ];
+
+  const MultiBtn = ({ opt, getter, setter }) => {
+    const sel = getter.includes(opt.key);
+    return (
+      <button onClick={() => toggleMulti(opt.key, getter, setter)} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', width: '100%', background: sel ? C.interactive + '10' : C.white, border: `1px solid ${sel ? C.interactive : C.border}`, borderRadius: 8, padding: '10px 12px', marginBottom: 8, cursor: 'pointer', textAlign: 'left' }}>
+        <span style={{ width: 18, height: 18, borderRadius: 4, flexShrink: 0, marginTop: 1, border: `2px solid ${sel ? C.interactive : C.border}`, background: sel ? C.interactive : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {sel && <span style={{ color: '#fff', fontSize: 11, lineHeight: 1 }}>✓</span>}
+        </span>
+        <span style={{ fontSize: 14, color: C.primary, lineHeight: 1.5 }}>{opt.label}</span>
+      </button>
+    );
+  };
+
+  const RadioBtn = ({ opt }) => {
+    const sel = s3 === opt.key;
+    return (
+      <button onClick={() => setS3(opt.key)} style={{ display: 'flex', gap: 10, alignItems: 'center', width: '100%', background: sel ? C.interactive + '10' : C.white, border: `1px solid ${sel ? C.interactive : C.border}`, borderRadius: 8, padding: '10px 12px', marginBottom: 8, cursor: 'pointer', textAlign: 'left' }}>
+        <span style={{ width: 16, height: 16, borderRadius: 8, flexShrink: 0, border: `2px solid ${sel ? C.interactive : C.border}`, background: sel ? C.interactive : 'transparent' }} />
+        <span style={{ fontSize: 14, color: C.primary, lineHeight: 1.5 }}>{opt.label}</span>
+      </button>
+    );
+  };
+
+  const NavRow = ({ onNext, nextLabel = 'Next →', nextDisabled = false }) => (
+    <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+      {step > 1 && <button onClick={() => setStep(step - 1)} style={{ flex: 1, padding: '12px 0', borderRadius: 10, border: `1px solid ${C.border}`, background: C.white, cursor: 'pointer', fontSize: 14, fontWeight: 700, color: C.secondary }}>← Back</button>}
+      <button onClick={onNext} disabled={nextDisabled} style={{ flex: 2, padding: '12px 0', borderRadius: 10, border: 'none', background: nextDisabled ? C.border : C.interactive, color: '#fff', cursor: nextDisabled ? 'default' : 'pointer', fontSize: 14, fontWeight: 700 }}>{nextLabel}</button>
+    </div>
+  );
+
+  if (step === 0) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ backgroundColor: C.activated + '12', border: `1px solid ${C.activated}30`, borderLeft: `4px solid ${C.activated}`, borderRadius: 10, padding: '14px 16px', marginBottom: 20 }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: C.primary, marginBottom: 8 }}>Before you start</div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7 }}>
+          The next four questions ask you to think about a real person in your life.
+        </div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginTop: 6 }}>
+          It is okay to stop and come back. You do not have to finish in one sitting.
+        </div>
+      </div>
+      <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, marginBottom: 20 }}>
+        Think of a specific person right now — someone whose ring you are not sure about, or someone who feels different from how they seem. Keep them in mind for all four questions.
+      </div>
+      <button onClick={() => setStep(1)} style={{ display: 'block', width: '100%', padding: '14px 0', borderRadius: 12, border: 'none', background: C.interactive, color: '#fff', cursor: 'pointer', fontSize: 16, fontWeight: 800 }}>I have someone in mind — Start</button>
+    </div>
+  );
+
+  if (step === 1) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 11, color: C.secondary, fontWeight: 600, marginBottom: 4 }}>STEP 1 OF 4</div>
+      <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 6 }}>What does this person actually do?</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>Not what they say. Not what you hope. What they actually do right now. Pick all that are true.</div>
+      {S1_OPTS.map(opt => <MultiBtn key={opt.key} opt={opt} getter={s1} setter={setS1} />)}
+      <NavRow onNext={() => setStep(2)} nextDisabled={s1.length === 0} />
+    </div>
+  );
+
+  if (step === 2) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 11, color: C.secondary, fontWeight: 600, marginBottom: 4 }}>STEP 2 OF 4</div>
+      <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 6 }}>How did they get to know personal things about you?</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>Pick all that are true.</div>
+      {S2_OPTS.map(opt => <MultiBtn key={opt.key} opt={opt} getter={s2} setter={setS2} />)}
+      <NavRow onNext={() => setStep(3)} nextDisabled={s2.length === 0} />
+    </div>
+  );
+
+  if (step === 3) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 11, color: C.secondary, fontWeight: 600, marginBottom: 4 }}>STEP 3 OF 4</div>
+      <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 6 }}>If the thing that brought you together ended tomorrow — would they still reach out?</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>Pick one.</div>
+      {S3_OPTS.map(opt => <RadioBtn key={opt.key} opt={opt} />)}
+      <NavRow onNext={() => setStep(4)} nextDisabled={!s3} />
+    </div>
+  );
+
+  if (step === 4) return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 11, color: C.secondary, fontWeight: 600, marginBottom: 4 }}>STEP 4 OF 4</div>
+      <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, marginBottom: 6 }}>One more question before your result.</div>
+      <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 16 }}>Does this person share your neurological profile? Pick all that apply.</div>
+      {S4_OPTS.map(opt => <MultiBtn key={opt.key} opt={opt} getter={s4} setter={setS4} />)}
+      <NavRow onNext={() => setStep(5)} nextLabel="See my result →" nextDisabled={s4.length === 0} />
+    </div>
+  );
+
+  if (step === 5) {
+    const { ring, mismatch, triggered, mitigating } = computeRingResult(s1, s2, s3, s4);
+    const ringData = RINGS_DATA[ring - 1];
+    return (
+      <div style={{ paddingTop: 8 }}>
+        <div style={{ fontSize: 11, color: C.secondary, fontWeight: 600, marginBottom: 12 }}>YOUR RESULT</div>
+        <div style={{ backgroundColor: ringData.color + '12', border: `2px solid ${ringData.color}`, borderRadius: 14, padding: '16px 18px', marginBottom: 16, textAlign: 'center' }}>
+          <div style={{ fontSize: 13, color: ringData.color, fontWeight: 700, marginBottom: 4 }}>Suggested ring placement</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: ringData.color }}>Ring {ring}</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, marginTop: 2 }}>{ringData.name}</div>
+          <div style={{ fontSize: 13, color: C.secondary, marginTop: 6, lineHeight: 1.5 }}>{ringData.plain}</div>
+        </div>
+        {mismatch && (
+          <div style={{ backgroundColor: C.activated + '12', border: `1px solid ${C.activated}40`, borderLeft: `4px solid ${C.activated}`, borderRadius: 10, padding: '12px 14px', marginBottom: 14 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.activated, marginBottom: 4 }}>Ring Mismatch flag</div>
+            <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>Some signs suggest this person may present as a closer ring than their behavior shows. See the signs below.</div>
+          </div>
+        )}
+        {mitigating && (
+          <div style={{ backgroundColor: C.calm + '10', border: `1px solid ${C.calm}30`, borderLeft: `4px solid ${C.calm}`, borderRadius: 10, padding: '12px 14px', marginBottom: 14 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.calm, marginBottom: 4 }}>Shared profile note</div>
+            <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>{mitigating}</div>
+          </div>
+        )}
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, color: C.secondary, marginBottom: 10, marginTop: 4 }}>Signs to watch for — tap each to learn more</div>
+        {MISMATCH_SIGNS.map((sign, i) => {
+          const isTriggered = triggered.includes(i);
+          const isOpen = openSign === i;
+          return (
+            <div key={i} style={{ marginBottom: 8 }}>
+              <button onClick={() => setOpenSign(isOpen ? null : i)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', textAlign: 'left', backgroundColor: isTriggered ? C.interactive + '08' : C.white, border: `1px solid ${isOpen ? C.interactive : isTriggered ? C.interactive + '60' : C.border}`, borderLeft: `4px solid ${isTriggered ? C.interactive : C.border}`, borderRadius: isOpen ? '8px 8px 0 0' : 8, padding: '10px 12px', cursor: 'pointer' }}>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  {isTriggered && <span style={{ fontSize: 10, fontWeight: 700, color: C.interactive, backgroundColor: C.interactive + '15', borderRadius: 4, padding: '2px 6px', flexShrink: 0 }}>NOTICED</span>}
+                  <span style={{ fontSize: 13, fontWeight: 600, color: C.primary }}>{sign.short}</span>
+                </div>
+                <span style={{ fontSize: 12, color: C.interactive, marginLeft: 8, flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
+              </button>
+              {isOpen && (
+                <div style={{ border: `1px solid ${C.interactive}`, borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '12px 14px', backgroundColor: C.interactive + '04' }}>
+                  <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65, marginBottom: 10 }}>{sign.detail}</div>
+                  <div style={{ backgroundColor: C.white, border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', marginBottom: 10 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase', color: C.secondary, marginBottom: 4 }}>Example</div>
+                    <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6 }}>{sign.example}</div>
+                  </div>
+                  <button onClick={() => setOpenSign(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive, padding: 0 }}>Close ✕</button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: `1px solid ${C.border}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <button onClick={() => navigate('ring-mismatch-rings')} style={{ display: 'block', width: '100%', textAlign: 'left', backgroundColor: C.white, border: `1px solid ${C.border}`, borderRadius: 10, padding: '11px 14px', cursor: 'pointer' }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: C.interactive }}>See full ring definitions →</span>
+          </button>
+          <button onClick={reset} style={{ display: 'block', width: '100%', textAlign: 'left', backgroundColor: C.white, border: `1px solid ${C.border}`, borderRadius: 10, padding: '11px 14px', cursor: 'pointer' }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: C.secondary }}>Start over with a different person</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+  return null;
 }
 
 // ─── HOME SCREEN ──────────────────────────────────────────────────────────────
@@ -5575,6 +6016,9 @@ export default function App() {
     emergency: null,
     module1: 'The Framework',
     'ring-mismatch': 'Understanding Rings',
+    'ring-mismatch-rings': 'The Five Rings',
+    'ring-mismatch-signs': 'Ring Mismatch',
+    'ring-mismatch-check': 'Ring Check',
     'module1-term': 'Term Detail',
     'module1-rules': 'Rule Cards',
     'module1-map': 'Framework Map',
@@ -5633,7 +6077,10 @@ export default function App() {
     if (screen === 'module1') return <Module1Home navigate={navigate} setSelectedTerm={setSelectedTermId} settings={settings} />;
     if (screen === 'module1-term') return <Module1TermDetail navigate={navigate} termId={selectedTermId} settings={settings} />;
     if (screen === 'module1-rules') return <Module1RuleCards navigate={navigate} />;
-    if (screen === 'ring-mismatch') return <RingMismatchPlaceholder navigate={navigate} />;
+    if (screen === 'ring-mismatch') return <RingMismatchHome navigate={navigate} />;
+    if (screen === 'ring-mismatch-rings') return <RingMismatchRings navigate={navigate} showTerm={showTerm} />;
+    if (screen === 'ring-mismatch-signs') return <RingMismatchSigns navigate={navigate} showTerm={showTerm} />;
+    if (screen === 'ring-mismatch-check') return <RingMismatchCheck navigate={navigate} />;
     if (screen === 'module1-map') return <Module1FrameworkMap navigate={navigate} setSelectedTerm={setSelectedTermId} />;
     // Rule detail — handles module1-rule-1 through module1-rule-13
     if (screen.startsWith('module1-rule-')) {
