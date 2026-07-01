@@ -1130,7 +1130,8 @@ function GroundingOverlay({ onClose, onEmergency, regState }) {
   );
 }
 
-function SettingsPanel({ settings, onChange, onClose }) {
+function SettingsPanel({ settings, onChange, onClose, navigate }) {
+  const trustedAdult = loadTrustedAdult();
   return (
     <div style={{
       position: 'absolute', inset: 0,
@@ -1207,6 +1208,25 @@ function SettingsPanel({ settings, onChange, onClose }) {
               </div>
             </div>
           ))}
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.secondary, letterSpacing: 0.5, marginBottom: 10 }}>TRUSTED ADULT</div>
+          {trustedAdult ? (
+            <div style={{ padding: '10px 12px', backgroundColor: C.calm + '10', border: `1px solid ${C.calm}30`, borderRadius: 8, marginBottom: 8 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>{trustedAdult.name}</div>
+              <div style={{ fontSize: 12, color: C.secondary, marginBottom: 6 }}>{trustedAdult.relationship}</div>
+              <div style={{ fontSize: 12, color: C.calm, fontWeight: 600 }}>Signal word set ✓</div>
+            </div>
+          ) : (
+            <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.5, marginBottom: 8 }}>Not set up yet.</div>
+          )}
+          <button
+            onClick={() => { onClose(); navigate('trusted-adult-setup'); }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: C.interactive, padding: 0 }}
+          >
+            {trustedAdult ? 'Edit →' : 'Set up now →'}
+          </button>
         </div>
 
         <div style={{ marginTop: 'auto' }}>
@@ -1677,6 +1697,114 @@ function RingMismatchCheck({ navigate }) {
   return null;
 }
 
+// ─── TRUSTED ADULT SETUP ──────────────────────────────────────────────────────
+
+function loadTrustedAdult() {
+  try { return JSON.parse(localStorage.getItem('aof-trusted-adult') || 'null'); } catch { return null; }
+}
+
+function TrustedAdultSetup({ navigate }) {
+  const existing = loadTrustedAdult();
+  const [name, setName] = useState(existing?.name || '');
+  const [relationship, setRelationship] = useState(existing?.relationship || '');
+  const [customRel, setCustomRel] = useState(existing?.relationship && !['Family member','Counselor','Therapist','Case manager','Mentor'].includes(existing.relationship) ? existing.relationship : '');
+  const [signalWord, setSignalWord] = useState(existing?.signalWord || '');
+  const [saved, setSaved] = useState(false);
+
+  const RELATIONSHIPS = ['Family member', 'Counselor', 'Therapist', 'Case manager', 'Mentor', 'Someone else'];
+  const finalRel = relationship === 'Someone else' ? customRel : relationship;
+  const canSave = name.trim().length > 0 && finalRel.trim().length > 0 && signalWord.trim().length > 0;
+
+  const handleSave = () => {
+    if (!canSave) return;
+    const data = { name: name.trim(), relationship: finalRel.trim(), signalWord: signalWord.trim() };
+    try { localStorage.setItem('aof-trusted-adult', JSON.stringify(data)); } catch (e) {}
+    setSaved(true);
+  };
+
+  const briefing = () => {
+    const data = { name: name.trim(), relationship: finalRel.trim(), signalWord: signalWord.trim() };
+    return [
+      'A note about this app and what your signal word means.',
+      '',
+      `${data.name} — you are set up as a trusted adult inside an app called The Art of Friendship.`,
+      '',
+      'The app teaches social and friendship skills. It also has an SOS screen for moments that feel too big.',
+      '',
+      `The signal word is: "${data.signalWord}"`,
+      '',
+      `If you get a text that just says "${data.signalWord}" — it means the person needs support right now. It does not mean an emergency has already happened. It means they want you to check in, call, or come find them.`,
+      '',
+      'You do not need to know anything else about the app to help. Just respond like you would to any other check-in.',
+      '',
+      '— The Art of Friendship',
+    ].join('\n');
+  };
+
+  if (saved) {
+    return (
+      <div style={{ paddingTop: 8 }}>
+        <div style={{ backgroundColor: C.calm + '12', border: `1px solid ${C.calm}40`, borderLeft: `4px solid ${C.calm}`, borderRadius: 10, padding: '14px 16px', marginBottom: 20 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: C.primary, marginBottom: 6 }}>Saved ✓</div>
+          <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7 }}>
+            {name} is now set up as your trusted adult. Your SOS screen will show this the next time you need it.
+          </div>
+        </div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>SHARE THIS WITH {name.toUpperCase()}</div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 10 }}>
+          It helps if {name} knows what the signal word means before you ever need to send it.
+        </div>
+        <FacilitatorShareButton summary={briefing()} />
+        <div style={{ marginTop: 16 }}>
+          <button onClick={() => setSaved(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: C.interactive, padding: 0, marginBottom: 12, display: 'block' }}>
+            Edit this →
+          </button>
+          <Btn label="Done" onClick={() => navigate('home')} variant="primary" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 20 }}>
+        A trusted adult is someone you can reach out to when something feels too big. Setting this up now means it is ready before you need it.
+      </div>
+
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHAT IS THEIR NAME?</div>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="First name is enough" style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, fontFamily: 'system-ui', boxSizing: 'border-box' }} />
+      </Card>
+
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHO ARE THEY TO YOU?</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: relationship === 'Someone else' ? 10 : 0 }}>
+          {RELATIONSHIPS.map(r => (
+            <button key={r} onClick={() => setRelationship(r)} style={{ padding: '7px 12px', borderRadius: 20, cursor: 'pointer', border: `1.5px solid ${relationship === r ? C.interactive : C.border}`, backgroundColor: relationship === r ? C.interactive + '14' : 'transparent', color: relationship === r ? C.interactive : C.secondary, fontSize: 12, fontWeight: relationship === r ? 700 : 400 }}>{r}</button>
+          ))}
+        </div>
+        {relationship === 'Someone else' && (
+          <input value={customRel} onChange={e => setCustomRel(e.target.value)} placeholder="Who are they to you?" style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, fontFamily: 'system-ui', boxSizing: 'border-box' }} />
+        )}
+      </Card>
+
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>PICK A SIGNAL WORD</div>
+        <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 10 }}>
+          A signal word is one word that means "I need support" without you having to explain anything. Pick a word that would not come up in a normal text — something just for this.
+        </div>
+        <input value={signalWord} onChange={e => setSignalWord(e.target.value)} placeholder="Example: pineapple" style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, fontFamily: 'system-ui', boxSizing: 'border-box' }} />
+      </Card>
+
+      <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6, marginBottom: 16, marginTop: 4 }}>
+        Talk to {name || 'this person'} about the signal word before you save it, if you can. It works best when both of you already know what it means.
+      </div>
+
+      <Btn label="Save →" onClick={handleSave} variant={canSave ? 'primary' : 'ghost'} />
+    </div>
+  );
+}
+
 // ─── HOME SCREEN ──────────────────────────────────────────────────────────────
 
 function HomeScreen({ navigate, regState, goal, saveGoal }) {
@@ -1716,6 +1844,18 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
       }}>
         <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>The Art of Friendship</div>
       </div>
+
+      {/* Trusted adult setup prompt — only if not yet configured */}
+      {!loadTrustedAdult() && (
+        <button onClick={() => navigate('trusted-adult-setup')} style={{
+          display: 'block', width: '100%', textAlign: 'left',
+          backgroundColor: C.white, border: `1px solid ${C.border}`,
+          borderRadius: 10, padding: '11px 14px', cursor: 'pointer', marginBottom: 14,
+        }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.primary, marginBottom: 2 }}>👤 Set up your trusted adult</div>
+          <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.5 }}>Takes a minute. Makes your SOS screen ready before you need it.</div>
+        </button>
+      )}
 
       {/* Regulation state response */}
       {regState === 'activated' && (
@@ -1930,6 +2070,7 @@ function OverwhelmedStop({ navigate, onEmergency, onGrounding }) {
 }
 
 function EmergencyScreen({ navigate }) {
+  const trustedAdult = loadTrustedAdult();
   return (
     <div style={{
       backgroundColor: '#1A2744',
@@ -1996,12 +2137,33 @@ function EmergencyScreen({ navigate }) {
         <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 0.5, marginBottom: 8 }}>
           IF YOU NEED SOMEONE
         </div>
-        <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6, marginBottom: 8 }}>
-          Text your trusted adult. You can send one word — the signal word you decided on together.
-        </div>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
-          If you have not set up a signal word yet, reach out to them however you normally would.
-        </div>
+        {trustedAdult ? (
+          <>
+            <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6, marginBottom: 10 }}>
+              Text {trustedAdult.name} one word:
+            </div>
+            <div style={{
+              backgroundColor: 'rgba(255,255,255,0.18)',
+              borderRadius: 8, padding: '10px 16px',
+              fontSize: 22, fontWeight: 800, color: '#fff',
+              textAlign: 'center', letterSpacing: 1,
+            }}>
+              "{trustedAdult.signalWord}"
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6, marginBottom: 8 }}>
+              Text your trusted adult. You can send one word — the signal word you decided on together.
+            </div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, marginBottom: 10 }}>
+              If you have not set up a signal word yet, reach out to them however you normally would.
+            </div>
+            <button onClick={() => navigate('trusted-adult-setup')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.75)', textDecoration: 'underline', padding: 0 }}>
+              Set this up for next time →
+            </button>
+          </>
+        )}
       </div>
 
       {/* EXIT at bottom too */}
@@ -3599,6 +3761,28 @@ function Module3Applied({ navigate }) {
     setTimeout(() => setSaved(false), 6000);
   };
 
+  const buildAcknowledgment = (e) => {
+    const behavior = e.text && e.text.trim().length > 2 ? e.text.trim() : null;
+    const ruleLine = `Rule ${e.rule} — ${e.ruleName}`;
+    if (e.context === 'real') {
+      const opener = behavior
+        ? `You did this yourself, without being asked: "${behavior}."`
+        : `You did this yourself, without being asked.`;
+      const outcomeLine = e.outcome === 'well'
+        ? ' It went well. That is the skill working in real life.'
+        : e.outcome === 'partly'
+        ? ' It went partly well. Using the rule on purpose is what matters, even when it is not perfect.'
+        : ' It did not go the way you wanted. You still noticed and named it. Noticing is the hardest part, and you did it.';
+      return `${opener} That is ${ruleLine}.${outcomeLine}`;
+    }
+    const outcomeLine = e.outcome === 'well'
+      ? ' It went well.'
+      : e.outcome === 'partly'
+      ? ' It went partly well. That still counts.'
+      : ' It did not go the way you wanted. Practicing it anyway is how it becomes automatic.';
+    return `You practiced ${ruleLine}.${outcomeLine}`;
+  };
+
   const buildSummary = (e) => [
     'Rule Applied Log Entry',
     '',
@@ -3683,7 +3867,7 @@ function Module3Applied({ navigate }) {
           <div style={{ padding: 12, backgroundColor: C.greenBg, border: `1px solid ${C.calm + '60'}`, borderRadius: 10, marginBottom: 4 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: C.calm }}>Logged ✓ {lastEntry.context === 'real' ? '🌱 Real-life application' : '📖 Practice session'}</div>
           </div>
-          <MasteryCard message={lastEntry.context === 'real' ? 'You used this in real life without a prompt. That is what generalization looks like.' : 'Noticing where you applied the framework is how the rules become automatic.'} />
+          <MasteryCard message={buildAcknowledgment(lastEntry)} />
           <FacilitatorShareButton summary={buildSummary(lastEntry)} />
         </>
       )}
@@ -4051,6 +4235,25 @@ function Module3Progress({ navigate }) {
         <Card style={{ borderLeft: `4px solid ${C.calm}` }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4, marginBottom: 6 }}>CURRENT GOAL</div>
           <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.6 }}>{goal}</div>
+        </Card>
+      )}
+
+      {entries.length > 0 && (
+        <Card style={{ backgroundColor: C.calm + '0A', borderLeft: `4px solid ${C.calm}` }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4, marginBottom: 10 }}>WHAT WENT RIGHT</div>
+          {entries.slice(0, 3).map((e, i) => (
+            <div key={i} style={{ marginBottom: i < 2 ? 10 : 0, paddingBottom: i < 2 ? 10 : 0, borderBottom: i < 2 ? `1px solid ${C.calm}20` : 'none' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.calm, marginBottom: 2 }}>
+                Rule {e.rule} — {RULES_SIMPLE.find(r => r.num === e.rule)?.title}
+              </div>
+              <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.5 }}>
+                {e.text ? `"${e.text}"` : (e.context === 'real' ? 'Applied in a real moment, without a prompt.' : 'Practiced in a structured session.')}
+              </div>
+            </div>
+          ))}
+          <div style={{ fontSize: 12, color: C.calm, fontWeight: 600, marginTop: 10 }}>
+            {realLife.length > 0 ? `${realLife.length} of these happened in real life, on your own.` : 'Keep logging — real-life moments count the most.'}
+          </div>
         </Card>
       )}
 
@@ -6038,6 +6241,7 @@ export default function App() {
     emergency: null,
     module1: 'The Framework',
     'ring-mismatch': 'Understanding Rings',
+    'trusted-adult-setup': 'Trusted Adult',
     'ring-mismatch-rings': 'The Five Rings',
     'ring-mismatch-signs': 'Ring Mismatch',
     'ring-mismatch-check': 'Ring Check',
@@ -6100,6 +6304,7 @@ export default function App() {
     if (screen === 'module1-term') return <Module1TermDetail navigate={navigate} termId={selectedTermId} settings={settings} />;
     if (screen === 'module1-rules') return <Module1RuleCards navigate={navigate} />;
     if (screen === 'ring-mismatch') return <RingMismatchHome navigate={navigate} />;
+    if (screen === 'trusted-adult-setup') return <TrustedAdultSetup navigate={navigate} />;
     if (screen === 'ring-mismatch-rings') return <RingMismatchRings navigate={navigate} showTerm={showTerm} />;
     if (screen === 'ring-mismatch-signs') return <RingMismatchSigns navigate={navigate} showTerm={showTerm} />;
     if (screen === 'ring-mismatch-check') return <RingMismatchCheck navigate={navigate} />;
@@ -6201,6 +6406,7 @@ export default function App() {
             settings={settings}
             onChange={setSettings}
             onClose={() => setShowSettings(false)}
+            navigate={navigate}
           />
         )}
       </div>
