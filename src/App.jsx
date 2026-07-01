@@ -897,7 +897,7 @@ function RegBar({ state }) {
   );
 }
 
-function Header({ title, onBack, onEmergency, onSettings, state }) {
+function Header({ title, onEmergency, onSettings, state }) {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -917,13 +917,6 @@ function Header({ title, onBack, onEmergency, onSettings, state }) {
       >⚙️</button>
 
       <div style={{ flex: 1, textAlign: 'center' }}>
-        {onBack && (
-          <button onClick={onBack} style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            color: C.interactive, fontSize: 13, fontWeight: 600,
-            letterSpacing: 0.3,
-          }}>← Back</button>
-        )}
         {title && (
           <span style={{ fontSize: 14, fontWeight: 700, color: C.primary, letterSpacing: 0.3 }}>
             {title}
@@ -934,24 +927,43 @@ function Header({ title, onBack, onEmergency, onSettings, state }) {
       <button
         onClick={onEmergency}
         style={{
-          width: 40, height: 40, borderRadius: 20,
+          width: 40, height: 44, borderRadius: 20,
           backgroundColor: C.overwhelmed, border: 'none',
-          cursor: 'pointer', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', fontSize: 18,
+          cursor: 'pointer', display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center', gap: 1,
         }}
         aria-label="Emergency screen"
-      >🆘</button>
+      >
+        <span style={{ fontSize: 16, lineHeight: 1 }}>🆘</span>
+        <span style={{ fontSize: 8, fontWeight: 800, color: '#fff', letterSpacing: 0.5 }}>SOS</span>
+      </button>
     </div>
   );
 }
 
-function Footer({ onGrounding, state }) {
+function Footer({ onGrounding, onBack, state }) {
   return (
     <div style={{
-      display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       padding: '10px 16px', borderTop: `1px solid ${C.border}`,
       backgroundColor: C.white, flexShrink: 0,
     }}>
+      {onBack ? (
+        <button
+          onClick={onBack}
+          style={{
+            padding: '8px 16px', borderRadius: 20,
+            backgroundColor: 'transparent',
+            border: `1px solid ${C.border}`,
+            cursor: 'pointer', fontSize: 13,
+            color: C.interactive, fontWeight: 700,
+            letterSpacing: 0.3,
+          }}
+          aria-label="Go back"
+        >← Back</button>
+      ) : (
+        <div style={{ width: 40 }} />
+      )}
       <button
         onClick={onGrounding}
         style={{
@@ -977,14 +989,14 @@ function Shell({ children, regState, onEmergency, onSettings, onGrounding, title
       <RegBar state={regState} />
       <GoalStrip goal={goal} onEdit={onGoalEdit} />
       <Header
-        title={title} onBack={onBack}
+        title={title}
         onEmergency={onEmergency} onSettings={onSettings}
         state={regState}
       />
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
         {children}
       </div>
-      {!noFooter && <Footer onGrounding={onGrounding} state={regState} />}
+      {!noFooter && <Footer onGrounding={onGrounding} onBack={onBack} state={regState} />}
     </div>
   );
 }
@@ -1920,81 +1932,90 @@ function OverwhelmedStop({ navigate, onEmergency, onGrounding }) {
 function EmergencyScreen({ navigate }) {
   return (
     <div style={{
-      backgroundColor: C.overwhelmed,
+      backgroundColor: '#1A2744',
       minHeight: '100%',
       padding: 24,
       display: 'flex', flexDirection: 'column',
     }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: 1, marginBottom: 20 }}>
-        ANCHOR SCREEN
+
+      {/* What this is */}
+      <div style={{ marginBottom: 8 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>
+          SOS Screen
+        </div>
+        <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1.3, marginBottom: 10 }}>
+          You pressed the 🆘 button.
+        </div>
+        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.75 }}>
+          This screen is here if you need to slow down or reach out to someone. You do not have to read anything or do anything. Nothing on this screen is required. You can leave right now.
+        </div>
       </div>
 
-      <div style={{
-        backgroundColor: 'rgba(255,255,255,0.12)',
-        borderRadius: 12, padding: 20, marginBottom: 16,
-      }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: 0.5, marginBottom: 8 }}>
-          STEP 1 — GROUND YOURSELF
+      {/* EXIT — prominent, at the top */}
+      <button
+        onClick={() => navigate('home')}
+        style={{
+          backgroundColor: 'rgba(255,255,255,0.15)',
+          border: '1.5px solid rgba(255,255,255,0.4)',
+          borderRadius: 12, padding: '14px 16px',
+          color: '#fff', fontSize: 15, fontWeight: 700,
+          cursor: 'pointer', marginTop: 20, marginBottom: 28,
+          textAlign: 'center',
+        }}
+      >
+        ← Leave this screen — go home
+      </button>
+
+      {/* Optional section label */}
+      <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 14 }}>
+        Optional — use any of these if they help
+      </div>
+
+      {/* Step 1 */}
+      <div style={{ backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: 18, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 0.5, marginBottom: 8 }}>
+          SLOW DOWN
         </div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', lineHeight: 1.4 }}>
-          Press your feet into the floor. Feel the pressure. You are here.
+        <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6 }}>
+          Press both feet into the floor. Feel the pressure. Breathe out slowly. You are here.
         </div>
       </div>
 
-      <div style={{
-        backgroundColor: 'rgba(255,255,255,0.12)',
-        borderRadius: 12, padding: 20, marginBottom: 16,
-      }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: 0.5, marginBottom: 8 }}>
-          STEP 2 — PERMISSION
+      {/* Step 2 */}
+      <div style={{ backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: 18, marginBottom: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 0.5, marginBottom: 8 }}>
+          PERMISSION
         </div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', lineHeight: 1.4 }}>
+        <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6 }}>
           You do not have to do anything right now. You are allowed to be still.
         </div>
       </div>
 
-      <div style={{
-        backgroundColor: 'rgba(255,255,255,0.12)',
-        borderRadius: 12, padding: 20, marginBottom: 16,
-      }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: 0.5, marginBottom: 8 }}>
-          STEP 3 — WHEN READY
+      {/* Step 3 */}
+      <div style={{ backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: 18, marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 0.5, marginBottom: 8 }}>
+          IF YOU NEED SOMEONE
         </div>
-        <div style={{ fontSize: 18, fontWeight: 600, color: '#fff', lineHeight: 1.5, marginBottom: 12 }}>
-          Text your trusted adult one word:
+        <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6, marginBottom: 8 }}>
+          Text your trusted adult. You can send one word — the signal word you decided on together.
         </div>
-        <div style={{
-          backgroundColor: 'rgba(255,255,255,0.2)',
-          borderRadius: 8, padding: '10px 16px',
-          fontSize: 24, fontWeight: 800, color: '#fff',
-          textAlign: 'center', letterSpacing: 2,
-        }}>
-          "[your agreed signal word]"
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+          If you have not set up a signal word yet, reach out to them however you normally would.
         </div>
       </div>
 
-      <div style={{
-        backgroundColor: 'rgba(255,255,255,0.08)',
-        border: '1px solid rgba(255,255,255,0.18)',
-        borderRadius: 12, padding: 20, marginBottom: 24,
-      }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.6)', letterSpacing: 0.5, marginBottom: 8 }}>
-          IF YOU CANNOT REACH OUT YET
-        </div>
-        <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', lineHeight: 1.6 }}>
-          Stay here. Press both feet into the floor. Breathe out slowly. You do not have to do anything else yet.
-        </div>
-      </div>
-
+      {/* EXIT at bottom too */}
       <button
         onClick={() => navigate('home')}
         style={{
-          backgroundColor: 'rgba(255,255,255,0.2)', border: '1.5px solid rgba(255,255,255,0.4)',
-          borderRadius: 10, padding: '14px', color: '#fff',
-          fontSize: 15, fontWeight: 700, cursor: 'pointer', marginTop: 'auto',
+          backgroundColor: 'transparent',
+          border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 10, padding: '13px 16px',
+          color: 'rgba(255,255,255,0.6)', fontSize: 14, fontWeight: 600,
+          cursor: 'pointer', marginTop: 'auto', textAlign: 'center',
         }}
       >
-        Return when you are ready
+        ← Return to home screen
       </button>
 
     </div>
@@ -6137,7 +6158,7 @@ export default function App() {
         overflow: 'hidden',
         boxShadow: '0 0 80px rgba(0,0,0,0.5)',
       }}>
-        {showWelcome && <WelcomeScreen onStart={() => { setShowWelcome(false); navigate('module1'); }} />}
+        {showWelcome && <WelcomeScreen onStart={() => setShowWelcome(false)} />}
 
         {isEmergency ? (
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
