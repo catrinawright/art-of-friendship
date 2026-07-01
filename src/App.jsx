@@ -3393,22 +3393,34 @@ function Module1FrameworkMap({ navigate, setSelectedTerm }) {
 
 function Module3Home({ navigate, setDest, goal }) {
   const tools = [
-    { id: 'module3-precorrect', icon: '🎯', title: 'Before It Happens',        desc: 'Flag a person or a moment coming up. See which rules matter before it starts.', badge: 'Before interaction' },
-    { id: 'module3-audit',      icon: '🔍', title: 'Self-Audit',              desc: 'Look at a conversation you just had. Answer five questions. Three ways to answer them.', badge: 'After interaction' },
-    { id: 'module3-applied',    icon: '✅', title: 'Rule I Applied Today',    desc: 'Write down one time today you used a rule from the framework.', badge: 'Daily' },
-    { id: 'module3-skill',      icon: '📊', title: 'Skill Tracker',           desc: 'Rate yourself on all 13 rules. Be honest about where you are right now.', badge: 'Weekly' },
-    { id: 'module3-initiation', icon: '📨', title: 'Initiation Tracker',      desc: 'Track who reaches out first in each relationship. Get an alert after three in a row.', badge: 'Ongoing' },
-    { id: 'module3-journal',    icon: '📓', title: 'Bilateral Journal',        desc: 'What I noticed in the other person. What I noticed in myself.', badge: 'Weekly' },
-    { id: 'module3-health',     icon: '💚', title: 'Relationship Health Check', desc: 'Score a relationship on five things. Use the score to decide how much to invest.', badge: 'Monthly' },
-    { id: 'module3-progress',   icon: '📈', title: 'Progress Summary',         desc: 'See a summary of what you have logged and noticed over time.', badge: 'Ongoing' },
-    { id: 'module3-scripts',   icon: '💬', title: 'Advocacy scripts',          desc: 'Words you can use to say what you experienced without putting pressure on the other person.', badge: 'Communication' },
-    { id: 'module3-repair',    icon: '🔧', title: 'Bilateral repair sequence',   desc: 'What to do after a conversation went wrong — for your side, their side, or both.', badge: 'Repair' },
-    { id: 'module3-disclosure',icon: '🔐', title: 'Controlled disclosure',       desc: 'Match what you share to which ring the person is in.', badge: 'Disclosure' },
-    { id: 'module3-conclude',  icon: '↩',  title: 'Before I conclude',           desc: 'Three questions to ask before you decide what the other person meant.', badge: 'Outgoing' },
-    { id: 'module3-quarterly',  icon: '🔎', title: 'Quarterly Self-Assessment', desc: 'Three questions. Do this every three months.', badge: 'Quarterly' },
-    { id: 'module3-feedback',   icon: '🫁', title: 'Receiving Honest Feedback', desc: 'What to do before, during, and after someone tells you something honest and hard.', badge: 'High stakes' },
-    { id: 'module3-signal',    icon: '📡', title: 'The signal and the source',  desc: 'Four types of response when you are activated. Knowing which one fits helps you ask for the right thing.', badge: 'Foundation' },
-    { id: 'module3-reality',   icon: '🔍', title: 'Reality testing',            desc: 'Three questions to figure out what this moment actually needs from you.', badge: 'Decision tool' },
+    { id: 'module3-precorrect', icon: '🎯', title: 'Before It Happens',        desc: 'Flag a person or a moment coming up. See which rules matter before it starts.', badge: 'Before interaction', cluster: 'Before' },
+    { id: 'module3-disclosure',icon: '🔐', title: 'Controlled disclosure',       desc: 'Match what you share to which ring the person is in.', badge: 'Disclosure', cluster: 'Before' },
+
+    { id: 'module3-initiation', icon: '📨', title: 'Initiation Tracker',      desc: 'Track who reaches out first in each relationship. Get an alert after three in a row.', badge: 'Ongoing', cluster: 'During' },
+    { id: 'module3-feedback',   icon: '🫁', title: 'Receiving Honest Feedback', desc: 'What to do before, during, and after someone tells you something honest and hard.', badge: 'High stakes', cluster: 'During' },
+    { id: 'module3-signal',    icon: '📡', title: 'The signal and the source',  desc: 'Four types of response when you are activated. Knowing which one fits helps you ask for the right thing.', badge: 'Foundation', cluster: 'During' },
+    { id: 'module3-reality',   icon: '🔍', title: 'Reality testing',            desc: 'Three questions to figure out what this moment actually needs from you.', badge: 'Decision tool', cluster: 'During' },
+
+    { id: 'module3-audit',      icon: '🔍', title: 'Self-Audit',              desc: 'Look at a conversation you just had. Answer five questions. Three ways to answer them.', badge: 'After interaction', cluster: 'After' },
+    { id: 'module3-applied',    icon: '✅', title: 'Rule I Applied Today',    desc: 'Write down one time today you used a rule from the framework.', badge: 'Daily', cluster: 'After' },
+    { id: 'module3-journal',    icon: '📓', title: 'Bilateral Journal',        desc: 'What I noticed in the other person. What I noticed in myself.', badge: 'Weekly', cluster: 'After' },
+    { id: 'module3-repair',    icon: '🔧', title: 'Bilateral repair sequence',   desc: 'What to do after a conversation went wrong — for your side, their side, or both.', badge: 'Repair', cluster: 'After' },
+    { id: 'module3-conclude',  icon: '↩',  title: 'Before I conclude',           desc: 'Three questions to ask before you decide what the other person meant.', badge: 'Outgoing', cluster: 'After' },
+
+    { id: 'module3-skill',      icon: '📊', title: 'Skill Tracker',           desc: 'Rate yourself on all 13 rules. Be honest about where you are right now.', badge: 'Weekly', cluster: 'Periodic' },
+    { id: 'module3-health',     icon: '💚', title: 'Relationship Health Check', desc: 'Score a relationship on five things. Use the score to decide how much to invest.', badge: 'Monthly', cluster: 'Periodic' },
+    { id: 'module3-quarterly',  icon: '🔎', title: 'Quarterly Self-Assessment', desc: 'Three questions. Do this every three months.', badge: 'Quarterly', cluster: 'Periodic' },
+
+    { id: 'module3-progress',   icon: '📈', title: 'Progress Summary',         desc: 'See a summary of what you have logged and noticed over time.', badge: 'Ongoing', cluster: 'Anytime' },
+    { id: 'module3-scripts',   icon: '💬', title: 'Advocacy scripts',          desc: 'Words you can use to say what you experienced without putting pressure on the other person.', badge: 'Communication', cluster: 'Anytime' },
+  ];
+
+  const CLUSTERS = [
+    { key: 'Before',   label: 'Before the Interaction', color: DC[1] },
+    { key: 'During',   label: 'During the Interaction', color: DC[3] },
+    { key: 'After',    label: 'After the Interaction',  color: DC[4] },
+    { key: 'Periodic', label: 'Periodic Evaluation',     color: DC[5] },
+    { key: 'Anytime',  label: 'Anytime',                 color: C.secondary },
   ];
 
   return (
@@ -3420,28 +3432,43 @@ function Module3Home({ navigate, setDest, goal }) {
         </div>
       )}
 
-      <div style={{ fontSize: 12, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 12 }}>
-        YOU WILL CHECK IN BEFORE EACH TOOL
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 4 }}>
+        Grouped the same way as the rules — by when you would use them.
+      </div>
+      <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.5, marginBottom: 16 }}>
+        You will check in before each tool opens.
       </div>
 
-      {tools.map(tool => (
-        <button
-          key={tool.id}
-          onClick={() => { setDest(tool.id); navigate('module3-gate'); }}
-          style={{
-            display: 'block', width: '100%', textAlign: 'left',
-            backgroundColor: C.white, border: `1px solid ${C.border}`,
-            borderLeft: `4px solid ${C.interactive}`,
-            borderRadius: 10, padding: '12px 14px', cursor: 'pointer', marginBottom: 8,
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{tool.icon} {tool.title}</span>
-            <span style={{ fontSize: 10, fontWeight: 700, color: C.interactive, backgroundColor: C.interactive + '14', padding: '2px 8px', borderRadius: 10 }}>{tool.badge}</span>
+      {CLUSTERS.map(c => {
+        const group = tools.filter(t => t.cluster === c.key);
+        if (group.length === 0) return null;
+        return (
+          <div key={c.key} style={{ marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: c.color, flexShrink: 0 }} />
+              <span style={{ fontSize: 12, fontWeight: 700, color: c.color, letterSpacing: 0.4 }}>{c.label.toUpperCase()}</span>
+            </div>
+            {group.map(tool => (
+              <button
+                key={tool.id}
+                onClick={() => { setDest(tool.id); navigate('module3-gate'); }}
+                style={{
+                  display: 'block', width: '100%', textAlign: 'left',
+                  backgroundColor: C.white, border: `1px solid ${C.border}`,
+                  borderLeft: `4px solid ${c.color}`,
+                  borderRadius: 10, padding: '12px 14px', cursor: 'pointer', marginBottom: 8,
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: C.primary }}>{tool.icon} {tool.title}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: c.color, backgroundColor: c.color + '14', padding: '2px 8px', borderRadius: 10 }}>{tool.badge}</span>
+                </div>
+                <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{tool.desc}</div>
+              </button>
+            ))}
           </div>
-          <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.5 }}>{tool.desc}</div>
-        </button>
-      ))}
+        );
+      })}
 
     </div>
   );
