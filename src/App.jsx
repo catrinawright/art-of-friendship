@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const C = {
@@ -539,6 +539,22 @@ const SKILL_RATINGS = [
 ];
 
 // ─── COMPLETE RULES DATA ──────────────────────────────────────────────────────
+const MAJOR_TITLES = {
+  module1: 'The Framework',
+  'ring-mismatch': 'Understanding Rings',
+  'module2-anchor': 'Before I Communicate',
+  module3: 'My Tracker',
+  module4: 'Practice',
+};
+const MAJOR_SCREENS = Object.keys(MAJOR_TITLES);
+
+function fallbackTitle(id) {
+  if (MAJOR_TITLES[id]) return MAJOR_TITLES[id];
+  const cleaned = id.replace(/^module\d-?/, '').replace(/-/g, ' ').trim();
+  if (!cleaned) return 'where you left off';
+  return cleaned.replace(/\b\w/g, c => c.toUpperCase());
+}
+
 const RULES_FULL = [
   {
     num: 1, cluster: 'Before', color: DC[1],
@@ -552,6 +568,8 @@ const RULES_FULL = [
       'Do not move someone to a closer ring just because you want to. They have to show you through their actions.',
     ],
     violation: 'Sharing personal things with someone who has not earned that level yet.',
+    example: 'You just met someone at work. They ask how you are doing. You keep it light and talk about your day. That matches Ring 2.',
+    nonExample: 'You just met someone at work. They ask how you are doing. You tell them about a fight with your family. That is Ring 4 or 5 information going to a Ring 2 person.',
     correction: 'Stop. Change the topic. Put the person back in the right ring. Start again from there.',
     activationPrompt: 'Think of one person you talked to recently. How close are they really? Not how close they feel — what have they actually done that tells you where they belong?',
     linkedTerms: [1, 2, 3],
@@ -569,6 +587,8 @@ const RULES_FULL = [
       'Check again every 4 to 6 weeks.',
     ],
     violation: 'Acting like someone is a friend — or expecting friend-level things — when the signs are not there from both of you yet.',
+    example: 'You have talked to someone five times. They have also reached out to you twice on their own. You think, "Maybe this is becoming a friendship," and you keep checking.',
+    nonExample: 'You have talked to someone twice. You already call them your best friend and expect them to drop everything for you.',
     correction: 'Check the 5 signs again. Change how you act to match where the relationship really is. Do not tell the person you are doing this.',
     activationPrompt: 'Think of someone you call a friend. Have you both reached out on your own at least once? Have you both shared at the same level?',
     linkedTerms: [1, 4],
@@ -586,6 +606,8 @@ const RULES_FULL = [
       'If they do reach out, resume and keep tracking.',
     ],
     violation: 'Reaching out more and more when the other person is not reaching back.',
+    example: 'You notice you have texted someone three times in a row with no reply. You stop reaching out and wait a week.',
+    nonExample: 'You have texted someone three times in a row with no reply. You send a fourth message, then a fifth, each one more urgent.',
     correction: 'Stop all reach-out right away. Write down what happened. Talk to your trusted adult before you reach out again. Do not bring up the imbalance directly without guidance.',
     activationPrompt: 'Think about your last few messages to one person. Who sent the first one each time — you or them?',
     linkedTerms: [4, 5],
@@ -603,6 +625,8 @@ const RULES_FULL = [
       'Do not bring the topic back in this same conversation.',
     ],
     violation: 'Keeping a topic or behavior going after someone has said directly that they do not want it.',
+    example: 'Someone says, "I need space right now." You say "Okay" and change the subject immediately.',
+    nonExample: 'Someone says, "I need space right now." You ask "Why though?" and keep talking about the same thing.',
     correction: 'Stop right away. Say a brief "Okay." Move to a new topic or close the conversation. If you missed the signal, name it at the next natural opening.',
     activationPrompt: 'Think of a time someone changed the subject or said they were busy. What did you do right after that?',
     linkedTerms: [6],
@@ -621,6 +645,8 @@ const RULES_FULL = [
       'If they are done, start to close the conversation.',
     ],
     violation: 'Keeping the same topic going after 2 or more quiet signs have shown up.',
+    example: 'Someone gives short replies and checks their phone twice. You say, "Want to talk about something else, or take a break?"',
+    nonExample: 'Someone gives short replies and checks their phone twice. You keep talking about the same topic without noticing.',
     correction: 'Stop right away. Ask the check-in question. Follow where it leads.',
     activationPrompt: 'In your last conversation, did the other person give short answers or look away? What did you do when that happened?',
     linkedTerms: [7, 8],
@@ -638,6 +664,8 @@ const RULES_FULL = [
       'If they have not replied in 72 hours to a low-urgency message, send one short, neutral follow-up. Then stop.',
     ],
     violation: 'Sending many follow-up messages when you have not heard back. Making the tone more urgent when the first message was not urgent.',
+    example: 'Someone who usually replies fast has not answered in two days. You wait and do not send another message.',
+    nonExample: 'Someone who usually replies fast has not answered in two days. You send three more messages, each one more urgent than the last.',
     correction: 'Stop all follow-up right away. Wait 24 to 72 hours. Only reach back out after the wait is done — or when they reply.',
     activationPrompt: 'Think of a time you sent a message and waited for a reply. How long before you sent another one?',
     linkedTerms: [8],
@@ -655,6 +683,8 @@ const RULES_FULL = [
       'If you have been going for a long time, say it: "I realize I have been doing most of the talking. What has been going on with you?"',
     ],
     violation: 'Talking about yourself for a long time without asking about the other person. Asking a question and then going right back to talking about yourself.',
+    example: 'After talking about your day for a few minutes, you ask, "What about you — how was your day?" and you listen to the answer.',
+    nonExample: 'You ask, "How was your day?" and then keep talking about your own day before they finish answering.',
     correction: 'Stop talking. Ask a real question. Listen all the way through before you speak again.',
     activationPrompt: 'In your last conversation, did you ask the other person a question about them — not the topic — even once?',
     linkedTerms: [9],
@@ -671,6 +701,8 @@ const RULES_FULL = [
       'If either check fails, pick a neutral topic instead. Come back to this one only when both checks pass.',
     ],
     violation: 'Bringing up sensitive or personal topics in the wrong place, with someone not close enough, or without checking if they are ready.',
+    example: 'You want to talk about a health issue. You check: this person is Ring 4. You go ahead.',
+    nonExample: 'You want to talk about a health issue with someone you met last week. You bring it up anyway.',
     correction: 'If they seem uncomfortable, say simply: "I think I jumped ahead. Let us talk about something else." Move on right away.',
     activationPrompt: 'Think of a sensitive topic you brought up recently. Did you check first whether the setting and the relationship were ready for it?',
     linkedTerms: [10],
@@ -687,6 +719,8 @@ const RULES_FULL = [
       'Do not open a new topic after you have started to close.',
     ],
     violation: 'Ending a conversation without saying anything. Starting a new topic after the close has begun.',
+    example: 'The conversation is winding down. You say, "I have to go, talk soon," before you leave.',
+    nonExample: 'You just stop responding in the middle of a conversation with no goodbye.',
     correction: 'If you left without closing, bring it up next time: "I realized I left without saying goodbye properly — that was not on purpose."',
     activationPrompt: 'How did your last conversation end? Did you say goodbye — or did it just stop?',
     linkedTerms: [11],
@@ -705,6 +739,8 @@ const RULES_FULL = [
       'Do not come back until you are fully calm.',
     ],
     violation: 'Letting a triggered reaction happen in the middle of a conversation without using your plan.',
+    example: 'Someone raises their voice, which is one of your triggers. You use your plan: step back, breathe, and speak calmly.',
+    nonExample: 'Someone raises their voice. You react right away without pausing, matching their volume.',
     correction: 'Leave using the calm exit phrase. Calm down on your own. Come back only when you are fully calm. If it fits, say briefly: "I am sorry for stepping away — I needed a moment."',
     activationPrompt: 'What is one thing that has thrown off a conversation for you before? Did you have a plan for it before it happened?',
     linkedTerms: [12],
@@ -724,6 +760,8 @@ const RULES_FULL = [
       'In future conversations, remember this limit is there.',
     ],
     violation: 'Keeping the same behavior going after a limit has been given. Coming back to it in the same or a later conversation.',
+    example: 'Someone says, "Please do not ask me about that again." You say, "Got it," and you do not bring it up again.',
+    nonExample: 'Someone says, "Please do not ask me about that again." You bring it up again a few minutes later in a different way.',
     correction: 'Stop right away. Say something brief and genuine about the effect — not your intent: "I understand that was uncomfortable. I will not do that again." Do not drag it out.',
     activationPrompt: 'Think of the last time someone said they did not want to continue something. What did you do right after?',
     linkedTerms: [13, 19],
@@ -740,6 +778,8 @@ const RULES_FULL = [
       'Check YOUR OWN behavior against the same 5 things — not only the other person\'s.',
     ],
     violation: 'Investing at a closer level than the score supports. Skipping the check when things feel good — which is exactly when the check matters most.',
+    example: 'Every few weeks, you check: are we both still reaching out? Still sharing? You adjust how close you act based on the answer.',
+    nonExample: 'You decide someone is your best friend once, and you never check again — even as the signs change.',
     correction: 'Do the check. Move your investment to match the score. Do not tell the person you are doing this — just change how you act.',
     activationPrompt: 'Think of your closest relationship. When did you last check whether the effort is actually going both ways?',
     linkedTerms: [14],
@@ -758,6 +798,8 @@ const RULES_FULL = [
       'Use this rule for YOUR OWN behavior too. If you see warning signs in how you are acting, tell your trusted adult before someone else has to.',
     ],
     violation: 'Staying close to a relationship — or a pattern in yourself — when 2 or more warning signs are there, without talking to anyone.',
+    example: 'You notice two warning signs in a relationship. You tell your trusted adult before deciding what to do next.',
+    nonExample: 'You notice two or more warning signs in a relationship. You decide to handle it completely on your own.',
     correction: 'Stop investing right away. Write down what you saw. Talk to your trusted adult within 48 hours.',
     activationPrompt: 'Think of a relationship that has felt off lately. Have you talked to anyone about it yet?',
     linkedTerms: [15, 16, 18],
@@ -980,7 +1022,18 @@ function Footer({ onGrounding, onBack, state }) {
   );
 }
 
-function Shell({ children, regState, onEmergency, onSettings, onGrounding, title, onBack, noFooter, goal, onGoalEdit }) {
+function Shell({ children, regState, onEmergency, onSettings, onGrounding, title, onBack, noFooter, goal, onGoalEdit, transitionNote }) {
+  const [showNote, setShowNote] = useState(!!transitionNote);
+
+  useEffect(() => {
+    if (transitionNote) {
+      setShowNote(true);
+      const t = setTimeout(() => setShowNote(false), 3200);
+      return () => clearTimeout(t);
+    }
+    setShowNote(false);
+  }, [transitionNote]);
+
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', height: '100%',
@@ -993,6 +1046,15 @@ function Shell({ children, regState, onEmergency, onSettings, onGrounding, title
         onEmergency={onEmergency} onSettings={onSettings}
         state={regState}
       />
+      {transitionNote && showNote && (
+        <div style={{
+          padding: '7px 16px', backgroundColor: C.interactive + '0C',
+          borderBottom: `1px solid ${C.interactive}20`,
+          fontSize: 12, fontWeight: 600, color: C.interactive, textAlign: 'center',
+        }}>
+          {transitionNote}
+        </div>
+      )}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
         {children}
       </div>
@@ -1703,6 +1765,33 @@ function loadTrustedAdult() {
   try { return JSON.parse(localStorage.getItem('aof-trusted-adult') || 'null'); } catch { return null; }
 }
 
+function loadLastScreen() {
+  try { return JSON.parse(localStorage.getItem('aof-last-screen') || 'null'); } catch { return null; }
+}
+
+function hasSeenTeachingNote() {
+  try { return localStorage.getItem('aof-seen-teaching-note') === '1'; } catch { return true; }
+}
+function markTeachingNoteSeen() {
+  try { localStorage.setItem('aof-seen-teaching-note', '1'); } catch (e) {}
+}
+
+function TeachingCycleNote() {
+  const [dismissed, setDismissed] = useState(hasSeenTeachingNote());
+  if (dismissed) return null;
+  return (
+    <div style={{ backgroundColor: C.interactive + '0C', border: `1px solid ${C.interactive}30`, borderRadius: 10, padding: '12px 14px', marginBottom: 14 }}>
+      <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65, marginBottom: 8 }}>
+        Read this. Then look at the example. Then try it in Practice.
+      </div>
+      <button onClick={() => { markTeachingNoteSeen(); setDismissed(true); }} style={{
+        background: 'none', border: `1px solid ${C.interactive}50`, borderRadius: 8,
+        padding: '6px 12px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.interactive,
+      }}>Got it →</button>
+    </div>
+  );
+}
+
 function TrustedAdultSetup({ navigate }) {
   const existing = loadTrustedAdult();
   const [name, setName] = useState(existing?.name || '');
@@ -1844,6 +1933,26 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
       }}>
         <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>The Art of Friendship</div>
       </div>
+
+      {/* Continue where you left off — the single most likely next action, surfaced first */}
+      {(() => {
+        const last = loadLastScreen();
+        if (!last || !last.screen) return null;
+        return (
+          <button onClick={() => navigate(last.screen)} style={{
+            display: 'flex', alignItems: 'center', gap: 10, width: '100%', textAlign: 'left',
+            backgroundColor: C.calm + '0F', border: `1px solid ${C.calm}40`,
+            borderRadius: 10, padding: '11px 14px', cursor: 'pointer', marginBottom: 14,
+          }}>
+            <span style={{ fontSize: 18, flexShrink: 0 }}>↻</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.3, marginBottom: 1 }}>CONTINUE WHERE YOU LEFT OFF</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>{last.title}</div>
+            </div>
+            <span style={{ fontSize: 16, color: C.calm }}>›</span>
+          </button>
+        );
+      })()}
 
       {/* Trusted adult setup prompt — only if not yet configured */}
       {!loadTrustedAdult() && (
@@ -2783,6 +2892,7 @@ function Module1TermDetail({ navigate, termId, settings }) {
 
   return (
     <div style={{ paddingTop: 4 }}>
+      <TeachingCycleNote />
       {/* Term header */}
       <div style={{ marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
@@ -3010,6 +3120,7 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
 
   return (
     <div style={{ paddingTop: 4, position: 'relative' }}>
+      <TeachingCycleNote />
 
       {/* Mid-content pause overlay */}
       {paused && (
@@ -3130,6 +3241,19 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
             <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65, flex: 1 }}>{step}</div>
           </div>
         ))}
+      </Card>
+
+      {/* What This Looks Like — example / non-example pair */}
+      <Card>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>WHAT THIS LOOKS LIKE</div>
+        <div style={{ backgroundColor: C.calm + '0A', border: `1px solid ${C.calm}30`, borderRadius: 8, padding: '10px 12px', marginBottom: 8 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, marginBottom: 4 }}>✅ LIKE THIS</div>
+          <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>{rule.example}</div>
+        </div>
+        <div style={{ backgroundColor: C.overwhelmed + '08', border: `1px solid ${C.overwhelmed}25`, borderRadius: 8, padding: '10px 12px' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.overwhelmed, marginBottom: 4 }}>❌ NOT LIKE THIS</div>
+          <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>{rule.nonExample}</div>
+        </div>
       </Card>
 
       {/* Violation Indicator */}
@@ -3269,6 +3393,7 @@ function Module1FrameworkMap({ navigate, setSelectedTerm }) {
 
 function Module3Home({ navigate, setDest, goal }) {
   const tools = [
+    { id: 'module3-precorrect', icon: '🎯', title: 'Before It Happens',        desc: 'Flag a person or a moment coming up. See which rules matter before it starts.', badge: 'Before interaction' },
     { id: 'module3-audit',      icon: '🔍', title: 'Self-Audit',              desc: 'Look at a conversation you just had. Answer five questions. Three ways to answer them.', badge: 'After interaction' },
     { id: 'module3-applied',    icon: '✅', title: 'Rule I Applied Today',    desc: 'Write down one time today you used a rule from the framework.', badge: 'Daily' },
     { id: 'module3-skill',      icon: '📊', title: 'Skill Tracker',           desc: 'Rate yourself on all 13 rules. Be honest about where you are right now.', badge: 'Weekly' },
@@ -3728,6 +3853,139 @@ function Module3SkillTracker({ navigate }) {
         </Card>
       )}
 
+    </div>
+  );
+}
+
+// ─── PRE-CORRECTION: BEFORE IT HAPPENS ────────────────────────────────────────
+
+function relevantRulesForRing(ring) {
+  const base = [1, 8];
+  if (ring === 1 || ring === 2 || ring === null) return [...base, 13];
+  if (ring === 4 || ring === 5) return [...base, 7, 11];
+  return [...base, 5];
+}
+
+function Module3PreCorrect({ navigate }) {
+  const [entries, setEntries] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('aof-precorrect-log') || '[]'); } catch { return []; }
+  });
+  const [showAdd, setShowAdd] = useState(false);
+  const [person, setPerson] = useState('');
+  const [ring, setRing] = useState(null);
+  const [situation, setSituation] = useState('');
+  const [openId, setOpenId] = useState(null);
+
+  const RING_OPTS = [1, 2, 3, 4, 5];
+
+  const save = () => {
+    if (!person.trim() || !situation.trim()) return;
+    const entry = { id: Date.now(), person: person.trim(), ring, situation: situation.trim(), date: new Date().toLocaleDateString() };
+    const newEntries = [entry, ...entries].slice(0, 20);
+    setEntries(newEntries);
+    try { localStorage.setItem('aof-precorrect-log', JSON.stringify(newEntries)); } catch (e) {}
+    setPerson(''); setRing(null); setSituation('');
+    setShowAdd(false);
+    setOpenId(entry.id);
+  };
+
+  const remove = (id) => {
+    const newEntries = entries.filter(e => e.id !== id);
+    setEntries(newEntries);
+    try { localStorage.setItem('aof-precorrect-log', JSON.stringify(newEntries)); } catch (e) {}
+  };
+
+  const RelevantRulesCard = ({ forRing }) => (
+    <div style={{ backgroundColor: C.interactive + '0A', border: `1px solid ${C.interactive}30`, borderRadius: 10, padding: '12px 14px', marginTop: 10 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.interactive, letterSpacing: 0.4, marginBottom: 10 }}>RULES THAT MATTER HERE</div>
+      {relevantRulesForRing(forRing).map(num => {
+        const r = RULES_SIMPLE.find(x => x.num === num);
+        if (!r) return null;
+        return (
+          <button key={num} onClick={() => navigate('module1-rule-' + num)} style={{
+            display: 'block', width: '100%', textAlign: 'left', backgroundColor: C.white,
+            border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 10px', marginBottom: 6, cursor: 'pointer',
+          }}>
+            <span style={{ fontSize: 12, fontWeight: 800, color: r.color, marginRight: 6 }}>R{num}</span>
+            <span style={{ fontSize: 13, color: C.primary }}>{r.title}</span>
+          </button>
+        );
+      })}
+      {(forRing === null || forRing === 1 || forRing === 2) && (
+        <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.5, marginTop: 4, marginBottom: 8 }}>
+          Not sure which ring they are in? The Ring Check tool can help.
+        </div>
+      )}
+      <Btn label="Open Before I Communicate →" onClick={() => navigate('module2-anchor')} variant="secondary" style={{ marginTop: 4 }} />
+    </div>
+  );
+
+  return (
+    <div style={{ paddingTop: 8 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 4 }}>Before It Happens</div>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
+        Flag a person or a moment coming up. See which rules matter before it starts — not after.
+      </div>
+
+      {!showAdd && <Btn label="+ Flag a person or situation" onClick={() => setShowAdd(true)} variant="primary" style={{ marginBottom: 16 }} />}
+
+      {showAdd && (
+        <Card style={{ borderLeft: `4px solid ${C.interactive}` }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHO IS THIS?</div>
+          <input value={person} onChange={e => setPerson(e.target.value)} placeholder="First name is enough" style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, fontFamily: 'system-ui', boxSizing: 'border-box', marginBottom: 14 }} />
+
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHICH RING? (IF YOU KNOW)</div>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+            {RING_OPTS.map(n => (
+              <button key={n} onClick={() => setRing(n)} style={{ flex: 1, padding: '8px 4px', borderRadius: 8, cursor: 'pointer', border: `1.5px solid ${ring === n ? C.interactive : C.border}`, backgroundColor: ring === n ? C.interactive + '14' : 'transparent', color: ring === n ? C.interactive : C.secondary, fontSize: 13, fontWeight: ring === n ? 700 : 400 }}>{n}</button>
+            ))}
+            <button onClick={() => setRing(null)} style={{ padding: '8px 8px', borderRadius: 8, cursor: 'pointer', border: `1.5px solid ${ring === null ? C.interactive : C.border}`, backgroundColor: ring === null ? C.interactive + '14' : 'transparent', color: ring === null ? C.interactive : C.secondary, fontSize: 12, fontWeight: ring === null ? 700 : 400 }}>Not sure</button>
+          </div>
+
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 8 }}>WHAT IS COMING UP?</div>
+          <textarea value={situation} onChange={e => setSituation(e.target.value)} placeholder="Example: Meeting Jordan for coffee tomorrow." style={{ width: '100%', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', fontSize: 14, color: C.primary, lineHeight: 1.5, resize: 'none', fontFamily: 'system-ui', minHeight: 64, boxSizing: 'border-box', marginBottom: 14 }} />
+
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Btn label="Cancel" onClick={() => { setShowAdd(false); setPerson(''); setRing(null); setSituation(''); }} variant="ghost" />
+            <Btn label="Save →" onClick={save} variant={person.trim() && situation.trim() ? 'primary' : 'ghost'} />
+          </div>
+        </Card>
+      )}
+
+      {entries.length === 0 && !showAdd && (
+        <div style={{ textAlign: 'center', color: C.secondary, fontSize: 14, padding: '24px 0', lineHeight: 1.6 }}>
+          You have not flagged anything yet. Flag a person or a moment before it happens, and the right rules will be waiting for you.
+        </div>
+      )}
+
+      {entries.map(e => {
+        const open = openId === e.id;
+        return (
+          <div key={e.id} style={{ marginBottom: 10 }}>
+            <button onClick={() => setOpenId(open ? null : e.id)} style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+              width: '100%', textAlign: 'left', backgroundColor: C.white,
+              border: `1px solid ${open ? C.interactive : C.border}`,
+              borderRadius: open ? '10px 10px 0 0' : 10, padding: '11px 14px', cursor: 'pointer',
+            }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: C.primary }}>{e.person}{e.ring ? ` · Ring ${e.ring}` : ''}</div>
+                <div style={{ fontSize: 13, color: C.secondary, marginTop: 2 }}>{e.situation}</div>
+                <div style={{ fontSize: 11, color: C.secondary, marginTop: 4 }}>{e.date}</div>
+              </div>
+              <span style={{ fontSize: 13, color: C.interactive, marginLeft: 8, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
+            </button>
+            {open && (
+              <div style={{ border: `1px solid ${C.interactive}`, borderTop: 'none', borderRadius: '0 0 10px 10px', padding: '12px 14px', backgroundColor: C.interactive + '04' }}>
+                <RelevantRulesCard forRing={e.ring} />
+                <button onClick={() => remove(e.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.secondary, padding: 0, marginTop: 12 }}>
+                  Remove this →
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -6205,8 +6463,20 @@ export default function App() {
   const [termPopupId, setTermPopupId] = useState(null);
   const showTerm = (id) => setTermPopupId(id);
 
+  const [transitionNote, setTransitionNote] = useState(null);
+
   const navigate = (to) => {
     setNavHistory(h => [...h, screen]);
+    if (to !== 'home' && to !== 'emergency') {
+      try {
+        localStorage.setItem('aof-last-screen', JSON.stringify({ screen: to, title: fallbackTitle(to) }));
+      } catch (e) {}
+    }
+    if (screen === 'home' && MAJOR_SCREENS.includes(to)) {
+      setTransitionNote(`Leaving Home. Entering ${MAJOR_TITLES[to]}.`);
+    } else {
+      setTransitionNote(null);
+    }
     setScreen(to);
   };
 
@@ -6259,6 +6529,7 @@ export default function App() {
     'module3-audit': 'Self-Audit',
     'module3-skill': 'Skill Tracker',
     'module3-applied': 'Rule Applied',
+    'module3-precorrect': 'Before It Happens',
     'module3-initiation': 'Initiation Tracker',
     'module3-journal': 'Bilateral Journal',
     'module3-health': 'Health Check',
@@ -6319,6 +6590,7 @@ export default function App() {
     if (screen === 'module3-audit') return <Module3SelfAudit navigate={navigate} settings={settings} />;
     if (screen === 'module3-skill') return <Module3SkillTracker navigate={navigate} />;
     if (screen === 'module3-applied') return <Module3Applied navigate={navigate} />;
+    if (screen === 'module3-precorrect') return <Module3PreCorrect navigate={navigate} />;
     if (screen === 'module3-initiation') return <Module3InitiationTracker navigate={navigate} />;
     if (screen === 'module3-journal') return <Module3Journal navigate={navigate} />;
     if (screen === 'module3-health') return <Module3HealthCheck navigate={navigate} />;
@@ -6382,6 +6654,7 @@ export default function App() {
             onGrounding={() => setShowGrounding(true)}
             goal={weeklyGoal}
             onGoalEdit={() => navigate('home')}
+            transitionNote={transitionNote}
           >
             {renderScreen()}
           </Shell>
