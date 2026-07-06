@@ -1356,22 +1356,22 @@ const RINGS_DATA = [
 const MISMATCH_SIGNS = [
   {
     short: 'Information goes one way.',
-    detail: 'They know a lot about you. You know almost nothing personal about them. In a real friendship, both people share. If someone knows a lot about your life but you know very little about theirs, information is only flowing one direction.',
+    detail: 'They know a lot about you. You know almost nothing personal about them. This is not really about how much either of you talks — it is that the flow only goes one direction, so you cannot yet test whether what they know lines up with how they actually treat you.',
     example: 'A counselor knows about your home situation from a report. A teacher knows your diagnosis from your records. This does not mean they are bad people. It means the information came from their access, not from your trust.',
   },
   {
     short: 'The warmth changes.',
-    detail: 'They are warmer when they want something from you. When they do not need anything, things get quieter. In a real friendship, care is consistent. Conditional warmth is a sign of Ring 2 behavior, not Ring 4.',
+    detail: 'They are warmer when they want something from you. When they do not need anything, things get quieter. This is the clearest version of the test failing: their warmth does not hold steady whether or not they are getting something from it.',
     example: 'Someone is very attentive during a meeting where they need your agreement. Afterward, you barely hear from them.',
   },
   {
     short: 'The connection is tied to a role.',
-    detail: 'When the role ends — school ends, the program ends, the job ends — the relationship ends with it. Real friendships exist outside of the context that created them.',
+    detail: 'When the role ends — school ends, the program ends, the job ends — the relationship ends with it. That is not proof they did not care. It is proof you never got to see whether their behavior would hold up outside the one setting where it was required.',
     example: 'A teacher who was very supportive while you were their student. Once you graduated or changed schools, the contact stopped completely.',
   },
   {
     short: 'You did not fully choose what they know.',
-    detail: 'The personal information they have about you got to them through their position, through other people, or through a system — not through a conversation where you decided to share it. That is not intimacy. That is access.',
+    detail: 'The personal information they have about you got to them through their position, through other people, or through a system — not through a conversation where you decided to share it. That is not intimacy, and it is not something you can test consistency against, since you never chose to hand it over in the first place.',
     example: 'A social worker who knows about your family from a case file. A new teacher who read your full records before they ever spoke to you.',
   },
 ];
@@ -1719,6 +1719,9 @@ function RingMismatchCheck({ navigate }) {
             <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>{mitigating}</div>
           </div>
         )}
+        <div style={{ backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}30`, borderRadius: 10, padding: '11px 14px', marginBottom: 14, fontSize: 13, color: C.primary, lineHeight: 1.65 }}>
+          One question sits underneath all four signs below: does what this person does match what they say — consistently, whether or not you are around to notice? That consistency, not how much they tell you, is what actually makes someone trustworthy.
+        </div>
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, color: C.secondary, marginBottom: 10, marginTop: 4 }}>Signs to watch for — tap each to learn more</div>
         {MISMATCH_SIGNS.map((sign, i) => {
           const isTriggered = triggered.includes(i);
