@@ -84,7 +84,7 @@ const QUESTIONS = [
     short: 'Clear comm\nor outcome?',
     yesLabel: 'Clear communication — free response',
     noLabel: 'A specific outcome',
-    noAction: 'Stop here. This is the signal that the communication is structured as manipulation. Restructure before proceeding. Bring it to your trusted adult if needed.',
+    noAction: 'Stop here. This is the signal that the communication is structured as manipulation. Restructure it before proceeding. If you are not sure how, talk it through with your trusted adult.',
     noType: 'red',
   },
 ];
@@ -115,6 +115,72 @@ const DOMAIN_LABELS = {
 };
 
 // ─── ALL 17 TERMS ─────────────────────────────────────────────────────────────
+// ─── CONCEPT LENS TEMPLATE ────────────────────────────────────────────────────
+// Template structure: any concept can be made visible through these four layers.
+// surface   — what it looks like / how it presents to others
+// function  — what it is doing underneath the surface presentation
+// beneath   — what it is protecting, covering, or substituting for
+// residue   — what remains / the core question when the layers are removed
+// bilateral — the same question applied in both directions
+
+const CONCEPT_LENSES = [
+  {
+    termId: 15,
+    name: 'Exploitative or Unsafe Pattern',
+    surface: 'Someone who cares. Who knows you. Who is warm. Who shows up.',
+    function: 'To secure access to what you have — your trust, your compliance, your resources, your silence — while giving as little back as possible.',
+    beneath: 'A person who has not developed the capacity for genuine reciprocity, or who is choosing not to use it in this relationship.',
+    residue: 'Remove the warmth and the knowing — and ask: is there bilateral investment here? Do they give when they cannot get anything back? That is the question. That is what remains to find out.',
+    bilateral: {
+      outward: 'Is this person\'s care contingent on what they receive from me?',
+      inward: 'Is my care for this person contingent on what I receive from them?',
+    },
+  },
+  {
+    termId: 16,
+    name: 'Manipulation vs Self-Advocacy',
+    surface: 'A need being expressed. A feeling being shared. A request being made.',
+    function: 'To get a specific response while making the other person feel that the response is their own free choice — when the way the communication was built has already made certain responses easier and others harder.',
+    beneath: 'A belief that asking directly — naming the need plainly and accepting any answer — will not get the need met. Or will result in something too painful to risk.',
+    residue: 'Strip away the framing, the pressure, the guilt — and ask what this person actually needs. Then ask: could they ask for that directly? The answer to the second question is the thing.',
+    bilateral: {
+      outward: 'Is this person\'s expression structured so that I cannot easily say no without being the one who caused a problem?',
+      inward: 'Is my expression structured so that the other person cannot easily say no without feeling responsible for my pain?',
+    },
+  },
+  {
+    termId: 18,
+    name: 'Gaslighting',
+    surface: 'A disagreement about what happened. A different perspective. A correction being offered.',
+    function: 'To make the other person\'s experience of reality inaccessible to them — so they cannot use their own perception as evidence for their own decisions.',
+    beneath: 'Something the person doing it needs not to be true. An event they need not to have happened. A pattern they need not to be accountable for.',
+    residue: 'Remove the correction, the reframing, the you\'re too sensitive — and ask: what does this person need the other person not to know that they know? That is the thing being protected.',
+    bilateral: {
+      outward: 'Is this person telling me my experience was wrong in a way that serves their needs rather than my clarity?',
+      inward: 'Have I told someone their perception was wrong because I needed the situation to be different from how they described it?',
+    },
+  },
+  {
+    termId: 25,
+    name: 'Premature Investment',
+    surface: 'Generosity. Warmth. Someone who gives freely and early. Someone who shows up with resources before they were asked.',
+    function: 'To establish a claim on the relationship through provision — making it harder for the other person to move freely once the investment has landed.',
+    beneath: 'A belief that who I am without what I can provide is not enough to secure connection. Or a strategy learned in an environment where provision was the only available path to belonging.',
+    residue: 'Remove the resources, the time, the access, the care given before it was earned bilaterally — and ask: is there a relationship here? Would this person be here if I brought nothing? Would you be willing to find out?',
+    bilateral: {
+      outward: 'Is this person giving me things I did not choose to receive, at a level I am now obligated by?',
+      inward: 'Am I giving at a level this relationship has not established, hoping the giving will build what is not yet there?',
+    },
+  },
+];
+
+const LENS_LAYERS = [
+  { key: 'surface',   label: 'WHAT IT LOOKS LIKE',  color: 'secondary',    note: 'The surface — how it presents to others' },
+  { key: 'function',  label: 'WHAT IT IS DOING',     color: 'activated',    note: 'The function — what it produces underneath the surface' },
+  { key: 'beneath',   label: 'WHAT IS UNDERNEATH',   color: 'interactive',  note: 'What it is protecting, covering, or substituting for' },
+  { key: 'residue',   label: 'WHAT REMAINS',         color: 'primary',      note: 'The core — what is left when the layers are removed' },
+];
+
 const TERMS = [
   {
     id: 1, domainNum: 1, linkedRule: 2,
@@ -280,6 +346,8 @@ const TERMS = [
     metaphor: { symbol: '🕸️', concept: 'A web — some connections hold you in place without your consent', explanation: 'A web looks like connection from a distance. The difference is whether you can leave freely.' },
     audioText: 'An unsafe pattern is when one person keeps crossing the other and using them. Signs include repeated boundary crossing, warmth that appears only when they want something, and pressure to stop seeing other people. Two or more of these means talk to your trusted adult.',
     activationPrompt: 'Think of a relationship where you often felt drained, guilty, or unsure of yourself. Those feelings are worth looking at more closely.',
+    bilateralMirror: 'Now ask the harder question. Think of someone in your life right now. Could they answer the same questions about how you treat them? Do you cross limits they have set? Are you warmer when you need something from them? Do they know more about you than you know about them? The same patterns work in both directions. Recognizing them in yourself is not a verdict. It is information.',
+    bilateralMirrorLabel: 'THE SAME QUESTION, TURNED AROUND',
   },
   {
     id: 16, domainNum: 5, linkedRule: 13,
@@ -291,6 +359,8 @@ const TERMS = [
     metaphor: { symbol: '⚖️', concept: 'A scale measuring who carries the weight of the decision', explanation: 'Self-advocacy places the decision on the scale and steps back. Manipulation tips the scale before the other person can weigh in.' },
     audioText: 'The difference between self-advocacy and manipulation is one question: does this give the other person a real choice to say no without pressure? If yes, it is self-advocacy. If no, it is manipulation.',
     activationPrompt: 'Think of a time you wanted something from someone. Did you ask directly — or did you find a way to make it harder for them to say no?',
+    bilateralMirror: 'Now ask it the other way. Think of a communication you sent recently — a message, a request, a reaction. Did it give the other person a real choice? Or did it make it hard for them to say no — through guilt, through urgency, through framing the situation so that saying no would make them the one who caused the problem? You do not have to have done this on purpose for it to have happened.',
+    bilateralMirrorLabel: 'THE SAME QUESTION, TURNED AROUND',
   },
   {
     id: 17, domainNum: 5, linkedRule: 13,
@@ -298,7 +368,7 @@ const TERMS = [
     plain: 'When one person pulls away and the other person tries harder to get them back. Neither person is fully in control. Both are responding automatically.',
     definition: 'The withdrawal-chase cycle is when one person pulls away and the other person tries harder to get them back. The person pulling away may not be choosing to. They may be overwhelmed. The person chasing is not fully in control either. Their brain is responding automatically to the loss of connection.',
     boundary: 'Pulling away because your system is overwhelmed is not the same as choosing to manipulate. But it still affects the other person in the same way. When you come back, let the person know what happened.',
-    ruleAnchor: 'If you know you are someone who shuts down during conflict, tell the people close to you in advance. Give them a signal during. Let them know when you are back.',
+    ruleAnchor: 'If you know you are someone who shuts down during conflict, tell the people close to you in advance. Give them a signal during. Let them know when you are back. Premature investment often sets up this cycle — the over-investment comes first, the withdrawal follows, and the chase begins.',
     metaphor: { symbol: '🌊', concept: 'A wave pulling back from shore — and the shore rushing toward it', explanation: 'The shore does not choose to rush. The retreat triggers the response automatically.' },
     audioText: 'The withdrawal-chase cycle is when one person pulls away and the other person chases. Neither person is fully in control. It is automatic. Understanding it is the first step to interrupting it.',
     activationPrompt: 'Have you ever texted someone more after they went quiet? That is the chase. Understanding why it happens is how you start to manage it.',
@@ -313,6 +383,8 @@ const TERMS = [
     metaphor: { symbol: '🌫️', concept: 'Fog that is deliberately made', explanation: 'Natural fog is disorienting but no one caused it. Deliberate fog is disorienting because someone is creating it.' },
     audioText: 'Gaslighting is when someone deliberately and repeatedly tells you that what you experienced did not happen the way you know it did. It is not one disagreement. It is a pattern that targets your ability to trust yourself.',
     activationPrompt: 'Think of a time you were certain about what you experienced, and someone said you were wrong. Did they give you evidence — or did they just keep insisting?',
+    bilateralMirror: 'Now ask the harder question. Think of a time someone told you what happened to them — and you told them they were wrong. Not to help them see more clearly. Because you needed the situation to be different from how they described it. Have you ever said things like: that did not happen, you are being too sensitive, you are misreading this, you always do this? If so — what were you protecting when you said those things?',
+    bilateralMirrorLabel: 'THE SAME QUESTION, TURNED AROUND',
   },
   {
     id: 19, domainNum: 5, linkedRule: 11,
@@ -379,6 +451,18 @@ const TERMS = [
     metaphor: { symbol: '🪞', concept: 'A mirror held up to both sides of the interaction at the same time', explanation: 'A mirror does not judge. It reflects. A bilateral evaluation reflects your conduct and the other person with the same clarity.' },
     audioText: 'Bilateral means both sides. The same standard that applies to the other person applies to you. You cannot hold someone to a rule you are not following yourself.',
     activationPrompt: 'Think of a recent interaction where you noticed what the other person did. Did you apply the same standard to your own behavior? That is the bilateral question.',
+  },
+  {
+    id: 25, domainNum: 5, name: 'Premature Investment',
+    metaphor: { symbol: '💸', label: 'The wallet that arrived first', description: 'Resources given before the relationship was ready for them' },
+    plain: 'When you give more to a relationship than it has earned yet — hoping the giving will build what is not there yet.',
+    definition: 'Premature investment is when you lead with what you have — money, time, attention, skill, care — before the other person has shown they are at the ring level that investment belongs to. You give at Ring 4 or Ring 5 depth to someone who is Ring 2 or Ring 3. The giving is real. But it arrives before trust, before bilateral evidence, before the other person had a chance to choose whether they wanted to enter at that depth. It puts them in receipt of something they did not ask for — which changes what they can do freely in the relationship from that point on.',
+    boundary: 'Premature investment is not the same as generosity. Generosity is giving to someone at the level the relationship supports. Premature investment is giving beyond that level — before the bilateral evidence is there — in the hope that the investment itself will produce the closeness it was given in anticipation of. The difference is the order: generosity follows evidence of the relationship. Premature investment tries to come before it.',
+    ruleAnchor: 'Before you give something significant — time, money, skill, access, care — check which ring this person is actually in. If the investment belongs at Ring 4 or Ring 5, and this person has not yet demonstrated that level bilaterally, wait.',
+    audioText: 'Premature investment is when you give more than the relationship has earned yet. The giving is real — but it arrives too early, before trust was established from both sides. Check the ring before you invest at that level.',
+    activationPrompt: 'Think of a relationship where you gave a lot early — time, money, attention, help, access. Did the other person choose to enter at that level, or did you establish it and they received it? What ring were they actually in when the investment happened?',
+    bilateralMirror: 'Now ask the other direction. Has someone given you significantly more than your relationship with them had established? Did you receive something before trust was built from both sides? What did that receiving do to your freedom to move in that relationship? Did it create an obligation you did not choose?',
+    bilateralMirrorLabel: 'THE SAME QUESTION, TURNED AROUND',
   },
 ];;
 
@@ -572,7 +656,7 @@ const RULES_FULL = [
     nonExample: 'You just met someone at work. They ask how you are doing. You tell them about a fight with your family. That is Ring 4 or 5 information going to a Ring 2 person.',
     correction: 'Stop. Change the topic. Put the person back in the right ring. Start again from there.',
     activationPrompt: 'Think of one person you talked to recently. How close are they really? Not how close they feel — what have they actually done that tells you where they belong?',
-    linkedTerms: [1, 2, 3],
+    linkedTerms: [1, 2, 3, 25],
   },
   {
     num: 2, cluster: 'Before', color: DC[1],
@@ -591,7 +675,7 @@ const RULES_FULL = [
     nonExample: 'You have talked to someone twice. You already call them your best friend and expect them to drop everything for you.',
     correction: 'Check the 5 signs again. Change how you act to match where the relationship really is. Do not tell the person you are doing this.',
     activationPrompt: 'Think of someone you call a friend. Have you both reached out on your own at least once? Have you both shared at the same level?',
-    linkedTerms: [1, 4],
+    linkedTerms: [1, 4, 25],
   },
   {
     num: 3, cluster: 'After', color: DC[4],
@@ -608,7 +692,7 @@ const RULES_FULL = [
     violation: 'Reaching out more and more when the other person is not reaching back.',
     example: 'You notice you have texted someone three times in a row with no reply. You stop reaching out and wait a week.',
     nonExample: 'You have texted someone three times in a row with no reply. You send a fourth message, then a fifth, each one more urgent.',
-    correction: 'Stop all reach-out right away. Write down what happened. Talk to your trusted adult before you reach out again. Do not bring up the imbalance directly without guidance.',
+    correction: 'Stop all reach-out right away. Write down what happened. Talk it through with your trusted adult before you reach out again. Thinking through it together helps — but the decision about what to do next is yours.',
     activationPrompt: 'Think about your last few messages to one person. Who sent the first one each time — you or them?',
     linkedTerms: [4, 5],
   },
@@ -782,27 +866,31 @@ const RULES_FULL = [
     nonExample: 'You decide someone is your best friend once, and you never check again — even as the signs change.',
     correction: 'Do the check. Move your investment to match the score. Do not tell the person you are doing this — just change how you act.',
     activationPrompt: 'Think of your closest relationship. When did you last check whether the effort is actually going both ways?',
-    linkedTerms: [14],
+    linkedTerms: [14, 25],
   },
   {
     num: 13, cluster: 'Periodic', color: DC[5],
     title: 'Bring Unsafe Patterns to a Trusted Adult',
-    theRule: 'If you see 2 or more warning signs in a relationship — including your own behavior — do not try to fix it alone. Tell your trusted adult first.',
+    theRule: 'If you see 2 or more warning signs in a relationship — including in your own behavior — do not think through it alone. Talk it through with your trusted adult. The thinking is yours. They are there so you do not have to do it alone.',
     defSource: 'Exploitative or Unsafe Pattern (Term 15) · Manipulation (Term 16)',
     protocol: [
-      'Watch for these 5 warning signs: (1) They keep crossing limits even after you said something. (2) They are warm only when you do what they want. (3) They push you away from other people in your life. (4) They use guilt, fear, or pressure to get what they want. (5) They take but do not give back.',
-      'If you see 2 or more: Do not get closer. Do not confront them on your own. Do not try to fix it by giving more.',
-      'A trusted adult is someone you know and trust, who can help you think clearly, and who holds a caring role — like a counselor, therapist, case manager, family member, or mentor.',
-      'Tell them what you saw using facts — say what happened, not what you think it means.',
-      'Follow their guidance before you do anything else in that relationship.',
-      'Use this rule for YOUR OWN behavior too. If you see warning signs in how you are acting, tell your trusted adult before someone else has to.',
+      'Watch for these 5 warning signs in the other person: (1) They keep crossing limits even after you said something. (2) They are warm only when you do what they want. (3) They push you away from other people in your life. (4) They use guilt, fear, or pressure to get what they want. (5) They take but do not give back.',
+      'If you see 2 or more of those signs: Do not get closer. Do not confront them alone. Do not try to fix it by giving more.',
+      'Tell your trusted adult what you saw using facts — say what happened, not what you think it means.',
+      'Talk it through with them. Tell them what you saw. Ask what they notice. The conclusions are yours to reach — they are there so you do not have to think through it alone.',
+    ],
+    bilateralProtocol: [
+      'Watch for these same 5 warning signs in your own behavior: (1) Have I kept crossing a limit someone set, even after they said something? (2) Am I warmer toward this person when I need something from them? (3) Have I said things that made this person feel like their own perception was wrong? (4) Have I used guilt, fear, or urgency to get what I wanted from this person? (5) Do I take from this relationship more than I give back?',
+      'If you notice 2 or more of these in yourself: Stop. Do not try to assess or correct this on your own.',
+      'Tell your trusted adult what you noticed. Use facts — what you did, not what you think it means about who you are.',
+      'Talk it through with them. You are not bringing this so they can tell you who you are. You are bringing it so you do not have to figure it out alone. The conclusions are yours to reach.',
     ],
     violation: 'Staying close to a relationship — or a pattern in yourself — when 2 or more warning signs are there, without talking to anyone.',
     example: 'You notice two warning signs in a relationship. You tell your trusted adult before deciding what to do next.',
     nonExample: 'You notice two or more warning signs in a relationship. You decide to handle it completely on your own.',
     correction: 'Stop investing right away. Write down what you saw. Talk to your trusted adult within 48 hours.',
     activationPrompt: 'Think of a relationship that has felt off lately. Have you talked to anyone about it yet?',
-    linkedTerms: [15, 16, 18],
+    linkedTerms: [15, 16, 18, 25],
   },
 ];
 
@@ -906,7 +994,7 @@ const TRIVIA_Q = [
   { id: 9,  tier: 'challenge', rule: 17, q: 'Name the four psychological mechanisms that drive the chase response when someone withdraws from a relationship.', a: 'Intermittent reinforcement (Skinner), attachment alarm activation (Bowlby), scarcity response (Cialdini), cognitive dissonance (Festinger)', explanation: 'The chase is not a choice — it is a conditioned neurological response. All four mechanisms activate simultaneously, which is why the pull to pursue is so strong even when the relationship evidence does not support it.' },
   { id: 10, tier: 'challenge', rule: 16, q: 'What single question determines whether a communication is self-advocacy or manipulation?', a: 'Does this communication give the other person genuine freedom to respond — including the freedom to say no — without guilt, fear, or emotional pressure from me?', explanation: 'This question evaluates the architecture of the communication — what it does to the other person\'s decision-making freedom — not the content or the legitimacy of the underlying need.' },
   { id: 11, tier: 'challenge', rule: 17, q: 'What makes neurological shutdown different from strategic withdrawal in terms of the student\'s responsibility?', a: 'The shutdown is involuntary and not manipulative. But its impact is identical. Responsibility shifts to three zones: proactive disclosure before, minimal signal during when capacity allows, and return acknowledgment after recovery.', explanation: 'The origin of the withdrawal determines whether it is manipulative — not the impact. But the relational equity principle holds: the other person experiences both types identically.' },
-  { id: 12, tier: 'challenge', rule: 0,  q: 'A student completes the pre-communication checklist and answers No to Question 3. What does the framework require them to do next?', a: 'Stop immediately. Do not communicate. Bring the need to a trusted adult first. The checklist produces a Red result — consult before proceeding.', explanation: 'Question 3 — acceptance of any response including no — is a Red threshold question. If refusal feels unacceptable, the communication is not structured as self-advocacy and should not proceed.' },
+  { id: 12, tier: 'challenge', rule: 0,  q: 'A student completes the pre-communication checklist and answers No to Question 3. What does the framework require them to do next?', a: 'Stop immediately. Do not communicate. Talk through the need with a trusted adult first. The checklist produces a Red result — think it through together before proceeding.', explanation: 'Question 3 — acceptance of any response including no — is a Red threshold question. If refusal feels unacceptable, the communication is not structured as self-advocacy and should not proceed.' },
 ];
 
 const AI_RULES_SUMMARY = `
@@ -1356,22 +1444,22 @@ const RINGS_DATA = [
 const MISMATCH_SIGNS = [
   {
     short: 'Information goes one way.',
-    detail: 'They know a lot about you. You know almost nothing personal about them. This is not really about how much either of you talks — it is that the flow only goes one direction, so you cannot yet test whether what they know lines up with how they actually treat you.',
+    detail: 'They know a lot about you. You know almost nothing personal about them. In a real friendship, both people share. If someone knows a lot about your life but you know very little about theirs, information is only flowing one direction.',
     example: 'A counselor knows about your home situation from a report. A teacher knows your diagnosis from your records. This does not mean they are bad people. It means the information came from their access, not from your trust.',
   },
   {
     short: 'The warmth changes.',
-    detail: 'They are warmer when they want something from you. When they do not need anything, things get quieter. This is the clearest version of the test failing: their warmth does not hold steady whether or not they are getting something from it.',
+    detail: 'They are warmer when they want something from you. When they do not need anything, things get quieter. In a real friendship, care is consistent. Conditional warmth is a sign of Ring 2 behavior, not Ring 4.',
     example: 'Someone is very attentive during a meeting where they need your agreement. Afterward, you barely hear from them.',
   },
   {
     short: 'The connection is tied to a role.',
-    detail: 'When the role ends — school ends, the program ends, the job ends — the relationship ends with it. That is not proof they did not care. It is proof you never got to see whether their behavior would hold up outside the one setting where it was required.',
+    detail: 'When the role ends — school ends, the program ends, the job ends — the relationship ends with it. Real friendships exist outside of the context that created them.',
     example: 'A teacher who was very supportive while you were their student. Once you graduated or changed schools, the contact stopped completely.',
   },
   {
     short: 'You did not fully choose what they know.',
-    detail: 'The personal information they have about you got to them through their position, through other people, or through a system — not through a conversation where you decided to share it. That is not intimacy, and it is not something you can test consistency against, since you never chose to hand it over in the first place.',
+    detail: 'The personal information they have about you got to them through their position, through other people, or through a system — not through a conversation where you decided to share it. That is not intimacy. That is access.',
     example: 'A social worker who knows about your family from a case file. A new teacher who read your full records before they ever spoke to you.',
   },
 ];
@@ -1719,9 +1807,6 @@ function RingMismatchCheck({ navigate }) {
             <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.6 }}>{mitigating}</div>
           </div>
         )}
-        <div style={{ backgroundColor: C.interactive + '08', border: `1px solid ${C.interactive}30`, borderRadius: 10, padding: '11px 14px', marginBottom: 14, fontSize: 13, color: C.primary, lineHeight: 1.65 }}>
-          One question sits underneath all four signs below: does what this person does match what they say — consistently, whether or not you are around to notice? That consistency, not how much they tell you, is what actually makes someone trustworthy.
-        </div>
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, color: C.secondary, marginBottom: 10, marginTop: 4 }}>Signs to watch for — tap each to learn more</div>
         {MISMATCH_SIGNS.map((sign, i) => {
           const isTriggered = triggered.includes(i);
@@ -2702,6 +2787,49 @@ function Module1Home({ navigate, setSelectedTerm, settings }) {
   return (
     <div style={{ paddingTop: 4 }}>
 
+      {/* What This Is For — purpose statement before everything else */}
+      <div style={{
+        backgroundColor: C.calm + '0A', border: `1px solid ${C.calm}30`,
+        borderLeft: `4px solid ${C.calm}`, borderRadius: 10,
+        padding: '14px 16px', marginBottom: 12,
+      }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.calm, letterSpacing: 0.4, marginBottom: 10 }}>
+          WHAT THIS IS FOR
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.8, marginBottom: 10 }}>
+          This framework is a set of tools. The tools are for one thing.
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.8, marginBottom: 10 }}>
+          Finding out who someone actually is — including yourself — when everything that is not them is removed.
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.8, marginBottom: 10 }}>
+          Not what they do to get what they want. Not what they lead with. Not the warmth that comes and goes. Not the wallet. Who is actually there.
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.8 }}>
+          The rules and the rings and all the tools are how you do that work. They help you see clearly enough to know who is actually there — in the other person, and in yourself.
+        </div>
+      </div>
+
+      {/* Personhood anchor — before the framework begins */}
+      <div style={{
+        backgroundColor: C.primary + '08', border: `1px solid ${C.primary}20`,
+        borderLeft: `4px solid ${C.primary}`, borderRadius: 10,
+        padding: '14px 16px', marginBottom: 20,
+      }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, letterSpacing: 0.4, marginBottom: 10 }}>
+          BEFORE THE FRAMEWORK BEGINS
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.8, marginBottom: 10 }}>
+          Your worth exists before any of this. It is not something you earn by applying rules correctly. It is not something you lose when a relationship goes wrong.
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.8, marginBottom: 10 }}>
+          The same is true for every person you interact with. The person you are thinking of right now has worth that exists before you decide what ring they are in. Before any rule applies to them. Before any interaction happens.
+        </div>
+        <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.8 }}>
+          This framework will ask you to look at what other people do. It will also ask you to look at what you do. Both matter. Neither is a verdict on who you are.
+        </div>
+      </div>
+
       {/* Foundational terms — always visible before tabs */}
       <div style={{ marginBottom: 20 }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: C.primary, letterSpacing: 0, marginBottom: 8 }}>
@@ -2859,6 +2987,66 @@ function Module1Home({ navigate, setSelectedTerm, settings }) {
   );
 }
 
+function ConceptLens({ termId }) {
+  const lens = CONCEPT_LENSES.find(l => l.termId === termId);
+  if (!lens) return null;
+
+  const colorMap = {
+    secondary: C.secondary,
+    activated: C.activated,
+    interactive: C.interactive,
+    primary: C.primary,
+  };
+
+  return (
+    <div style={{ paddingTop: 4 }}>
+      <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.65, marginBottom: 16 }}>
+        Four layers. Each one sits on top of the next. Reading from top to bottom is peeling them away — until what is actually there becomes visible.
+      </div>
+
+      {LENS_LAYERS.map((layer, i) => {
+        const color = colorMap[layer.color] || C.secondary;
+        return (
+          <div key={layer.key} style={{ marginBottom: 10 }}>
+            {i > 0 && (
+              <div style={{ textAlign: 'center', fontSize: 16, color: C.border, marginBottom: 10 }}>↓</div>
+            )}
+            <div style={{
+              backgroundColor: color + '08',
+              border: `1px solid ${color}25`,
+              borderLeft: `4px solid ${color}`,
+              borderRadius: 10, padding: '12px 14px',
+            }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: 0.5, marginBottom: 6 }}>
+                {layer.label}
+              </div>
+              <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75, marginBottom: 6 }}>
+                {lens[layer.key]}
+              </div>
+              <div style={{ fontSize: 11, color: C.secondary, fontStyle: 'italic' }}>{layer.note}</div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Bilateral */}
+      <div style={{ marginTop: 16, backgroundColor: C.overwhelmed + '08', border: `1px solid ${C.overwhelmed}25`, borderRadius: 10, padding: '12px 14px' }}>
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.overwhelmed, letterSpacing: 0.5, marginBottom: 10 }}>
+          BOTH DIRECTIONS
+        </div>
+        <div style={{ marginBottom: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, marginBottom: 4 }}>LOOKING OUTWARD</div>
+          <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65 }}>{lens.bilateral.outward}</div>
+        </div>
+        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 10 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, marginBottom: 4 }}>LOOKING INWARD</div>
+          <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65 }}>{lens.bilateral.inward}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Module1TermDetail({ navigate, termId, settings }) {
   const [activeTab, setActiveTab] = useState('text');
   const [audioState, setAudioState] = useState('idle'); // idle | playing | done
@@ -2887,10 +3075,13 @@ function Module1TermDetail({ navigate, termId, settings }) {
     setAudioState('idle');
   };
 
+  const hasLens = CONCEPT_LENSES.some(l => l.termId === term.id);
+
   const tabs = [
     { id: 'text', label: '📖 Define' },
     { id: 'visual', label: '🎨 See' },
     { id: 'audio', label: '🔊 Hear' },
+    ...(hasLens ? [{ id: 'layers', label: '🔍 Layers' }] : []),
   ];
 
   return (
@@ -2967,6 +3158,21 @@ function Module1TermDetail({ navigate, termId, settings }) {
             <div style={{ fontSize: 11, fontWeight: 700, color: C.primary, letterSpacing: 0.4, marginBottom: 6 }}>RULE ANCHOR</div>
             <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.7, fontStyle: 'italic' }}>"{term.ruleAnchor}"</div>
           </Card>
+
+          {/* Bilateral mirror — only for terms 15, 16, 18 */}
+          {term.bilateralMirror && (
+            <Card style={{ backgroundColor: C.overwhelmed + '08', borderLeft: `4px solid ${C.overwhelmed}`, borderColor: C.overwhelmed + '30' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.overwhelmed, letterSpacing: 0.4, marginBottom: 8 }}>
+                {term.bilateralMirrorLabel || 'THE SAME QUESTION, TURNED AROUND'}
+              </div>
+              <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75 }}>
+                {term.bilateralMirror}
+              </div>
+              <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6, marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
+                Recognizing this in yourself is not a verdict. It is the beginning of doing something about it. See Rule 13.
+              </div>
+            </Card>
+          )}
         </div>
       )}
 
@@ -3044,6 +3250,10 @@ function Module1TermDetail({ navigate, termId, settings }) {
           )}
 
         </div>
+      )}
+
+      {activeTab === 'layers' && hasLens && (
+        <ConceptLens termId={term.id} />
       )}
 
       {/* Rule link */}
@@ -3246,6 +3456,29 @@ function Module1RuleDetail({ navigate, ruleNum, setSelectedTerm, showTerm }) {
         ))}
       </Card>
 
+      {/* Bilateral protocol — for Rule 13 */}
+      {rule.bilateralProtocol && (
+        <Card style={{ backgroundColor: C.overwhelmed + '08', borderLeft: `4px solid ${C.overwhelmed}`, borderColor: C.overwhelmed + '30' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.overwhelmed, letterSpacing: 0.4, marginBottom: 10 }}>
+            THE SAME RULE — APPLIED TO YOURSELF
+          </div>
+          <div style={{ fontSize: 13, color: C.secondary, lineHeight: 1.6, marginBottom: 12 }}>
+            This rule works in both directions. If you notice these signs in your own behavior toward someone else — the same protocol applies.
+          </div>
+          {rule.bilateralProtocol.map((step, i) => (
+            <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'flex-start' }}>
+              <div style={{
+                width: 22, height: 22, borderRadius: 11, flexShrink: 0,
+                backgroundColor: C.overwhelmed + '18', border: `1px solid ${C.overwhelmed}40`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 11, fontWeight: 800, color: C.overwhelmed, marginTop: 1,
+              }}>{i + 1}</div>
+              <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.65, flex: 1 }}>{step}</div>
+            </div>
+          ))}
+        </Card>
+      )}
+
       {/* What This Looks Like — example / non-example pair */}
       <Card>
         <div style={{ fontSize: 11, fontWeight: 700, color: C.secondary, letterSpacing: 0.4, marginBottom: 10 }}>WHAT THIS LOOKS LIKE</div>
@@ -3405,6 +3638,7 @@ function Module3Home({ navigate, setDest, goal }) {
     { id: 'module3-reality',   icon: '🔍', title: 'Reality testing',            desc: 'Three questions to figure out what this moment actually needs from you.', badge: 'Decision tool', cluster: 'During' },
 
     { id: 'module3-audit',      icon: '🔍', title: 'Self-Audit',              desc: 'Look at a conversation you just had. Answer five questions. Three ways to answer them.', badge: 'After interaction', cluster: 'After' },
+    { id: 'module3-accountability', icon: '🪞', title: 'Accountability Mirror',  desc: 'Three questions about whether your behavior violated the other person. The hardest version of the bilateral principle.', badge: 'After interaction', cluster: 'After' },
     { id: 'module3-applied',    icon: '✅', title: 'Rule I Applied Today',    desc: 'Write down one time today you used a rule from the framework.', badge: 'Daily', cluster: 'After' },
     { id: 'module3-journal',    icon: '📓', title: 'Bilateral Journal',        desc: 'What I noticed in the other person. What I noticed in myself.', badge: 'Weekly', cluster: 'After' },
     { id: 'module3-repair',    icon: '🔧', title: 'Bilateral repair sequence',   desc: 'What to do after a conversation went wrong — for your side, their side, or both.', badge: 'Repair', cluster: 'After' },
@@ -4018,6 +4252,249 @@ function Module3PreCorrect({ navigate }) {
       })}
     </div>
   );
+}
+
+// ─── ACCOUNTABILITY MIRROR ────────────────────────────────────────────────────
+
+const ACCOUNTABILITY_Q = [
+  {
+    id: 1,
+    symbol: '🔍',
+    question: 'Did I tell this person their perception was wrong?',
+    sub: 'Not to help them see more clearly. Because I needed the situation to be different from how they described it.',
+    probe: 'Did I say — out loud or through how I acted — that what they experienced did not happen, that they were too sensitive, or that they were misreading the situation?',
+    yesLabel: 'Yes — I said something like that',
+    noLabel: 'No — I did not do this',
+    termRef: 18,
+    termName: 'Gaslighting',
+  },
+  {
+    id: 2,
+    symbol: '🎭',
+    question: 'Did I use what I know about this person to get what I wanted?',
+    sub: 'Did I use their fears, their needs, their attachment to me, or what they care about — to get them to do something or feel something?',
+    probe: 'Did I frame what I wanted in a way that made it hard for them to say no? Did I bring up something they care about at a moment when I needed them to agree with me?',
+    yesLabel: 'Yes — I think I did this',
+    noLabel: 'No — I did not do this',
+    termRef: 16,
+    termName: 'Manipulation vs Self-Advocacy',
+  },
+  {
+    id: 3,
+    symbol: '🚧',
+    question: 'Did I cross a limit they set?',
+    sub: 'Did they say — directly or through how they acted — that they did not want something to continue, and I kept going anyway?',
+    probe: 'Did I ask why the limit existed? Did I try again in a different form? Did I act like the limit did not apply to this situation?',
+    yesLabel: 'Yes — I crossed a limit',
+    noLabel: 'No — I respected their limits',
+    termRef: 15,
+    termName: 'Exploitative or Unsafe Pattern',
+  },
+];
+
+function Module3Accountability({ navigate }) {
+  const [step, setStep] = useState(0); // 0 = intro, 1-3 = questions, 4 = result
+  const [answers, setAnswers] = useState({});
+  const [saved, setSaved] = useState(false);
+
+  const currentQ = ACCOUNTABILITY_Q[step - 1];
+  const yesCount = Object.values(answers).filter(a => a === 'yes').length;
+
+  const handleAnswer = (val) => {
+    setAnswers(prev => ({ ...prev, [step]: val }));
+    if (step < 3) {
+      setStep(s => s + 1);
+    } else {
+      setStep(4);
+    }
+  };
+
+  const reset = () => { setStep(0); setAnswers({}); setSaved(false); };
+
+  const saveToLog = () => {
+    try {
+      const entry = {
+        date: new Date().toLocaleDateString(),
+        answers,
+        yesCount,
+        timestamp: Date.now(),
+      };
+      const existing = JSON.parse(localStorage.getItem('aof-accountability-log') || '[]');
+      localStorage.setItem('aof-accountability-log', JSON.stringify([entry, ...existing].slice(0, 20)));
+    } catch (e) {}
+    setSaved(true);
+  };
+
+  // Intro screen
+  if (step === 0) return (
+    <div style={{ paddingTop: 4 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 8 }}>Accountability Mirror</div>
+      <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.75, marginBottom: 16 }}>
+        This tool asks the hardest version of the bilateral question. Not what someone else did. What you did.
+      </div>
+      <Card style={{ borderLeft: `4px solid ${C.overwhelmed}`, backgroundColor: C.overwhelmed + '08' }}>
+        <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.75, marginBottom: 8 }}>
+          Three questions. Each one asks whether your behavior violated the other person — their sense of reality, their ability to choose freely, or their worth as a person.
+        </div>
+        <div style={{ fontSize: 13, color: C.primary, lineHeight: 1.75 }}>
+          Answering yes to one of these questions is not a verdict on who you are. It is information. It tells you where to focus and what to bring to your trusted adult.
+        </div>
+      </Card>
+      <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6, marginTop: 12, marginBottom: 20 }}>
+        Use this after a conversation that felt off — where you are not sure if what you did was okay, or where you noticed something in yourself that you want to look at honestly.
+      </div>
+      <Btn label="Start →" onClick={() => setStep(1)} variant="primary" />
+    </div>
+  );
+
+  // Question screens
+  if (step >= 1 && step <= 3) return (
+    <div style={{ paddingTop: 4 }}>
+      {/* Progress */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+        {[1, 2, 3].map(n => (
+          <div key={n} style={{
+            flex: 1, height: 4, borderRadius: 2,
+            backgroundColor: n < step ? C.overwhelmed : n === step ? C.overwhelmed + '60' : C.border,
+          }} />
+        ))}
+        <span style={{ fontSize: 12, fontWeight: 700, color: C.secondary, whiteSpace: 'nowrap' }}>{step} of 3</span>
+      </div>
+
+      <Card style={{ borderLeft: `4px solid ${C.overwhelmed}`, backgroundColor: C.overwhelmed + '06' }}>
+        <div style={{ fontSize: 22, marginBottom: 10 }}>{currentQ.symbol}</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: C.primary, lineHeight: 1.4, marginBottom: 10 }}>
+          {currentQ.question}
+        </div>
+        <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.7, marginBottom: 12 }}>
+          {currentQ.sub}
+        </div>
+        <div style={{
+          backgroundColor: C.bg, borderRadius: 8, padding: '10px 12px',
+          fontSize: 13, color: C.primary, lineHeight: 1.65, fontStyle: 'italic',
+        }}>
+          {currentQ.probe}
+        </div>
+      </Card>
+
+      <div style={{ fontSize: 12, color: C.secondary, lineHeight: 1.6, margin: '12px 0 16px' }}>
+        Answer honestly. This is only visible to you.
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <button
+          onClick={() => handleAnswer('yes')}
+          style={{
+            padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
+            border: `1.5px solid ${C.overwhelmed}`, backgroundColor: C.overwhelmed + '10',
+            color: C.overwhelmed, fontWeight: 700, fontSize: 14, textAlign: 'left',
+          }}
+        >{currentQ.yesLabel}</button>
+        <button
+          onClick={() => handleAnswer('no')}
+          style={{
+            padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
+            border: `1.5px solid ${C.calm}`, backgroundColor: C.calm + '10',
+            color: C.calm, fontWeight: 700, fontSize: 14, textAlign: 'left',
+          }}
+        >{currentQ.noLabel}</button>
+        <button
+          onClick={() => handleAnswer('unsure')}
+          style={{
+            padding: '14px 16px', borderRadius: 10, cursor: 'pointer',
+            border: `1.5px solid ${C.border}`, backgroundColor: 'transparent',
+            color: C.secondary, fontWeight: 600, fontSize: 14, textAlign: 'left',
+          }}
+        >I am not sure</button>
+      </div>
+
+      <div style={{ fontSize: 11, color: C.secondary, marginTop: 10, fontStyle: 'italic' }}>
+        Connected to: Term {currentQ.termRef} — {currentQ.termName}
+      </div>
+    </div>
+  );
+
+  // Result screen
+  if (step === 4) return (
+    <div style={{ paddingTop: 4 }}>
+      <div style={{ fontSize: 20, fontWeight: 800, color: C.primary, marginBottom: 16 }}>
+        What you noticed
+      </div>
+
+      {/* Summary of answers */}
+      {ACCOUNTABILITY_Q.map((q, i) => {
+        const answer = answers[i + 1];
+        const color = answer === 'yes' ? C.overwhelmed : answer === 'no' ? C.calm : C.secondary;
+        const label = answer === 'yes' ? q.yesLabel : answer === 'no' ? q.noLabel : 'Not sure';
+        return (
+          <div key={q.id} style={{
+            display: 'flex', gap: 12, alignItems: 'flex-start',
+            padding: '10px 12px', backgroundColor: color + '08',
+            border: `1px solid ${color}30`, borderRadius: 10, marginBottom: 8,
+          }}>
+            <span style={{ fontSize: 18, flexShrink: 0 }}>{q.symbol}</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: C.primary, marginBottom: 2 }}>{q.question}</div>
+              <div style={{ fontSize: 12, color, fontWeight: 700 }}>{label}</div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Contextual response based on yes count */}
+      <div style={{ marginTop: 16, marginBottom: 16 }}>
+        {yesCount === 0 ? (
+          <Card style={{ borderLeft: `4px solid ${C.calm}`, backgroundColor: C.calm + '08' }}>
+            <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75 }}>
+              You did not identify any of these patterns in this interaction. If something still feels off and you are not sure why — you can always talk it through with your trusted adult anyway. Thinking through something small together is better than sitting with uncertainty alone.
+            </div>
+          </Card>
+        ) : yesCount === 1 ? (
+          <Card style={{ borderLeft: `4px solid ${C.activated}`, backgroundColor: C.activated + '08' }}>
+            <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75, marginBottom: 8 }}>
+              You noticed one of these patterns. That matters. Noticing it is the first thing that has to happen before anything else can.
+            </div>
+            <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75 }}>
+              Talk it through with your trusted adult. Tell them what you did and what you are noticing now. They are there to help you think — not to tell you what it means. The understanding you reach is yours.
+            </div>
+          </Card>
+        ) : (
+          <Card style={{ borderLeft: `4px solid ${C.overwhelmed}`, backgroundColor: C.overwhelmed + '08' }}>
+            <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75, marginBottom: 8 }}>
+              You noticed more than one of these patterns. Do not try to figure out what this means on your own. This is exactly what Rule 13 is for.
+            </div>
+            <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75, marginBottom: 8 }}>
+              Talk it through with your trusted adult. Tell them what you did and what you noticed. Work through what it means together. The understanding is yours to reach — they are there so you do not have to find it alone.
+            </div>
+            <div style={{ fontSize: 14, color: C.primary, lineHeight: 1.75 }}>
+              Recognizing this in yourself is hard. It is also the most important thing you can do with it.
+            </div>
+          </Card>
+        )}
+      </div>
+
+      {/* Personhood reminder */}
+      <div style={{
+        padding: '12px 14px', backgroundColor: C.primary + '06',
+        border: `1px solid ${C.primary}15`, borderRadius: 10, marginBottom: 20,
+        fontSize: 13, color: C.secondary, lineHeight: 1.7,
+      }}>
+        What you noticed here does not change your worth. The same is true for the other person. Both of you have worth that exists before this conversation and after it.
+      </div>
+
+      {!saved ? (
+        <Btn label="Save this reflection" onClick={saveToLog} variant="secondary" />
+      ) : (
+        <MasteryCard message="You looked honestly at your own behavior. That is the hardest version of this framework — and the most important one." />
+      )}
+
+      <div style={{ marginTop: 12 }}>
+        <Btn label="Start over" onClick={reset} variant="ghost" />
+      </div>
+    </div>
+  );
+
+  return null;
 }
 
 function Module3Applied({ navigate }) {
@@ -5404,7 +5881,7 @@ function Module4Home({ navigate }) {
   const tools = [
     { id: 'module4-scenarios',  icon: '🃏', title: 'Scenario Cards',       desc: '8 practice scenarios with three levels of support.', badge: 'Bilateral practice' },
     { id: 'module4-trivia',     icon: '🧠', title: 'Rule Trivia',           desc: '12 questions across three levels of difficulty.', badge: 'Knowledge check' },
-    { id: 'module4-flashcards', icon: '📚', title: 'Flashcard Deck',        desc: 'All 24 definitions. Flip through each one and rate yourself.', badge: 'Definition review' },
+    { id: 'module4-flashcards', icon: '📚', title: 'Flashcard Deck',        desc: 'All 25 definitions. Flip through each one and rate yourself.', badge: 'Definition review' },
     { id: 'module4-generator',  icon: '✨', title: 'Scenario Generator',    desc: 'Describe a real situation. Get a practice scenario built around it.', badge: 'Template-based' },
   ];
 
@@ -6559,6 +7036,7 @@ export default function App() {
     'module3-audit': 'Self-Audit',
     'module3-skill': 'Skill Tracker',
     'module3-applied': 'Rule Applied',
+    'module3-accountability': 'Accountability Mirror',
     'module3-precorrect': 'Before It Happens',
     'module3-initiation': 'Initiation Tracker',
     'module3-journal': 'Bilateral Journal',
@@ -6620,6 +7098,7 @@ export default function App() {
     if (screen === 'module3-audit') return <Module3SelfAudit navigate={navigate} settings={settings} />;
     if (screen === 'module3-skill') return <Module3SkillTracker navigate={navigate} />;
     if (screen === 'module3-applied') return <Module3Applied navigate={navigate} />;
+    if (screen === 'module3-accountability') return <Module3Accountability navigate={navigate} />;
     if (screen === 'module3-precorrect') return <Module3PreCorrect navigate={navigate} />;
     if (screen === 'module3-initiation') return <Module3InitiationTracker navigate={navigate} />;
     if (screen === 'module3-journal') return <Module3Journal navigate={navigate} />;
