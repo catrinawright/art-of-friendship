@@ -464,7 +464,29 @@ const TERMS = [
     bilateralMirror: 'Now ask the other direction. Has someone given you significantly more than your relationship with them had established? Did you receive something before trust was built from both sides? What did that receiving do to your freedom to move in that relationship? Did it create an obligation you did not choose?',
     bilateralMirrorLabel: 'THE SAME QUESTION, TURNED AROUND',
   },
-];;
+  {
+    id: 26, domainNum: 2, linkedRule: 14,
+    name: 'Clarifying Question',
+    plain: 'When you are not sure what someone means, ask them directly instead of guessing. Guessing can lead you to the wrong answer.',
+    definition: 'A clarifying question is a direct question you ask when you do not understand what someone meant, felt, or wanted. Instead of guessing and deciding on your own what they meant, you ask them to tell you.',
+    boundary: 'Asking a clarifying question is not the same as being annoying or not paying attention. It is normal and expected to ask when something is unclear. Most people would rather answer a direct question than have you guess wrong.',
+    ruleAnchor: 'When you do not understand what someone meant, ask them directly. Do not decide on your own what they meant and act on that guess.',
+    metaphor: { symbol: '🔦', concept: 'A flashlight in a dark room', explanation: 'Guessing in the dark can lead you into a wall. Asking a direct question turns on the light so you can actually see where you are.' },
+    audioText: 'A clarifying question is a direct question you ask when you are not sure what someone meant. Instead of guessing, you ask them to tell you. This is normal and expected.',
+    activationPrompt: 'Think of a recent time you were not sure what someone meant. Did you ask them, or did you guess? What happened?',
+  },
+  {
+    id: 27, domainNum: 4, linkedRule: 15,
+    name: 'Feeling vs. Fact',
+    plain: 'A feeling is real, but a feeling is not proof of what actually happened. Feeling uncomfortable does not always mean someone did something wrong.',
+    definition: 'A feeling vs. fact check means separating what you feel from what you know actually happened. You can feel uncomfortable, confused, or hurt, and still not know for certain why. The feeling is real. It is not automatically proof of what caused it.',
+    boundary: 'This does not mean your feelings do not matter. It means a feeling by itself is not the same as evidence. You can have both — a real feeling and an unclear cause.',
+    ruleAnchor: 'When you feel uncomfortable, check: what do I actually know happened, versus what am I assuming happened? Use the reality-testing tool if you are not sure.',
+    metaphor: { symbol: '🌫️', concept: 'Fog on a window', explanation: 'The fog is real. But the fog changes what you can see clearly. A feeling can be real while still fogging up what you can tell for certain about what happened.' },
+    audioText: 'A feeling is real, but it is not automatic proof of what happened. When you feel uncomfortable, check what you actually know versus what you are assuming.',
+    activationPrompt: 'Think of a time you felt uncomfortable during a conversation. What did you actually know for certain happened? What were you assuming?',
+  },
+];
 
 // ─── RULE CARDS DATA ──────────────────────────────────────────────────────────
 const RULE_CARDS = [
@@ -487,6 +509,8 @@ const RULE_CARDS = [
       { num: 5, title: 'Read implicit signal clusters', plain: 'Two or more implicit signals together are a message. Pause and check in.' },
       { num: 7, title: 'Maintain conversational balance', plain: 'Every three self-referential statements, ask one genuine question about the other person.' },
       { num: 9, title: 'Structure every interaction', plain: 'Every interaction needs a deliberate opening, a reciprocal middle, and a verbal close.' },
+      { num: 14, title: 'Ask for clarity before you assume', plain: 'When you are not sure what someone meant, ask them directly instead of guessing.' },
+      { num: 15, title: 'A feeling is not always proof something went wrong', plain: 'Feeling uncomfortable is real, but it does not automatically mean the other person did something wrong. Check the facts first.' },
     ],
   },
   {
@@ -585,6 +609,8 @@ const RULES_SIMPLE = [
   { num: 11, title: 'Accept boundaries without argument',      cluster: 'After',    color: DC[4] },
   { num: 12, title: 'Evaluate relationships periodically',     cluster: 'Periodic', color: DC[5] },
   { num: 13, title: 'Bring unsafe patterns to a trusted adult', cluster: 'Periodic', color: DC[5] },
+  { num: 14, title: 'Ask for clarity before you assume',       cluster: 'During',   color: DC[3] },
+  { num: 15, title: 'A feeling is not always proof something went wrong', cluster: 'During', color: DC[3] },
 ];
 
 const HEALTH_CRITERIA = [
@@ -609,6 +635,8 @@ const GOAL_SUGGESTIONS = [
   { ruleNum: 11, cluster: 'After',    text: 'I want to accept one limit without arguing or coming back to it later.' },
   { ruleNum: 12, cluster: 'Periodic', text: 'I want to check one relationship against the 5 healthy friendship criteria.' },
   { ruleNum: 13, cluster: 'Periodic', text: 'I want to name one warning sign I have noticed and bring it to my trusted adult.' },
+  { ruleNum: 14, cluster: 'During',   text: 'I want to ask a clarifying question instead of guessing at least once this week.' },
+  { ruleNum: 15, cluster: 'During',   text: 'I want to check the facts before deciding a feeling means someone did something wrong.' },
   { ruleNum: 0, cluster: 'Checklist', text: 'I want to name my need in one clear sentence before I send any message this week.' },
   { ruleNum: 0, cluster: 'Checklist', text: 'I want to include the inconvenient parts of the picture in what I share this week.' },
   { ruleNum: 0, cluster: 'Checklist', text: 'I want to practice accepting a no without arguing or returning to the topic.' },
@@ -891,6 +919,44 @@ const RULES_FULL = [
     correction: 'Stop investing right away. Write down what you saw. Talk to your trusted adult within 48 hours.',
     activationPrompt: 'Think of a relationship that has felt off lately. Have you talked to anyone about it yet?',
     linkedTerms: [15, 16, 18, 25],
+  },
+  {
+    num: 14, cluster: 'During', color: DC[3],
+    title: 'Ask for Clarity Before You Assume',
+    theRule: 'When you are not sure what someone meant, felt, or wanted, ask them directly. Do not decide on your own and act like your guess is true.',
+    defSource: 'Clarifying Question (Term 26)',
+    protocol: [
+      'Notice when you are not sure what someone meant, felt, or wanted.',
+      'Do not decide on your own what they meant. Do not act on a guess like it is a fact.',
+      'Ask a direct, calm question: "What did you mean by that?" or "Are you saying you want space, or something else?"',
+      'Wait for their actual answer.',
+      'Use their answer — not your guess — to decide what to do next.',
+    ],
+    violation: 'Deciding what someone meant without asking, then acting like that guess is a fact.',
+    example: 'Someone says "whatever" in a flat voice. Instead of deciding they are mad at you, you ask: "Are you upset about something?"',
+    nonExample: 'Someone says "whatever" in a flat voice. You decide they are mad at you and stop talking to them for the rest of the day, without ever asking.',
+    correction: 'Go back and ask the direct question you skipped. Say: "Earlier I was not sure what you meant. Can you tell me?"',
+    activationPrompt: 'Think of a recent moment you weren\u2019t sure what someone meant. Did you ask, or did you decide on your own? What would asking have changed?',
+    linkedTerms: [26],
+  },
+  {
+    num: 15, cluster: 'During', color: DC[3],
+    title: 'A Feeling Is Not Always Proof Something Went Wrong',
+    theRule: 'Feeling uncomfortable, confused, or hurt is real. But that feeling by itself does not prove the other person did something wrong.',
+    defSource: 'Feeling vs. Fact (Term 27)',
+    protocol: [
+      'Notice the feeling without deciding yet what caused it.',
+      'Ask yourself: what do I actually know happened? What am I only assuming?',
+      'If you are not sure, use the reality-testing tool or ask a clarifying question (Rule 14) before deciding what the feeling means.',
+      'Remember a feeling can be real and the cause can still be unclear at the same time.',
+      'Decide what to do based on what you actually know — not only on the feeling.',
+    ],
+    violation: 'Deciding someone did something wrong only because you felt bad, without checking what actually happened.',
+    example: 'You feel embarrassed after a conversation. Instead of deciding the other person humiliated you on purpose, you use the reality-testing tool to check what actually happened.',
+    nonExample: 'You feel embarrassed after a conversation. You decide the other person did it on purpose and tell others they were mean to you, without checking.',
+    correction: 'Pause. Separate the feeling from the assumption. Use the reality-testing tool. Adjust your conclusion if the facts do not support it.',
+    activationPrompt: 'Think of a recent uncomfortable feeling. Was there real evidence the other person did something wrong, or was it mostly the feeling itself?',
+    linkedTerms: [27],
   },
 ];
 
@@ -1990,7 +2056,7 @@ function HomeScreen({ navigate, regState, goal, saveGoal }) {
       icon: '📖',
       screen: 'module1',
       title: 'The Framework',
-      sub: '13 Rules · 24 Definitions',
+      sub: '15 Rules · 27 Definitions',
       desc: 'Start here. Learn the rules and what they mean.',
       accent: C.interactive,
       primary: true,
@@ -3278,7 +3344,7 @@ function Module1RuleCards({ navigate }) {
   return (
     <div style={{ paddingTop: 4 }}>
       <div style={{ fontSize: 14, color: C.secondary, lineHeight: 1.6, marginBottom: 16 }}>
-        The 13 rules organized into four clusters. Tap any rule to read the full protocol.
+        The 15 rules organized into four clusters. Tap any rule to read the full protocol.
       </div>
 
       {RULE_CARDS.map((cluster, ci) => (
@@ -3644,7 +3710,7 @@ function Module3Home({ navigate, setDest, goal }) {
     { id: 'module3-repair',    icon: '🔧', title: 'Bilateral repair sequence',   desc: 'What to do after a conversation went wrong — for your side, their side, or both.', badge: 'Repair', cluster: 'After' },
     { id: 'module3-conclude',  icon: '↩',  title: 'Before I conclude',           desc: 'Three questions to ask before you decide what the other person meant.', badge: 'Outgoing', cluster: 'After' },
 
-    { id: 'module3-skill',      icon: '📊', title: 'Skill Tracker',           desc: 'Rate yourself on all 13 rules. Be honest about where you are right now.', badge: 'Weekly', cluster: 'Periodic' },
+    { id: 'module3-skill',      icon: '📊', title: 'Skill Tracker',           desc: 'Rate yourself on all 15 rules. Be honest about where you are right now.', badge: 'Weekly', cluster: 'Periodic' },
     { id: 'module3-health',     icon: '💚', title: 'Relationship Health Check', desc: 'Score a relationship on five things. Use the score to decide how much to invest.', badge: 'Monthly', cluster: 'Periodic' },
     { id: 'module3-quarterly',  icon: '🔎', title: 'Quarterly Self-Assessment', desc: 'Three questions. Do this every three months.', badge: 'Quarterly', cluster: 'Periodic' },
 
@@ -6250,67 +6316,22 @@ function Module4Generator({ navigate }) {
     setError('');
     setResult(null);
 
-    // Template fallback when no API key is configured
-    if (!import.meta.env.VITE_ANTHROPIC_API_KEY) {
-      const ruleMap = { 'Before the Interaction': [1, 2, 8], 'During the Interaction': [4, 5, 7, 9], 'After the Interaction': [3, 6, 10, 11], 'Periodic Evaluation': [12, 13] };
-      const rules = ruleMap[cluster] || [1];
-      const templateResult = {
-        title: 'Practice Scenario: ' + cluster,
-        scenario: 'Alex navigates a situation involving ' + category.split('(')[0].trim() + '. A decision point arises that connects to the ' + cluster + ' rules.',
-        rules: rules.slice(0, 2),
-        ruleNames: rules.slice(0, 2).map(function(r) { var f = RULES_SIMPLE.find(function(x) { return x.num === r; }); return f ? f.title : 'Rule ' + r; }),
-        analysisQuestions: [
-          'What specific behavior in this scenario raises a concern?',
-          'Which rule from the ' + cluster + ' cluster applies most directly?',
-          'What is the correct next action according to the framework?',
-          'Bilateral: If this were your behavior in a recent interaction, what would the correction pathway be?'
-        ]
-      };
-      setResult(templateResult);
-      setLoading(false);
-      return;
-    }
-
-    const prompt = `Generate a practice scenario card for a social-emotional learning framework.
-
-Student's real situation: "${situation}"
-Relationship category: ${category}
-Most relevant rule cluster: ${cluster}
-
-Framework rules: ${AI_RULES_SUMMARY}
-
-Requirements:
-- Rewrite entirely in third person. Use "Alex" for the student.
-- Make ALL social information explicit — state every behavior, tone, and signal as observable fact. No implied subtext. The learner has ASD and benefits from full behavioral description.
-- Keep scenario under 90 words.
-- Identify 1-2 most relevant rule numbers.
-- Generate 4 bilateral analysis questions. Question 4 must be the inward/bilateral question ("If this were your behavior...").
-
-Respond with ONLY valid JSON, no markdown, no explanation:
-{"title":"short title","scenario":"the scenario text","rules":[1,2],"ruleNames":["Rule name 1","Rule name 2"],"analysisQuestions":["q1","q2","q3","q4 bilateral"]}`;
-
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY || '',
-            'anthropic-version': '2023-06-01',
-          },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      });
-      const data = await response.json();
-      const text = data.content?.filter(b => b.type === 'text').map(b => b.text).join('');
-      const clean = text.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(clean);
-      setResult(parsed);
-    } catch (e) {
-      setError('Unable to generate the scenario right now. Check your connection and try again.');
-    }
+    // Always generated locally — nothing typed here is ever sent off this device.
+    const ruleMap = { 'Before the Interaction': [1, 2, 8], 'During the Interaction': [4, 5, 7, 9], 'After the Interaction': [3, 6, 10, 11], 'Periodic Evaluation': [12, 13] };
+    const rules = ruleMap[cluster] || [1];
+    const templateResult = {
+      title: 'Practice Scenario: ' + cluster,
+      scenario: 'Alex navigates a situation involving ' + category.split('(')[0].trim() + '. A decision point arises that connects to the ' + cluster + ' rules.',
+      rules: rules.slice(0, 2),
+      ruleNames: rules.slice(0, 2).map(function(r) { var f = RULES_SIMPLE.find(function(x) { return x.num === r; }); return f ? f.title : 'Rule ' + r; }),
+      analysisQuestions: [
+        'What specific behavior in this scenario raises a concern?',
+        'Which rule from the ' + cluster + ' cluster applies most directly?',
+        'What is the correct next action according to the framework?',
+        'Bilateral: If this were your behavior in a recent interaction, what would the correction pathway be?'
+      ]
+    };
+    setResult(templateResult);
     setLoading(false);
   };
 
