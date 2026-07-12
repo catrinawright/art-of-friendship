@@ -660,6 +660,38 @@ const MAJOR_TITLES = {
 };
 const MAJOR_SCREENS = Object.keys(MAJOR_TITLES);
 
+// ─── SPEECH VOICE SELECTION ───────────────────────────────────────────────────
+let __cachedFemaleVoice = null;
+const FEMALE_VOICE_HINTS = ['female', 'samantha', 'victoria', 'zira', 'susan', 'karen', 'moira', 'tessa', 'fiona', 'ava', 'allison', 'kate', 'serena', 'aria', 'jenny', 'joanna', 'salli', 'kimberly', 'olivia', 'emma', 'amy'];
+
+function pickFemaleVoice(voices) {
+  if (!voices || voices.length === 0) return null;
+  const english = voices.filter(v => /^en(-|_|$)/i.test(v.lang || ''));
+  const pool = english.length ? english : voices;
+  const byHint = pool.find(v => FEMALE_VOICE_HINTS.some(h => (v.name || '').toLowerCase().includes(h)));
+  if (byHint) return byHint;
+  // Some platforms expose voiceURI/name with gendered defaults even without matching a hint list;
+  // fall back to the first English voice rather than forcing a possibly-wrong pick.
+  return english[0] || pool[0] || null;
+}
+
+function getFemaleVoice() {
+  if (__cachedFemaleVoice) return __cachedFemaleVoice;
+  if (!window.speechSynthesis) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const picked = pickFemaleVoice(voices);
+  if (picked) __cachedFemaleVoice = picked;
+  return picked;
+}
+
+if (typeof window !== 'undefined' && window.speechSynthesis) {
+  // Pre-warm voice list — many browsers load it asynchronously on first page visit.
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    __cachedFemaleVoice = pickFemaleVoice(window.speechSynthesis.getVoices());
+  };
+}
+
 function fallbackTitle(id) {
   if (MAJOR_TITLES[id]) return MAJOR_TITLES[id];
   const cleaned = id.replace(/^module\d-?/, '').replace(/-/g, ' ').trim();
@@ -3126,6 +3158,7 @@ function Module1TermDetail({ navigate, termId, settings }) {
     }
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(term.audioText);
+    utterance.voice = getFemaleVoice();
     utterance.rate = 0.88;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
@@ -6586,6 +6619,7 @@ function SpeakButton({ text }) {
     }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
+    u.voice = getFemaleVoice();
     u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
     u.onstart = () => setState('playing');
     u.onend = () => setState('idle');
@@ -6771,6 +6805,7 @@ function WelcomeScreen({ onStart }) {
     }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(welcomeText);
+    u.voice = getFemaleVoice();
     u.rate = 0.82; u.pitch = 1.05; u.volume = 1.0;
     u.onstart = () => setAudioState('playing');
     u.onend = () => setAudioState('done');
